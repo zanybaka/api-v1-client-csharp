@@ -1,0 +1,42 @@
+﻿using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Info.Blockchain.API.Wallet
+{
+    /// <summary>
+    /// Used in combination with the `Wallet` class
+    /// </summary>
+    public class Address
+    {
+        public Address(JObject a)
+        {
+            Balance = (long)a["balance"];
+            AddressStr = (string)a["address"];
+            Label = (string)a["label"];
+            TotalReceived = (long)a["total_received"];
+        }
+
+        /// <summary>
+        /// Balance in satoshi
+        /// </summary>
+        public long Balance { get; private set; }
+
+        /// <summary>
+        /// String representation of the address
+        /// </summary>
+        public String AddressStr { get; private set; }
+
+        /// <summary>
+        /// Label attached to the address
+        /// </summary>
+        public String Label { get; private set; }
+
+        /// <summary>
+        /// Total received amount in satoshi
+        /// </summary>
+        public long TotalReceived { get; private set; }
+    }
+}
