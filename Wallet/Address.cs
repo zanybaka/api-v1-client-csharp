@@ -19,6 +19,15 @@ namespace Info.Blockchain.API.Wallet
             TotalReceived = (long)a["total_received"];
         }
 
+        public Address(long balance, string address,
+            string label, long totalReceived)
+        {
+            Balance = balance;
+            AddressStr = address;
+            Label = label;
+            TotalReceived = totalReceived;
+        }
+
         /// <summary>
         /// Balance in satoshi
         /// </summary>

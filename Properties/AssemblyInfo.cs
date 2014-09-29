@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Blockchain")]
 [assembly: AssemblyProduct("BlockchainAPI")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyCopyright("Copyright © 2014 Blockchain")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
