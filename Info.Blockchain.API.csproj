@@ -53,6 +53,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Receive\Receive.cs" />
     <Compile Include="Receive\ReceiveResponse.cs" />
+    <Compile Include="Statistics\Statistics.cs" />
+    <Compile Include="Statistics\StatisticsResponse.cs" />
     <Compile Include="Wallet\Address.cs" />
     <Compile Include="Wallet\PaymentResponse.cs" />
     <Compile Include="Wallet\Wallet.cs" />

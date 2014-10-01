@@ -5,7 +5,6 @@ The `Wallet` namespace contains the `Wallet` class that reflects the functionali
 Example usage:
 
 ```csharp
-
 using System;
 using System.Collections.Generic;
 using System.Linq;

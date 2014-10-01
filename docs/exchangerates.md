@@ -5,7 +5,6 @@ The `Exchangerates` namespace contains the `ExchangeRates` class that reflects t
 Example usage:
 
 ```csharp
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
