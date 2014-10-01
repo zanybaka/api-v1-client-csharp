@@ -45,6 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="APIException.cs" />
+    <Compile Include="CreateWallet\CreateWallet.cs" />
+    <Compile Include="CreateWallet\CreateWalletResponse.cs" />
     <Compile Include="ExchangeRates\Currency.cs" />
     <Compile Include="ExchangeRates\ExchangeRates.cs" />
     <Compile Include="HttpClient.cs" />

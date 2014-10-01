@@ -56,6 +56,7 @@ namespace Info.Blockchain.API
                     }
                     else if (method == "POST")
                     {
+                        client.Headers.Add(HttpRequestHeader.ContentType, "application/x-www-form-urlencoded");
                         byte[] bytes = Encoding.UTF8.GetBytes(query);
                         byte[] byteResponse = client.UploadData(BASE_URI + resource, bytes);
                         response = System.Text.Encoding.UTF8.GetString(byteResponse);
