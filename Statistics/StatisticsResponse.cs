@@ -29,6 +29,7 @@ namespace Info.Blockchain.API.Statistics
             NumberOfTransactions = (long)s["n_tx"];
             HashRate = (double)s["hash_rate"];
             Timestamp = (long)s["timestamp"];
+            MinedBlocks = (long)s["n_blocks_mined"];
             BlocksSize = (long)s["blocks_size"];
             TotalBTC = (long)s["totalbc"];
             TotalBlocks = (long)s["n_blocks_total"];
@@ -114,6 +115,11 @@ namespace Info.Blockchain.API.Statistics
         /// Timestamp of when this report was compiled (in ms)
         /// </summary>
         public long Timestamp { get; private set; }
+
+        /// <summary>
+        /// Number of blocks mined in the past 24 hours
+        /// </summary>
+        public long MinedBlocks { get; private set; }
 
         /// <summary>
         /// 

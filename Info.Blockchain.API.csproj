@@ -45,6 +45,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="APIException.cs" />
+    <Compile Include="BlockExplorer\Address.cs" />
+    <Compile Include="BlockExplorer\Block.cs" />
+    <Compile Include="BlockExplorer\BlockExplorer.cs" />
+    <Compile Include="BlockExplorer\Input.cs" />
+    <Compile Include="BlockExplorer\Output.cs" />
+    <Compile Include="BlockExplorer\SimpleBlock.cs" />
+    <Compile Include="BlockExplorer\Transaction.cs" />
+    <Compile Include="BlockExplorer\UnspentOutput.cs" />
     <Compile Include="CreateWallet\CreateWallet.cs" />
     <Compile Include="CreateWallet\CreateWalletResponse.cs" />
     <Compile Include="ExchangeRates\Currency.cs" />
