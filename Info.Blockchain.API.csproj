@@ -49,6 +49,8 @@
     <Compile Include="BlockExplorer\Block.cs" />
     <Compile Include="BlockExplorer\BlockExplorer.cs" />
     <Compile Include="BlockExplorer\Input.cs" />
+    <Compile Include="BlockExplorer\InventoryData.cs" />
+    <Compile Include="BlockExplorer\LatestBlock.cs" />
     <Compile Include="BlockExplorer\Output.cs" />
     <Compile Include="BlockExplorer\SimpleBlock.cs" />
     <Compile Include="BlockExplorer\Transaction.cs" />

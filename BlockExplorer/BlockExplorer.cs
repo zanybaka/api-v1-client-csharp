@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
@@ -101,7 +102,7 @@ namespace Info.Blockchain.API.BlockExplorer
         /// <param name="height">Block height</param>
         /// <returns>A list of blocks at the specified height</returns>
         /// <exception cref="APIException">If the server returns an error</exception>
-        public IEnumerable<Block> GetBlocksAtHeight(long height)
+        public ReadOnlyCollection<Block> GetBlocksAtHeight(long height)
         {
             var req = new NameValueCollection();
             req["format"] = "json";
@@ -117,7 +118,7 @@ namespace Info.Blockchain.API.BlockExplorer
                 blocks.Add(new Block((JObject)b));
             }
 
-            return blocks;
+            return blocks.AsReadOnly();
         }
 
         /// <summary>
@@ -126,7 +127,7 @@ namespace Info.Blockchain.API.BlockExplorer
         /// <param name="address">Base58check or hash160 address string</param>
         /// <returns>A list of unspent outputs for the specified address </returns>
         /// <exception cref="APIException">If the server returns an error</exception>
-        public IEnumerable<UnspentOutput> GetUnspentOutputs(string address)
+        public ReadOnlyCollection<UnspentOutput> GetUnspentOutputs(string address)
         {
             var req = new NameValueCollection();
             req["active"] = address;
@@ -144,13 +145,110 @@ namespace Info.Blockchain.API.BlockExplorer
                 // the API isn't supposed to return an error code here. No free outputs is
                 // a legitimate situation. We are circumventing that by returning an empty list
                 if (e.Message == "No free outputs to spend")
-                    return new List<UnspentOutput>();
+                    return new List<UnspentOutput>().AsReadOnly();
                 else
                     throw e;
             }
 
             return JObject.Parse(response)["unspent_outputs"].
-                AsJEnumerable().Select(x => new UnspentOutput((JObject)x)).ToList();
+                AsJEnumerable().Select(x => new UnspentOutput((JObject)x)).ToList().AsReadOnly();
+        }
+
+        /// <summary>
+        /// Gets the latest block on the main chain (simplified representation).
+        /// </summary>
+        /// <returns>An instance of the LatestBlock class</returns>
+        /// <exception cref="APIException">If the server returns an error</exception>
+        public LatestBlock GetLatestBlock()
+        {
+            var req = new NameValueCollection();
+            if (apiCode != null)
+                req["api_code"] = apiCode;
+
+            string response = HttpClient.Get("latestblock", req);
+            var latestBlockJson = JObject.Parse(response);
+            return new LatestBlock(latestBlockJson);
+        }
+
+        /// <summary>
+        /// Gets a list of currently unconfirmed transactions.
+        /// </summary>
+        /// <returns>A list of unconfirmed Transaction objects</returns>
+        /// <exception cref="APIException">If the server returns an error</exception>
+        public ReadOnlyCollection<Transaction> GetUnconfirmedTransactions()
+        {
+            var req = new NameValueCollection();
+            req["format"] = "json";
+            if (apiCode != null)
+                req["api_code"] = apiCode;
+
+            string response = HttpClient.Get("unconfirmed-transactions", req);
+            var txsJson = JObject.Parse(response);
+            var txs = txsJson["txs"].AsJEnumerable().
+                Select(x => new Transaction((JObject)x, -1, (bool)x["double_spend"])).ToList();
+            return txs.AsReadOnly();
+        }
+
+        /// <summary>
+        /// Gets a list of blocks mined today by all pools since 00:00 UTC.
+        /// </summary>
+        /// <returns>A list of SimpleBlock objects</returns>
+        /// <exception cref="APIException">If the server returns an error</exception>
+        public ReadOnlyCollection<SimpleBlock> GetBlocks()
+        {
+            return GetBlocks(null);
+        }
+
+        /// <summary>
+        /// Gets a list of blocks mined on a specific day.
+        /// </summary>
+        /// <param name="timestamp">Unix timestamp (without milliseconds) that falls 
+        /// between 00:00 UTC and 23:59 UTC of the desired day.</param>
+        /// <returns>A list of SimpleBlock objects</returns>
+        /// <exception cref="APIException">If the server returns an error</exception>
+        public ReadOnlyCollection<SimpleBlock> GetBlocks(long timestamp)
+        {
+            return GetBlocks((timestamp * 1000).ToString());
+        }
+
+        /// <summary>
+        /// Gets a list of recent blocks by a specific mining pool.
+        /// </summary>
+        /// <param name="poolName">Name of the mining pool</param>
+        /// <returns>A list of SimpleBlock objects</returns>
+        /// <exception cref="APIException">If the server returns an error</exception>
+        public ReadOnlyCollection<SimpleBlock> GetBlocks(string poolName)
+        {
+            var req = new NameValueCollection();
+            req["format"] = "json";
+            if (apiCode != null)
+                req["api_code"] = apiCode;
+
+            poolName = poolName == null ? null : poolName;
+
+            string response = HttpClient.Get("blocks/" + poolName, req);
+            var blocksJson = JObject.Parse(response);
+
+            var blocks = blocksJson["blocks"].AsJEnumerable().Select(x => new SimpleBlock((JObject)x)).ToList();
+            return blocks.AsReadOnly();
+        }
+
+        /// <summary>
+        /// Gets inventory data for an object.
+        /// </summary>
+        /// <param name="hash">Object hash</param>
+        /// <returns>An instance of the InventoryData class</returns>
+        /// <exception cref="APIException">If the server returns an error</exception>
+        public InventoryData GetInventoryData(string hash)
+        {
+            var req = new NameValueCollection();
+            req["format"] = "json";
+            if (apiCode != null)
+                req["api_code"] = apiCode;
+
+            string response = HttpClient.Get("inv/" + hash, req);
+            var invJson = JObject.Parse(response);
+            return new InventoryData(invJson);
         }
     }
 }

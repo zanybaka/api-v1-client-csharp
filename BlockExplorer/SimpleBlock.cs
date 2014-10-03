@@ -11,12 +11,13 @@ namespace Info.Blockchain.API.BlockExplorer
     /// </summary>
     public class SimpleBlock
     {
-        public SimpleBlock(JObject b)
+
+        public SimpleBlock(JObject b, bool? mainChain = false)
         {
             Height = (long)b["height"];
             Hash = (string)b["hash"];
             Time = (long)b["time"];
-            MainChain = (bool)b["main_chain"];
+            MainChain = mainChain != null ? mainChain.Value : (bool)b["main_chain"];
         }
 
         /// <summary>
@@ -30,7 +31,7 @@ namespace Info.Blockchain.API.BlockExplorer
         public string Hash { get; private set; }
 
         /// <summary>
-        /// Block timestamp set by the miner
+        /// Block timestamp set by the miner (unix time in seconds)
         /// </summary>
         public long Time { get; private set; }
 
