@@ -6,6 +6,11 @@ An official .NET (C#) library for interacting with the Blockchain.info API.
 
 The library requires at least .NET 4.0.
 
+The recommended way to install and use the library is via NuGet:
+```
+PM> Install-Package BlockchainAPI
+```
+
 The library consists of the following namespaces:
 
 * `Info.Blockchain.Api.Blockexplorer` ([docs](docs/blockexplorer.md)) ([api/blockchain_api][api1])
