@@ -15,7 +15,18 @@ namespace Info.Blockchain.API.BlockExplorer
         public Transaction(JObject t, long? blockHeight = null, bool? doubleSpend = null)
         {
             DoubleSpend = doubleSpend != null ? doubleSpend.Value : (bool)t["double_spend"];
-            BlockHeight = blockHeight != null ? blockHeight.Value : (long)t["block_height"];
+            BlockHeight = blockHeight != null ? blockHeight.Value : -1;
+            
+            // this mitigates the bug where unconfirmed txs lack the block height field
+            if (BlockHeight == -1)
+            {
+                JToken height = t["block_height"];
+                if (height != null)
+                {
+                    BlockHeight = (long)t["block_height"];
+                }
+            }
+
             Time = (long)t["time"];
             RelayedBy = (string)t["relayed_by"];
             Hash = (string)t["hash"];
