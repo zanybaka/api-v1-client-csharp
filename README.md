@@ -16,6 +16,7 @@ The library consists of the following namespaces:
 * `Info.Blockchain.Api.Blockexplorer` ([docs](docs/blockexplorer.md)) ([api/blockchain_api][api1])
 * `Info.Blockchain.Api.Createwallet` ([docs](docs/createwallet.md)) ([api/create_wallet][api2])
 * `Info.Blockchain.Api.Exchangerates` ([docs](docs/exchangerates.md)) ([api/exchange\_rates\_api][api3])
+* `Info.Blockchain.API.PushTx` ([docs](docs/pushtx.md)) ([pushtx][api7])
 * `Info.Blockchain.Api.Receive` ([docs](docs/receive.md)) ([api/api_receive][api4])
 * `Info.Blockchain.Api.Statistics` ([docs](docs/statistics.md)) ([api/charts_api][api5])
 * `Info.Blockchain.Api.Wallet` ([docs](docs/wallet.md)) ([api/blockchain\_wallet\_api][api6])
@@ -23,6 +24,14 @@ The library consists of the following namespaces:
 ###Error handling
 
 All methods may throw exceptions caused by incorrectly passed parameters or other problems. If a call is rejected server-side, the `APIException` exception will be thrown. Other exceptions may also be thrown by the environment (e.g. no internet connection etc).
+
+###Connection timeouts
+
+It is possible to set arbitrary connection timeouts.
+
+```csharp
+Info.Blockchain.API.HttpClient.TimeoutMs = 5000; // time out after 5 seconds
+```
 
 ###Request limits and API keys
 
@@ -36,3 +45,4 @@ The same API key can be used to bypass the request limiter.
 [api4]: https://blockchain.info/api/api_receive
 [api5]: https://blockchain.info/api/charts_api
 [api6]: https://blockchain.info/api/blockchain_wallet_api
+[api7]: https://blockchain.info/pushtx
