@@ -13,6 +13,9 @@ namespace Info.Blockchain.API
     {
         private static string BASE_URI = "https://blockchain.info/";
 
+        private static volatile int timeoutMs = 10000;
+        public static int TimeoutMs { get { return timeoutMs; } set { timeoutMs = value; } }
+
         /// <summary>
         /// Performs a GET request on a Blockchain.info API resource. 
         /// </summary>
@@ -38,50 +41,56 @@ namespace Info.Blockchain.API
         private static string OpenURL(String resource, string method,
             NameValueCollection parameters = null)
         {
-            using (var client = new WebClient())
+            string responseStr = null;
+            string query = null;
+
+            if (parameters != null && parameters.Count > 0)
             {
-                string response = null;
-                try
+                query = string.Join("&", parameters.AllKeys.Select(key => string.Format("{0}={1}", 
+                    HttpUtility.UrlEncode(key), HttpUtility.UrlEncode(parameters[key]))));
+            }
+
+            var request = WebRequest.Create(BASE_URI + resource + (method == "GET" && query != null ? '?' + query : null));
+            request.Timeout = timeoutMs;
+
+            if (method == "POST")
+            {
+                byte[] bytes = Encoding.UTF8.GetBytes(query);
+                request.Method = "POST";
+                request.ContentType = "application/x-www-form-urlencoded";
+                request.ContentLength = bytes.Length;
+                var requestStream = request.GetRequestStream();
+                requestStream.Write(bytes, 0, bytes.Length);
+                requestStream.Close();
+            }
+
+            try
+            {
+                var webResponse = (HttpWebResponse)request.GetResponse();
+                responseStr = ReadStream(webResponse.GetResponseStream());
+            }
+            catch (WebException e)
+            {
+                if (e.Status == WebExceptionStatus.ProtocolError)
                 {
-                    string query = null;
-                    if (parameters != null && parameters.Count > 0)
-                    {
-                        query = string.Join("&", parameters.AllKeys.Select(key => string.Format("{0}={1}", 
-                            HttpUtility.UrlEncode(key), HttpUtility.UrlEncode(parameters[key]))));
-                    }
-                    
-                    if (method == "GET")
-                    {
-                        response = client.DownloadString(BASE_URI + resource + "?" + query);
-                    }
-                    else if (method == "POST")
-                    {
-                        client.Headers.Add(HttpRequestHeader.ContentType, "application/x-www-form-urlencoded");
-                        byte[] bytes = Encoding.UTF8.GetBytes(query);
-                        byte[] byteResponse = client.UploadData(BASE_URI + resource, bytes);
-                        response = System.Text.Encoding.UTF8.GetString(byteResponse);
-                    }
-                }
-                catch (WebException e)
-                {
-                    if (e.Status == WebExceptionStatus.ProtocolError)
-                    {
-                        var httpResponse = e.Response as HttpWebResponse;
-                        if (httpResponse != null && httpResponse.StatusCode != HttpStatusCode.OK)
-                        {
-                            using (StreamReader reader = new StreamReader(httpResponse.GetResponseStream(), Encoding.UTF8))
-                            {
-                                throw new APIException(reader.ReadToEnd());
-                            }
-                        }
-                        else
-                            throw e;
-                    }
+                    var httpResponse = e.Response as HttpWebResponse;
+                    if (httpResponse != null && httpResponse.StatusCode != HttpStatusCode.OK)
+                        throw new APIException(ReadStream(httpResponse.GetResponseStream()));
                     else
                         throw e;
                 }
+                else
+                    throw e;
+            }
 
-                return response;
+            return responseStr;
+        }
+
+        private static string ReadStream(Stream stream)
+        {
+            using (var streamReader = new StreamReader(stream, Encoding.UTF8))
+            {
+                return streamReader.ReadToEnd();
             }
         }
     }

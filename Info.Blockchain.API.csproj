@@ -61,6 +61,7 @@
     <Compile Include="ExchangeRates\ExchangeRates.cs" />
     <Compile Include="HttpClient.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PushTx\PushTx.cs" />
     <Compile Include="Receive\Receive.cs" />
     <Compile Include="Receive\ReceiveResponse.cs" />
     <Compile Include="Statistics\Statistics.cs" />
