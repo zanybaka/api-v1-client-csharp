@@ -27,6 +27,7 @@ namespace TestApp
                 Console.WriteLine("The balance is {0}", addr.Balance);
 
                 // send 0.2 bitcoins with a custom fee of 0.01 BTC and a note
+                // public notes require a minimum transaction size of 0.005 BTC
                 PaymentResponse payment = wallet.Send("1dice6YgEVBf88erBFra9BHf6ZMoyvG88",
                     20000000, fee: 1000000L, note: "Amazon payment");
                 Console.WriteLine("The payment TX hash is {0}", payment.TxHash);
