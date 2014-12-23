@@ -25,7 +25,6 @@ namespace Info.Blockchain.API.Statistics
             BTCMined = (long)s["n_btc_mined"];
             Difficulty = (double)s["difficulty"];
             MinutesBetweenBlocks = (double)s["minutes_between_blocks"];
-            DaysDestroyed = (double)s["days_destroyed"];
             NumberOfTransactions = (long)s["n_tx"];
             HashRate = (double)s["hash_rate"];
             Timestamp = (long)s["timestamp"];
@@ -95,11 +94,6 @@ namespace Info.Blockchain.API.Statistics
         /// Minutes between blocks
         /// </summary>
         public double MinutesBetweenBlocks { get; private set; }
-
-        /// <summary>
-        /// Days destroyed in the past 24 hours
-        /// </summary>
-        public double DaysDestroyed { get; private set; }
 
         /// <summary>
         /// Number of transactions in the past 24 hours
