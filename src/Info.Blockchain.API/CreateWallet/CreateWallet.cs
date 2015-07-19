@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Info.Blockchain.API.ExchangeRates;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -37,7 +38,7 @@ namespace Info.Blockchain.API.CreateWallet
             if (email != null)
                 req["email"] = email;
 
-            string response = HttpClient.Post("api/v2/create_wallet", req);
+            string response = HttpClientUtil.Post("api/v2/create_wallet", req);
             JObject topElem = JObject.Parse(response);
 
             return new CreateWalletResponse((string)topElem["guid"],

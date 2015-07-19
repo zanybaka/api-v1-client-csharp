@@ -36,12 +36,12 @@ namespace Info.Blockchain.API.Wallet
         /// <summary>
         /// String representation of the address
         /// </summary>
-        public String AddressStr { get; private set; }
+        public string AddressStr { get; private set; }
 
         /// <summary>
         /// Label attached to the address
         /// </summary>
-        public String Label { get; private set; }
+        public string Label { get; private set; }
 
         /// <summary>
         /// Total received amount in satoshi

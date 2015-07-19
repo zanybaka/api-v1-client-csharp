@@ -10,7 +10,7 @@ namespace Info.Blockchain.API.Wallet
     /// </summary>
     public class PaymentResponse
     {
-        public PaymentResponse(String message, String txHash, String notice)
+        public PaymentResponse(string message, string txHash, string notice)
         {
             Message = message;
             TxHash = txHash;
@@ -20,16 +20,16 @@ namespace Info.Blockchain.API.Wallet
         /// <summary>
         /// Response message from the server
         /// </summary>
-        public String Message { get; private set; }
+        public string Message { get; private set; }
 
         /// <summary>
         /// Transaction hash
         /// </summary>
-        public String TxHash { get; private set; }
+        public string TxHash { get; private set; }
 
         /// <summary>
         /// Additional response message from the server
         /// </summary>
-        public String Notice { get; private set; }
+        public string Notice { get; private set; }
     }
 }

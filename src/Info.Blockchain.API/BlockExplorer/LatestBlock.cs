@@ -17,7 +17,7 @@ namespace Info.Blockchain.API.BlockExplorer
             Index = (long)b["block_index"];
 
             var txs = b["txIndexes"].AsJEnumerable().Select(x => (long)x).ToList();
-            TransactionIndexes = txs.AsReadOnly();
+            TransactionIndexes = new ReadOnlyCollection<long>(txs);
         }
 
         /// <summary>

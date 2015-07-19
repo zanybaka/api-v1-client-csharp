@@ -25,8 +25,8 @@ namespace Info.Blockchain.API.Wallet
         /// <param name="password">Decryption password</param>
         /// <param name="secondPassword">Second password</param>
         /// <param name="apiCode">Blockchain.info API code</param>
-        public Wallet(String identifier, String password,
-            String secondPassword = null, String apiCode = null)
+        public Wallet(string identifier, string password,
+			string secondPassword = null, string apiCode = null)
         {
             this.identifier = identifier;
             this.password = password;
@@ -88,7 +88,7 @@ namespace Info.Blockchain.API.Wallet
             if (note != null)
                 req["note"] = note;
 
-            string response = HttpClient.Get(String.Format("merchant/{0}/{1}",
+            string response = HttpClientUtil.Get(string.Format("merchant/{0}/{1}",
                 identifier, method), req);
             JObject topElem = ParseResponse(response);
 
@@ -106,7 +106,7 @@ namespace Info.Blockchain.API.Wallet
         /// <exception cref="Info.Blockchain.API.APIException">If the server returns an error</exception>
         public long GetBalance()
         {
-            String response = HttpClient.Get(string.Format("merchant/{0}/balance", identifier),
+			string response = HttpClientUtil.Get(string.Format("merchant/{0}/balance", identifier),
                 BuildBasicRequest());
             JObject topElem = ParseResponse(response);
 
@@ -125,7 +125,7 @@ namespace Info.Blockchain.API.Wallet
             var req = BuildBasicRequest();
             req["confirmations"] = confirmations.ToString();
 
-            string response = HttpClient.Get(String.Format("merchant/{0}/list",
+            string response = HttpClientUtil.Get(string.Format("merchant/{0}/list",
                 identifier), req);
             JObject topElem = ParseResponse(response);
             JArray jAddresses = (JArray)topElem["addresses"];
@@ -147,13 +147,13 @@ namespace Info.Blockchain.API.Wallet
         /// must have before being included in the balance of addresses (can be 0)</param>
         /// <returns>An instance of the Address class</returns>
         /// <exception cref="Info.Blockchain.API.APIException">If the server returns an error</exception>
-        public Address GetAddress(String address, int confirmations = 0)
+        public Address GetAddress(string address, int confirmations = 0)
         {
             var req = BuildBasicRequest();
             req["confirmations"] = confirmations.ToString();
             req["address"] = address;
 
-            string response = HttpClient.Get(String.Format("merchant/{0}/address_balance",
+            string response = HttpClientUtil.Get(string.Format("merchant/{0}/address_balance",
                 identifier), req);
             JObject topElem = ParseResponse(response);
 
@@ -166,13 +166,13 @@ namespace Info.Blockchain.API.Wallet
         /// <param name="label">Label to attach to this address</param>
         /// <returns>An instance of the Address class</returns>
         /// <exception cref="Info.Blockchain.API.APIException">If the server returns an error</exception>
-        public Address NewAddress(String label = null)
+        public Address NewAddress(string label = null)
         {
             var req = BuildBasicRequest();
             if (label != null)
                 req["label"] = label;
 
-            string response = HttpClient.Get(String.Format("merchant/{0}/new_address",
+            string response = HttpClientUtil.Get(string.Format("merchant/{0}/new_address",
                 identifier), req);
             JObject topElem = ParseResponse(response);
 
@@ -190,7 +190,7 @@ namespace Info.Blockchain.API.Wallet
             var req = BuildBasicRequest();
             req["address"] = address;
 
-            string response = HttpClient.Get(String.Format("merchant/{0}/archive_address",
+            string response = HttpClientUtil.Get(string.Format("merchant/{0}/archive_address",
                identifier), req);
             JObject topElem = ParseResponse(response);
 
@@ -208,7 +208,7 @@ namespace Info.Blockchain.API.Wallet
             var req = BuildBasicRequest();
             req["address"] = address;
 
-            string response = HttpClient.Get(String.Format("merchant/{0}/unarchive_address",
+            string response = HttpClientUtil.Get(string.Format("merchant/{0}/unarchive_address",
                identifier), req);
             JObject topElem = ParseResponse(response);
 
@@ -227,7 +227,7 @@ namespace Info.Blockchain.API.Wallet
             var req = BuildBasicRequest();
             req["days"] = days.ToString();
 
-            string response = HttpClient.Get(String.Format("merchant/{0}/auto_consolidate",
+            string response = HttpClientUtil.Get(string.Format("merchant/{0}/auto_consolidate",
                 identifier), req);
             JObject topElem = ParseResponse(response);
 

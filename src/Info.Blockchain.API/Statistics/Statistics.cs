@@ -26,7 +26,7 @@ namespace Info.Blockchain.API.Statistics
             if (apiCode != null)
                 req["api_code"] = apiCode;
 
-            string response = HttpClient.Get("stats", req);
+            string response = HttpClientUtil.Get("stats", req);
             return new StatisticsResponse(JObject.Parse(response));
         }
     }

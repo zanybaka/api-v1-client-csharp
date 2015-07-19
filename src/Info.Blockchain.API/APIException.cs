@@ -12,7 +12,7 @@ namespace Info.Blockchain.API
     /// </summary>
     public class APIException : Exception
     {
-        public APIException(String message)
+        public APIException(string message)
             : base(message)
         {
         }

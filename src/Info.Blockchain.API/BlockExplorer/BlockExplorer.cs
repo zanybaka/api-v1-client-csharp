@@ -45,7 +45,7 @@ namespace Info.Blockchain.API.BlockExplorer
             if (apiCode != null)
                 req["api_code"] = apiCode;
 
-            string response = HttpClient.Get("rawtx/" + txHash, req);
+            string response = HttpClientUtil.Get("rawtx/" + txHash, req);
             var txJson = JObject.Parse(response);
             return new Transaction(txJson);
         }
@@ -73,7 +73,7 @@ namespace Info.Blockchain.API.BlockExplorer
             if (apiCode != null)
                 req["api_code"] = apiCode;
 
-            string response = HttpClient.Get("rawblock/" + blockHash, req);
+            string response = HttpClientUtil.Get("rawblock/" + blockHash, req);
             var txJson = JObject.Parse(response);
             return new Block(txJson);
         }
@@ -90,7 +90,7 @@ namespace Info.Blockchain.API.BlockExplorer
             if (apiCode != null)
                 req["api_code"] = apiCode;
 
-            string response = HttpClient.Get("rawaddr/" + address, req);
+            string response = HttpClientUtil.Get("rawaddr/" + address, req);
             var addrJson = JObject.Parse(response);
             return new Address(addrJson);
         }
@@ -109,7 +109,7 @@ namespace Info.Blockchain.API.BlockExplorer
             if (apiCode != null)
                 req["api_code"] = apiCode;
 
-            string response = HttpClient.Get("block-height/" + height, req);
+            string response = HttpClientUtil.Get("block-height/" + height, req);
             var blocksJson = JObject.Parse(response);
 
             List<Block> blocks = new List<Block>();
@@ -117,9 +117,9 @@ namespace Info.Blockchain.API.BlockExplorer
             {
                 blocks.Add(new Block((JObject)b));
             }
-
-            return blocks.AsReadOnly();
-        }
+			
+            return new ReadOnlyCollection<Block>(blocks);
+		}
 
         /// <summary>
         /// Gets unspent outputs for a single address.
@@ -138,20 +138,23 @@ namespace Info.Blockchain.API.BlockExplorer
 
             try
             {
-                response = HttpClient.Get("unspent", req);
+                response = HttpClientUtil.Get("unspent", req);
             }
             catch (APIException e)
             {
                 // the API isn't supposed to return an error code here. No free outputs is
                 // a legitimate situation. We are circumventing that by returning an empty list
                 if (e.Message == "No free outputs to spend")
-                    return new List<UnspentOutput>().AsReadOnly();
+                    return new ReadOnlyCollection<UnspentOutput>(new List<UnspentOutput>());
                 else
                     throw e;
             }
 
-            return JObject.Parse(response)["unspent_outputs"].
-                AsJEnumerable().Select(x => new UnspentOutput((JObject)x)).ToList().AsReadOnly();
+            List<UnspentOutput> outputs = JObject.Parse(response)["unspent_outputs"].
+                AsJEnumerable()
+				.Select(x => new UnspentOutput((JObject)x))
+				.ToList();
+			return new ReadOnlyCollection<UnspentOutput>(outputs);
         }
 
         /// <summary>
@@ -165,7 +168,7 @@ namespace Info.Blockchain.API.BlockExplorer
             if (apiCode != null)
                 req["api_code"] = apiCode;
 
-            string response = HttpClient.Get("latestblock", req);
+            string response = HttpClientUtil.Get("latestblock", req);
             var latestBlockJson = JObject.Parse(response);
             return new LatestBlock(latestBlockJson);
         }
@@ -182,11 +185,11 @@ namespace Info.Blockchain.API.BlockExplorer
             if (apiCode != null)
                 req["api_code"] = apiCode;
 
-            string response = HttpClient.Get("unconfirmed-transactions", req);
+            string response = HttpClientUtil.Get("unconfirmed-transactions", req);
             var txsJson = JObject.Parse(response);
             var txs = txsJson["txs"].AsJEnumerable().
                 Select(x => new Transaction((JObject)x, -1, (bool)x["double_spend"])).ToList();
-            return txs.AsReadOnly();
+            return new ReadOnlyCollection<Transaction>(txs);
         }
 
         /// <summary>
@@ -226,11 +229,11 @@ namespace Info.Blockchain.API.BlockExplorer
 
             poolName = poolName == null ? null : poolName;
 
-            string response = HttpClient.Get("blocks/" + poolName, req);
+            string response = HttpClientUtil.Get("blocks/" + poolName, req);
             var blocksJson = JObject.Parse(response);
 
             var blocks = blocksJson["blocks"].AsJEnumerable().Select(x => new SimpleBlock((JObject)x)).ToList();
-            return blocks.AsReadOnly();
+			return new ReadOnlyCollection<SimpleBlock>(blocks);
         }
 
         /// <summary>
@@ -246,7 +249,7 @@ namespace Info.Blockchain.API.BlockExplorer
             if (apiCode != null)
                 req["api_code"] = apiCode;
 
-            string response = HttpClient.Get("inv/" + hash, req);
+            string response = HttpClientUtil.Get("inv/" + hash, req);
             var invJson = JObject.Parse(response);
             return new InventoryData(invJson);
         }

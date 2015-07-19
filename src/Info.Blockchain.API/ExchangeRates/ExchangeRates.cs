@@ -26,7 +26,7 @@ namespace Info.Blockchain.API.ExchangeRates
             if (apiCode != null)
                 req["api_code"] = apiCode;
 
-            string response = HttpClient.Get("ticker", req);
+            string response = HttpClientUtil.Get("ticker", req);
             JObject tickerObj = JObject.Parse(response);
 
             var resultDict = new Dictionary<string, Currency>();
@@ -61,7 +61,7 @@ namespace Info.Blockchain.API.ExchangeRates
             if (apiCode != null)
                 req["api_code"] = apiCode;
 
-            string response = HttpClient.Get("tobtc", req);
+            string response = HttpClientUtil.Get("tobtc", req);
             return double.Parse(response);
         }
     }

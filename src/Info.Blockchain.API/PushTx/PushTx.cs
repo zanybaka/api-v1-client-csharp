@@ -26,7 +26,7 @@ namespace Info.Blockchain.API.PushTx
             if (apiCode != null)
                 req["api_code"] = apiCode;
 
-            HttpClient.Post("pushtx", req);
+            HttpClientUtil.Post("pushtx", req);
         }
     }
 }
