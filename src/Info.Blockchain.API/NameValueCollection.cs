@@ -14,13 +14,13 @@ namespace Info.Blockchain.API
 			get { return this.collection[name]; }
 			set
 			{
-				if (this.collection.ContainsKey(value))
+				if (this.collection.ContainsKey(name))
 				{
-					this.collection[value] += "," + value;
+					this.collection[name] += "," + value;
 				}
 				else
 				{
-					this.collection[value] = value;
+					this.collection[name] = value;
 				}
 			}
 		}
