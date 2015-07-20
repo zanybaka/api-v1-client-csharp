@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Info.Blockchain.API.BlockExplorer;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,16 +12,20 @@ namespace Info.Blockchain.API.Wallet
     /// </summary>
     public class Address
     {
-        public Address(JObject a)
+		private string v1;
+		private string v2;
+		private int v3;
+
+		public Address(JObject a)
         {
-            Balance = (long)a["balance"];
+            Balance = BitcoinValue.FromSatoshis((long)a["balance"]);
             AddressStr = (string)a["address"];
             Label = (string)a["label"];
-            TotalReceived = (long)a["total_received"];
+            TotalReceived = BitcoinValue.FromSatoshis((long)a["total_received"]);
         }
 
-        public Address(long balance, string address,
-            string label, long totalReceived)
+        public Address(BitcoinValue balance, string address,
+            string label, BitcoinValue totalReceived)
         {
             Balance = balance;
             AddressStr = address;
@@ -28,10 +33,18 @@ namespace Info.Blockchain.API.Wallet
             TotalReceived = totalReceived;
         }
 
-        /// <summary>
-        /// Balance in satoshi
-        /// </summary>
-        public long Balance { get; private set; }
+		public Address(JObject a, string v1, string v2, int v3) : this(a)
+		{
+			this.v1 = v1;
+			this.v2 = v2;
+			this.v3 = v3;
+		}
+
+
+		/// <summary>
+		/// Balance in bitcoins
+		/// </summary>
+		public BitcoinValue Balance { get; private set; }
 
         /// <summary>
         /// String representation of the address
@@ -44,8 +57,8 @@ namespace Info.Blockchain.API.Wallet
         public string Label { get; private set; }
 
         /// <summary>
-        /// Total received amount in satoshi
+        /// Total received amount
         /// </summary>
-        public long TotalReceived { get; private set; }
+        public BitcoinValue TotalReceived { get; private set; }
     }
 }

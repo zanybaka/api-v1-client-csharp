@@ -14,7 +14,7 @@ namespace Info.Blockchain.API.BlockExplorer
         public Output(JObject o, bool? spent = null)
         {
             N = (int)o["n"];
-            Value = (long)o["value"];
+            Value = BitcoinValue.FromSatoshis((long)o["value"]);
             Address = (string)o["addr"];
             TxIndex = (long)o["tx_index"];
             Script = (string)o["script"];
@@ -27,9 +27,9 @@ namespace Info.Blockchain.API.BlockExplorer
         public int N { get; private set; }
 
         /// <summary>
-        /// Value of the output (in satoshi)
+        /// Value of the output
         /// </summary>
-        public long Value { get; private set; }
+        public BitcoinValue Value { get; private set; }
 
         /// <summary>
         /// Address that the output belongs to

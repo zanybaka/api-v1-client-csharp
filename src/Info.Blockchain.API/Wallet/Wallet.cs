@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Info.Blockchain.API.BlockExplorer;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -38,16 +39,16 @@ namespace Info.Blockchain.API.Wallet
         /// Sends bitcoin from your wallet to a single address.
         /// </summary>
         /// <param name="toAddress">Recipient bitcoin address</param>
-        /// <param name="amount">Amount to send (in satoshi)</param>
+        /// <param name="amount">Amount to send</param>
         /// <param name="fromAddress">Specific address to send from</param>
-        /// <param name="fee">Transaction fee in satoshi. Must be greater than the default fee</param>
+        /// <param name="fee">Transaction fee. Must be greater than the default fee</param>
         /// <param name="note">Public note to include with the transaction</param>
         /// <returns>An instance of the PaymentResponse class</returns>
         /// <exception cref="APIException">If the server returns an error</exception>
-        public PaymentResponse Send(string toAddress, long amount,
-            string fromAddress = null, long? fee = null, string note = null)
+        public PaymentResponse Send(string toAddress, BitcoinValue amount,
+            string fromAddress = null, BitcoinValue? fee = null, string note = null)
         {
-            var recipients = new Dictionary<string, long>();
+            var recipients = new Dictionary<string, BitcoinValue>();
             recipients[toAddress] = amount;
 
             return SendMany(recipients, fromAddress, fee, note);
@@ -57,14 +58,14 @@ namespace Info.Blockchain.API.Wallet
         /// Sends bitcoin from your wallet to multiple addresses.
         /// </summary>
         /// <param name="recipients">Dictionary with the structure of 'address':amount 
-        /// in satoshi (string:long)</param>
+        /// (string:BitcoinValue)</param>
         /// <param name="fromAddress">Specific address to send from</param>
-        /// <param name="fee">Transaction fee in satoshi. Must be greater than the default fee</param>
+        /// <param name="fee">Transaction fee. Must be greater than the default fee</param>
         /// <param name="note">Public note to include with the transaction</param>
         /// <returns>An instance of the PaymentResponse class</returns>
         /// <exception cref="APIException">If the server returns an error</exception>
-        public PaymentResponse SendMany(Dictionary<string, long> recipients, 
-            string fromAddress = null, long? fee = null, string note = null)
+        public PaymentResponse SendMany(Dictionary<string, BitcoinValue> recipients, 
+            string fromAddress = null, BitcoinValue? fee = null, string note = null)
         {
             var req = BuildBasicRequest();
             string method = null;
@@ -102,15 +103,15 @@ namespace Info.Blockchain.API.Wallet
         /// Fetches the wallet balance. Includes unconfirmed transactions 
         /// and possibly double spends.
         /// </summary>
-        /// <returns>Wallet balance in satoshi</returns>
+        /// <returns>Wallet balance</returns>
         /// <exception cref="Info.Blockchain.API.APIException">If the server returns an error</exception>
-        public long GetBalance()
+        public BitcoinValue GetBalance()
         {
 			string response = HttpClientUtil.Get(string.Format("merchant/{0}/balance", identifier),
                 BuildBasicRequest());
             JObject topElem = ParseResponse(response);
 
-            return Convert.ToInt64(topElem.Property("balance").Value);
+            return BitcoinValue.FromSatoshis(Convert.ToInt64(topElem.Property("balance").Value));
         }
 
         /// <summary>
@@ -176,7 +177,7 @@ namespace Info.Blockchain.API.Wallet
                 identifier), req);
             JObject topElem = ParseResponse(response);
 
-            return new Address(0, (string)topElem["address"], (string)topElem["label"], 0);
+            return new Address(BitcoinValue.Zero, (string)topElem["address"], (string)topElem["label"], BitcoinValue.Zero);
         }
 
         /// <summary>

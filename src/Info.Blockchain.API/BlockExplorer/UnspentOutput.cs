@@ -17,7 +17,7 @@ namespace Info.Blockchain.API.BlockExplorer
             TransactionHash = (string)o["tx_hash"];
             TransactionIndex = (long)o["tx_index"];
             Script = (string)o["script"];
-            Value = (long)o["value"];
+            Value = BitcoinValue.FromSatoshis((long)o["value"]);
             Confirmations = (long)o["confirmations"];
         }
 
@@ -42,9 +42,9 @@ namespace Info.Blockchain.API.BlockExplorer
         public string Script { get; private set; }
 
         /// <summary>
-        /// Value of the output (in satoshi)
+        /// Value of the output
         /// </summary>
-        public long Value { get; private set; }
+        public BitcoinValue Value { get; private set; }
 
         /// <summary>
         /// Number of confirmations

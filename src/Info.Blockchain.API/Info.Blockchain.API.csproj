@@ -36,6 +36,7 @@
   <ItemGroup>
     <Compile Include="APIException.cs" />
     <Compile Include="BlockExplorer\Address.cs" />
+    <Compile Include="BlockExplorer\BitcoinValue.cs" />
     <Compile Include="BlockExplorer\Block.cs" />
     <Compile Include="BlockExplorer\BlockExplorer.cs" />
     <Compile Include="BlockExplorer\Input.cs" />
@@ -57,7 +58,6 @@
     <Compile Include="Receive\ReceiveResponse.cs" />
     <Compile Include="Statistics\Statistics.cs" />
     <Compile Include="Statistics\StatisticsResponse.cs" />
-    <Compile Include="Utilities\BitcoinUtil.cs" />
     <Compile Include="Wallet\Address.cs" />
     <Compile Include="Wallet\PaymentResponse.cs" />
     <Compile Include="Wallet\Wallet.cs" />

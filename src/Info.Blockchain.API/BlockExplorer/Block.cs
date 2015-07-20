@@ -18,7 +18,7 @@ namespace Info.Blockchain.API.BlockExplorer
             PreviousBlockHash = (string)b["prev_block"];
             MerkleRoot = (string)b["mrkl_root"];
             Bits = (long)b["bits"];
-            Fees = (long)b["fee"];
+            Fees = BitcoinValue.FromSatoshis((long)b["fee"]);
             Nonce = (long)b["nonce"];
             Size = (long)b["size"];
             Index = (long)b["block_index"];
@@ -50,9 +50,9 @@ namespace Info.Blockchain.API.BlockExplorer
         public long Bits { get; private set; }
 
         /// <summary>
-        /// Total transaction fees from this block (in satoshi)
+        /// Total transaction fees from this block
         /// </summary>
-        public long Fees { get; private set; }
+        public BitcoinValue Fees { get; private set; }
 
         /// <summary>
         /// Block nonce

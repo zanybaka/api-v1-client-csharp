@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Info.Blockchain.API.BlockExplorer;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,10 +20,10 @@ namespace Info.Blockchain.API.Statistics
             MinersRevenueUSD = (double)s["miners_revenue_usd"];
             MarketPriceUSD = (double)s["market_price_usd"];
             EstimatedTransactionVolumeUSD = (double)s["estimated_transaction_volume_usd"];
-            TotalFeesBTC = (long)s["total_fees_btc"];
-            TotalBTCSent = (long)s["total_btc_sent"];
-            EstimatedBTCSent = (long)s["estimated_btc_sent"];
-            BTCMined = (long)s["n_btc_mined"];
+            TotalFeesBTC = BitcoinValue.FromSatoshis((long)s["total_fees_btc"]);
+            TotalBTCSent = BitcoinValue.FromSatoshis((long)s["total_btc_sent"]);
+            EstimatedBTCSent = BitcoinValue.FromSatoshis((long)s["estimated_btc_sent"]);
+            BTCMined = BitcoinValue.FromSatoshis((long)s["n_btc_mined"]);
             Difficulty = (double)s["difficulty"];
             MinutesBetweenBlocks = (double)s["minutes_between_blocks"];
             NumberOfTransactions = (long)s["n_tx"];
@@ -30,7 +31,7 @@ namespace Info.Blockchain.API.Statistics
             Timestamp = (long)s["timestamp"];
             MinedBlocks = (long)s["n_blocks_mined"];
             BlocksSize = (long)s["blocks_size"];
-            TotalBTC = (long)s["totalbc"];
+            TotalBTC = BitcoinValue.FromSatoshis((long)s["totalbc"]);
             TotalBlocks = (long)s["n_blocks_total"];
             NextRetarget = (long)s["nextretarget"];
         }
@@ -66,24 +67,24 @@ namespace Info.Blockchain.API.Statistics
         public double EstimatedTransactionVolumeUSD { get; private set; }
 
         /// <summary>
-        /// Total fees in the past 24 hours (in satoshi)
+        /// Total fees in the past 24 hours
         /// </summary>
-        public long TotalFeesBTC { get; private set; }
+        public BitcoinValue TotalFeesBTC { get; private set; }
 
         /// <summary>
-        /// Total BTC sent in the past 24 hours (in satoshi)
+        /// Total BTC sent in the past 24 hours
         /// </summary>
-        public long TotalBTCSent { get; private set; }
+        public BitcoinValue TotalBTCSent { get; private set; }
 
         /// <summary>
-        /// Estimated BTC sent in the past 24 hours (in satoshi)
+        /// Estimated BTC sent in the past 24 hours
         /// </summary>
-        public long EstimatedBTCSent { get; private set; }
+        public BitcoinValue EstimatedBTCSent { get; private set; }
 
         /// <summary>
-        /// Number of BTC mined in the past 24 hours (in satoshi)
+        /// Number of BTC mined in the past 24 hours
         /// </summary>
-        public long BTCMined { get; private set; }
+        public BitcoinValue BTCMined { get; private set; }
 
         /// <summary>
         /// Current difficulty
@@ -121,9 +122,9 @@ namespace Info.Blockchain.API.Statistics
         public long BlocksSize { get; private set; }
 
         /// <summary>
-        /// Total BTC in existence (in satoshi)
+        /// Total BTC in existence
         /// </summary>
-        public long TotalBTC { get; private set; }
+        public BitcoinValue TotalBTC { get; private set; }
 
         /// <summary>
         /// Total number of blocks in existence

@@ -1,5 +1,4 @@
 ﻿using Info.Blockchain.API.BlockExplorer;
-using Info.Blockchain.API.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -42,9 +41,9 @@ namespace UniversalAppSample
 			BlockExplorer blockExplorer = new BlockExplorer();
 			Address address = await blockExplorer.GetAddressAsync(addressString);
 
-			this.TotalSentValue.Text = this.ToBtcString(BitcoinUtil.ToBtc(address.TotalSent));
-			this.TotalReceivedValue.Text = this.ToBtcString(BitcoinUtil.ToBtc(address.TotalReceived));
-			this.FinalBalanceValue.Text = this.ToBtcString(BitcoinUtil.ToBtc(address.FinalBalance));
+			this.TotalSentValue.Text = this.ToBtcString(address.TotalSent);
+			this.TotalReceivedValue.Text = this.ToBtcString(address.TotalReceived);
+			this.FinalBalanceValue.Text = this.ToBtcString(address.FinalBalance);
 			this.Hash160Value.Text = address.Hash160;
 			this.TransactionList.Items.Clear();
 			foreach(Transaction transaction in address.Transactions)
@@ -56,24 +55,24 @@ namespace UniversalAppSample
 		private void AddTransaction(Transaction transaction, Address address)
 		{
 			TextBlock textBox = new TextBlock();
-			long totalValue = this.GetTransactionValue(transaction, address);
-			string btcValue = this.ToBtcString(BitcoinUtil.ToBtc(totalValue));
+			BitcoinValue totalValue = this.GetTransactionValue(transaction, address);
+			string btcValue = this.ToBtcString(totalValue);
 			DateTime dateTime = AddressLookupPage.UnixTimeStampToDateTime(transaction.Time);
 			textBox.Text = string.Format("{0} on {1}", btcValue, dateTime);
 			this.TransactionList.Items.Add(textBox);
 		}
 
-		private long GetTransactionValue(Transaction transaction, Address address)
+		private BitcoinValue GetTransactionValue(Transaction transaction, Address address)
 		{
 			List<Output> outputs = transaction.Outputs
 				.Where(o => o.Address == address.AddressStr)
 				.ToList();
 
-			long totalValue = 0;
+			decimal totalValue = 0;
 			if (outputs.Any())
 			{
 				totalValue += outputs
-				.Sum(o => o.Value);
+				.Sum(o => o.Value.Btc);
 			}
 
 			List<Input> inputs = transaction.Inputs
@@ -83,10 +82,10 @@ namespace UniversalAppSample
 			if (inputs.Any())
 			{
 				totalValue -= inputs
-				.Sum(o => o.PreviousOutput.Value);
+				.Sum(o => o.PreviousOutput.Value.Btc);
 			}
 
-			return totalValue;			
+			return new BitcoinValue(totalValue);			
 		}
 
 		private bool AddressIsValid(string addressString)
@@ -94,9 +93,9 @@ namespace UniversalAppSample
 			return true; //TODO
 		}
 
-		private string ToBtcString(double btc)
+		private string ToBtcString(BitcoinValue value)
 		{
-			return btc.ToString() + " BTC";
+			return value.Btc.ToString() + " BTC";
 		}
 
 		public static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
