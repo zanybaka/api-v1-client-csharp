@@ -26,6 +26,22 @@ namespace Info.Blockchain.API.BlockExplorer
 		}
 
 		/// <summary>
+		/// Address object contructor to copy from another address and associate a list of transactions
+		/// </summary>
+		/// <param name="address">Address to copy all properties from except the transactions</param>
+		/// <param name="transactions">Transaction list to associate to the address object</param>
+		public Address(Address address, List<Transaction> transactions)
+		{
+			this.Hash160 = address.Hash160;
+			this.AddressStr = address.AddressStr;
+			this.TotalReceived = address.TotalReceived;
+			this.TotalSent = address.TotalSent;
+			this.FinalBalance = address.FinalBalance;
+			this.TransactionCount = address.TransactionCount;			
+			this.Transactions = new ReadOnlyCollection<Transaction>(transactions);
+		}
+
+		/// <summary>
 		/// Hash160 representation of the address
 		/// </summary>
 		public string Hash160 { get; private set; }

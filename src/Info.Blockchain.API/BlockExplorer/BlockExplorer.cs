@@ -94,13 +94,59 @@ namespace Info.Blockchain.API.BlockExplorer
 		/// Gets data for a single address asynchronously.
 		/// </summary>
 		/// <param name="address">Base58check or hash160 address string</param>
+		/// <param name="maxTransactionCount">Max amount of transactions to retrieve</param>
 		/// <returns>An instance of the Address class</returns>
 		/// <exception cref="APIException">If the server returns an error</exception>
-		public async Task<Address> GetAddressAsync(string address)
+		public async Task<Address> GetAddressAsync(string address, int? maxTransactionCount = null)
 		{
+			Address addressObj = await this.GetAddressWithOffsetAsync(address);
+			List<Transaction> transactionList = await this.GetTransactions(addressObj, maxTransactionCount);
+			return new Address(addressObj, transactionList);
+		}
+
+		private async Task<List<Transaction>> GetTransactions(Address address, long? maxTransactionCount = null)
+		{
+			const int maxTransactionLimit = 50;
+			int transactionsPerRequest = maxTransactionCount == null || maxTransactionCount >= maxTransactionLimit ? maxTransactionLimit : (int)maxTransactionCount.Value;
+			
+
+			maxTransactionCount = maxTransactionCount ?? address.TransactionCount;
+            List<Task<Address>> tasks = new List<Task<Address>>();
+
+			for(int offset = 50; offset <= maxTransactionCount.Value; offset += 50)
+			{
+				Task<Address> task = this.GetAddressWithOffsetAsync(address.AddressStr, transactionsPerRequest, offset);
+                tasks.Add(task);
+			}
+
+			await Task.WhenAll(tasks.ToArray());
+
+			List<Transaction> transactions = address.Transactions.ToList();
+
+			foreach (Task<Address> task in tasks)
+			{
+				transactions.AddRange(task.Result.Transactions);
+			}
+			
+			return transactions;
+		}
+
+		private async Task<Address> GetAddressWithOffsetAsync(string address, int transactionLimit = 50, int offset = 0)
+		{
+			if(transactionLimit > 50 || transactionLimit < 1)
+			{
+				throw new ArgumentOutOfRangeException("Transaction limit can't be greater than 50 or less than 1.", nameof(transactionLimit));
+			}
+			if(offset < 0)
+			{
+				throw new ArgumentOutOfRangeException("Offset can't be less than 0.", nameof(offset));
+			}
+
 			var req = new NameValueCollection();
 			if (apiCode != null)
 				req["api_code"] = apiCode;
+			req["offset"] = offset.ToString();
+			req["limit"] = transactionLimit.ToString();
 
 			string response = await HttpClientUtil.GetAsync("rawaddr/" + address, req);
 			var addrJson = JObject.Parse(response);
