@@ -32,5 +32,11 @@ namespace UniversalAppSample
 			Type sourcePageType = typeof(AddressLookupPage);
 			this.ContentFrame.Navigate(sourcePageType);
 		}
+
+		private void BlockLookupClick(object sender, RoutedEventArgs e)
+		{
+			Type sourcePageType = typeof(BlockLookupPage);
+			this.ContentFrame.Navigate(sourcePageType);
+		}
 	}
 }

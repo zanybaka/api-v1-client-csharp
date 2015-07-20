@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Info.Blockchain.API.Utilities;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +17,8 @@ namespace Info.Blockchain.API.BlockExplorer
         {
             Hash = (string)i["hash"];
             Type = (string)i["type"];
-            InitialTime = (long)i["initial_time"];
-            LastTime = (long)i["last_time"];
+            InitialTime = DateTimeUtil.UnixTimeStampToDateTime((long)i["initial_time"] / 1000);
+            LastTime = DateTimeUtil.UnixTimeStampToDateTime((long)i["last_time"] / 1000);
             InitialIP = (string)i["initial_ip"];
             NConnected = (int)i["nconnected"];
             RelayedCount = (int)i["relayed_count"];
@@ -36,15 +37,15 @@ namespace Info.Blockchain.API.BlockExplorer
 
         /// <summary>
         /// The time Blockchain.info first received an inventory message
-        /// containing a hash for this transaction (unix time in ms).
+        /// containing a hash for this transaction.
         /// </summary>
-        public long InitialTime { get; private set; }
+        public DateTime InitialTime { get; private set; }
 
         /// <summary>
         /// The last time Blockchain.info received an inventory message 
-        /// containing a hash for this transaction (unix time in ms).
+        /// containing a hash for this transaction.
         /// </summary>
-        public long LastTime { get; private set; }
+        public DateTime LastTime { get; private set; }
 
         /// <summary>
         /// IP of the peer from which Blockchain.info first received an inventory 

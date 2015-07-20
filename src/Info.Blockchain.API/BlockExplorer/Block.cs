@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Info.Blockchain.API.Utilities;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,7 +23,7 @@ namespace Info.Blockchain.API.BlockExplorer
             Nonce = (long)b["nonce"];
             Size = (long)b["size"];
             Index = (long)b["block_index"];
-            ReceivedTime = b["received_time"] != null ? (long)b["received_time"] : Time;
+			ReceivedTime = b["received_time"] != null ? DateTimeUtil.UnixTimeStampToDateTime((long)b["received_time"]) : this.Time;
             RelayedBy = b["relayed_by"] != null ? (string)b["relayed_by"] : null;
 
             var txs = b["tx"].Select(x => new Transaction((JObject)x, Height, false)).ToList();
@@ -72,7 +73,7 @@ namespace Info.Blockchain.API.BlockExplorer
         /// <summary>
         /// The time this block was received by Blockchain.info
         /// </summary>
-        public long ReceivedTime { get; private set; }
+        public DateTime ReceivedTime { get; private set; }
 
         /// <summary>
         /// IP address that relayed the block

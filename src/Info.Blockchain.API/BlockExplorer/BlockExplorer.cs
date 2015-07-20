@@ -43,8 +43,10 @@ namespace Info.Blockchain.API.BlockExplorer
         public Transaction GetTransaction(string txHash)
         {
             var req = new NameValueCollection();
-            if (apiCode != null)
-                req["api_code"] = apiCode;
+			if (apiCode != null)
+			{
+				req["api_code"] = apiCode;
+			}
 
             string response = HttpClientUtil.Get("rawtx/" + txHash, req);
             var txJson = JObject.Parse(response);
@@ -57,9 +59,9 @@ namespace Info.Blockchain.API.BlockExplorer
         /// <param name="blockIndex">Block index</param>
         /// <returns>An instance of the Block class</returns>
         /// <exception cref="APIException">If the server returns an error</exception>
-        public Block GetBlock(long blockIndex)
+        public async Task<Block> GetBlockAsync(long blockIndex)
         {
-            return GetBlock(blockIndex.ToString());
+            return await GetBlockAsync(blockIndex.ToString());
         }
 
         /// <summary>
@@ -68,26 +70,17 @@ namespace Info.Blockchain.API.BlockExplorer
         /// <param name="blockHash">Block hash</param>
         /// <returns>An instance of the Block class</returns>
         /// <exception cref="APIException">If the server returns an error</exception>
-        public Block GetBlock(string blockHash)
+        public async Task<Block> GetBlockAsync(string blockHash)
         {
             var req = new NameValueCollection();
-            if (apiCode != null)
-                req["api_code"] = apiCode;
+			if (apiCode != null)
+			{
+				req["api_code"] = apiCode;
+			}
 
-            string response = HttpClientUtil.Get("rawblock/" + blockHash, req);
+            string response = await HttpClientUtil.GetAsync("rawblock/" + blockHash, req);
             var txJson = JObject.Parse(response);
             return new Block(txJson);
-		}
-
-		/// <summary>
-		/// Gets data for a single address.
-		/// </summary>
-		/// <param name="address">Base58check or hash160 address string</param>
-		/// <returns>An instance of the Address class</returns>
-		/// <exception cref="APIException">If the server returns an error</exception>
-		public Address GetAddress(string address)
-		{
-			return this.GetAddressAsync(address).GetAwaiter().GetResult();
 		}
 
 		/// <summary>
@@ -144,7 +137,9 @@ namespace Info.Blockchain.API.BlockExplorer
 
 			var req = new NameValueCollection();
 			if (apiCode != null)
+			{
 				req["api_code"] = apiCode;
+			}
 			req["offset"] = offset.ToString();
 			req["limit"] = transactionLimit.ToString();
 
@@ -164,8 +159,10 @@ namespace Info.Blockchain.API.BlockExplorer
         {
             var req = new NameValueCollection();
             req["format"] = "json";
-            if (apiCode != null)
-                req["api_code"] = apiCode;
+			if (apiCode != null)
+			{
+				req["api_code"] = apiCode;
+			}
 
             string response = HttpClientUtil.Get("block-height/" + height, req);
             var blocksJson = JObject.Parse(response);
@@ -189,8 +186,10 @@ namespace Info.Blockchain.API.BlockExplorer
         {
             var req = new NameValueCollection();
             req["active"] = address;
-            if (apiCode != null)
-                req["api_code"] = apiCode;
+			if (apiCode != null)
+			{
+				req["api_code"] = apiCode;
+			}
 
             string response = null;
 
@@ -223,8 +222,10 @@ namespace Info.Blockchain.API.BlockExplorer
         public LatestBlock GetLatestBlock()
         {
             var req = new NameValueCollection();
-            if (apiCode != null)
-                req["api_code"] = apiCode;
+			if (apiCode != null)
+			{
+				req["api_code"] = apiCode;
+			}
 
             string response = HttpClientUtil.Get("latestblock", req);
             var latestBlockJson = JObject.Parse(response);
@@ -240,8 +241,10 @@ namespace Info.Blockchain.API.BlockExplorer
         {
             var req = new NameValueCollection();
             req["format"] = "json";
-            if (apiCode != null)
-                req["api_code"] = apiCode;
+			if (apiCode != null)
+			{
+				req["api_code"] = apiCode;
+			}
 
             string response = HttpClientUtil.Get("unconfirmed-transactions", req);
             var txsJson = JObject.Parse(response);
@@ -282,8 +285,10 @@ namespace Info.Blockchain.API.BlockExplorer
         {
             var req = new NameValueCollection();
             req["format"] = "json";
-            if (apiCode != null)
-                req["api_code"] = apiCode;
+			if (apiCode != null)
+			{
+				req["api_code"] = apiCode;
+			}
 
             poolName = poolName == null ? null : poolName;
 
@@ -304,8 +309,10 @@ namespace Info.Blockchain.API.BlockExplorer
         {
             var req = new NameValueCollection();
             req["format"] = "json";
-            if (apiCode != null)
-                req["api_code"] = apiCode;
+			if (apiCode != null)
+			{
+				req["api_code"] = apiCode;
+			}
 
             string response = HttpClientUtil.Get("inv/" + hash, req);
             var invJson = JObject.Parse(response);

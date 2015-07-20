@@ -1,19 +1,9 @@
 ﻿using Info.Blockchain.API.BlockExplorer;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -57,8 +47,7 @@ namespace UniversalAppSample
 			TextBlock textBox = new TextBlock();
 			BitcoinValue totalValue = this.GetTransactionValue(transaction, address);
 			string btcValue = this.ToBtcString(totalValue);
-			DateTime dateTime = AddressLookupPage.UnixTimeStampToDateTime(transaction.Time);
-			textBox.Text = string.Format("{0} on {1}", btcValue, dateTime);
+			textBox.Text = string.Format("{0} on {1}", btcValue, transaction.Time);
 			this.TransactionList.Items.Add(textBox);
 		}
 
@@ -95,16 +84,9 @@ namespace UniversalAppSample
 
 		private string ToBtcString(BitcoinValue value)
 		{
-			return value.Btc.ToString() + " BTC";
+			return value.ToString() + " BTC";
 		}
 
-		public static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
-		{
-			// Unix timestamp is seconds past epoch
-			System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-			dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
-			return dtDateTime;
-		}
 
 	}
 }

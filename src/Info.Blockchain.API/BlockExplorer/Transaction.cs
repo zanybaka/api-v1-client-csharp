@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Info.Blockchain.API.Utilities;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -27,7 +28,7 @@ namespace Info.Blockchain.API.BlockExplorer
                 }
             }
 
-            Time = (long)t["time"];
+            Time = DateTimeUtil.UnixTimeStampToDateTime((long)t["time"]);
             RelayedBy = (string)t["relayed_by"];
             Hash = (string)t["hash"];
             Index = (long)t["tx_index"];
@@ -52,9 +53,9 @@ namespace Info.Blockchain.API.BlockExplorer
         public long BlockHeight { get; private set; }
 
         /// <summary>
-        /// Timestamp of the transaction (unix time in seconds)
+        /// Timestamp of the transaction
         /// </summary>
-        public long Time { get; private set; }
+        public DateTime Time { get; private set; }
 
         /// <summary>
         /// IP address that relayed the transaction

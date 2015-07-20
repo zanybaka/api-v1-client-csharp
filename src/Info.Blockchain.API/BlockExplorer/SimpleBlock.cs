@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Info.Blockchain.API.Utilities;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace Info.Blockchain.API.BlockExplorer
         {
             Height = (long)b["height"];
             Hash = (string)b["hash"];
-            Time = (long)b["time"];
+            Time = DateTimeUtil.UnixTimeStampToDateTime((long)b["time"]);
             MainChain = mainChain != null ? mainChain.Value : (bool)b["main_chain"];
         }
 
@@ -31,9 +32,9 @@ namespace Info.Blockchain.API.BlockExplorer
         public string Hash { get; private set; }
 
         /// <summary>
-        /// Block timestamp set by the miner (unix time in seconds)
+        /// Block timestamp set by the miner
         /// </summary>
-        public long Time { get; private set; }
+        public DateTime Time { get; private set; }
 
         /// <summary>
         /// Whether the block is on the main chain

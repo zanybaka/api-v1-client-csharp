@@ -13,7 +13,7 @@
 		<SplitView.Pane>
 			<StackPanel Margin="0,96,0,0">
 				<Button HorizontalAlignment="Stretch" Margin="10,0" Content="Address Lookup" Click="AddressLookupClick"/>
-				<Button Content="Test" HorizontalAlignment="Stretch" Margin="10,0"/>
+				<Button Content="Block Lookup" HorizontalAlignment="Stretch" Margin="10,0" Click="BlockLookupClick"/>
 			</StackPanel>
 		</SplitView.Pane>
 		<SplitView.Content>
