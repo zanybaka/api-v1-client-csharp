@@ -29,6 +29,17 @@ namespace Info.Blockchain.API
 		}
 
 		/// <summary>
+		/// Performs an asynchronous GET request on a Blockchain.info API resource. 
+		/// </summary>
+		/// <param name="resource">Resource path after https://blockchain.info/api/ </param>
+		/// <param name="parameters">Collection containing request parameters</param>
+		/// <returns>String response</returns>
+		public static async Task<string> GetAsync(string resource, NameValueCollection parameters = null)
+		{
+			return await OpenURL(resource, Method.Get, parameters);
+		}
+
+		/// <summary>
 		/// Performs a POST request on a Blockchain.info API resource. 
 		/// </summary>
 		/// <param name="resource">Resource path after https://blockchain.info/api/ </param>
@@ -37,6 +48,17 @@ namespace Info.Blockchain.API
 		public static string Post(string resource, NameValueCollection parameters = null)
 		{
 			return OpenURL(resource, Method.Post, parameters).GetAwaiter().GetResult();
+		}
+
+		/// <summary>
+		/// Performs an asynchronous POST request on a Blockchain.info API resource. 
+		/// </summary>
+		/// <param name="resource">Resource path after https://blockchain.info/api/ </param>
+		/// <param name="parameters">Collection containing request parameters</param>
+		/// <returns>String response</returns>
+		public static async Task<string> PostAsync(string resource, NameValueCollection parameters = null)
+		{
+			return await OpenURL(resource, Method.Post, parameters);
 		}
 
 		private static async Task<string> OpenURL(string resource, Method method,

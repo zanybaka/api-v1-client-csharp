@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Info.Blockchain.API.BlockExplorer
 {
@@ -76,33 +77,44 @@ namespace Info.Blockchain.API.BlockExplorer
             string response = HttpClientUtil.Get("rawblock/" + blockHash, req);
             var txJson = JObject.Parse(response);
             return new Block(txJson);
-        }
+		}
 
-        /// <summary>
-        /// Gets data for a single address.
-        /// </summary>
-        /// <param name="address">Base58check or hash160 address string</param>
-        /// <returns>An instance of the Address class</returns>
-        /// <exception cref="APIException">If the server returns an error</exception>
-        public Address GetAddress(string address)
-        {
-            var req = new NameValueCollection();
-            if (apiCode != null)
-                req["api_code"] = apiCode;
+		/// <summary>
+		/// Gets data for a single address.
+		/// </summary>
+		/// <param name="address">Base58check or hash160 address string</param>
+		/// <returns>An instance of the Address class</returns>
+		/// <exception cref="APIException">If the server returns an error</exception>
+		public Address GetAddress(string address)
+		{
+			return this.GetAddressAsync(address).GetAwaiter().GetResult();
+		}
 
-            string response = HttpClientUtil.Get("rawaddr/" + address, req);
-            var addrJson = JObject.Parse(response);
-            return new Address(addrJson);
-        }
+		/// <summary>
+		/// Gets data for a single address asynchronously.
+		/// </summary>
+		/// <param name="address">Base58check or hash160 address string</param>
+		/// <returns>An instance of the Address class</returns>
+		/// <exception cref="APIException">If the server returns an error</exception>
+		public async Task<Address> GetAddressAsync(string address)
+		{
+			var req = new NameValueCollection();
+			if (apiCode != null)
+				req["api_code"] = apiCode;
 
-        /// <summary>
-        /// Gets a list of blocks at the specified height. Normally, only one block will be returned, 
-        /// but in case of a chain fork, multiple blocks may be present.
-        /// </summary>
-        /// <param name="height">Block height</param>
-        /// <returns>A list of blocks at the specified height</returns>
-        /// <exception cref="APIException">If the server returns an error</exception>
-        public ReadOnlyCollection<Block> GetBlocksAtHeight(long height)
+			string response = await HttpClientUtil.GetAsync("rawaddr/" + address, req);
+			var addrJson = JObject.Parse(response);
+			return new Address(addrJson);
+		}
+
+		/// <summary>
+		/// Gets a list of blocks at the specified height. Normally, only one block will be returned, 
+		/// but in case of a chain fork, multiple blocks may be present.
+		/// </summary>
+		/// <param name="height">Block height</param>
+		/// <returns>A list of blocks at the specified height</returns>
+		/// <exception cref="APIException">If the server returns an error</exception>
+		public ReadOnlyCollection<Block> GetBlocksAtHeight(long height)
         {
             var req = new NameValueCollection();
             req["format"] = "json";
