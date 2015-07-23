@@ -1,35 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Newtonsoft.Json;
 
 namespace Info.Blockchain.API.Wallet
-{  
-    /// <summary>
-    /// Used as a response object to the `send` and `sendMany` methods in the `Wallet` class.
-    /// </summary>
-    public class PaymentResponse
-    {
-        public PaymentResponse(string message, string txHash, string notice)
-        {
-            Message = message;
-            TxHash = txHash;
-            Notice = notice;
-        }
+{
+	/// <summary>
+	/// Used as a response object to the `send` and `sendMany` methods in the `Wallet` class.
+	/// </summary>
+	public class PaymentResponse
+	{
+		[JsonConstructor]
+		private PaymentResponse()
+		{
+		}
 
-        /// <summary>
-        /// Response message from the server
-        /// </summary>
-        public string Message { get; private set; }
+		/// <summary>
+		/// Response message from the server
+		/// </summary>
+		[JsonProperty("message")]
+		public string Message { get; private set; }
 
-        /// <summary>
-        /// Transaction hash
-        /// </summary>
-        public string TxHash { get; private set; }
+		/// <summary>
+		/// Transaction hash
+		/// </summary>
+		[JsonProperty("tx_hash")]
+		public string TxHash { get; private set; }
 
-        /// <summary>
-        /// Additional response message from the server
-        /// </summary>
-        public string Notice { get; private set; }
-    }
+		/// <summary>
+		/// Additional response message from the server
+		/// </summary>
+		[JsonProperty("notice")]
+		public string Notice { get; private set; }
+	}
 }

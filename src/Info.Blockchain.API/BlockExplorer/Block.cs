@@ -1,88 +1,102 @@
-﻿using Info.Blockchain.API.Utilities;
-using Newtonsoft.Json.Linq;
+﻿using Info.Blockchain.API.Json;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 
 namespace Info.Blockchain.API.BlockExplorer
 {
-    /// <summary>
-    /// This class is a full representation of a block. For simpler representations, see SimpleBlock and LatestBlock.
-    /// </summary>
-    public class Block : SimpleBlock
-    {
-        public Block(JObject b) : base(b)
-        {
-            Version = (int)b["ver"];
-            PreviousBlockHash = (string)b["prev_block"];
-            MerkleRoot = (string)b["mrkl_root"];
-            Bits = (long)b["bits"];
-            Fees = BitcoinValue.FromSatoshis((long)b["fee"]);
-            Nonce = (long)b["nonce"];
-            Size = (long)b["size"];
-            Index = (long)b["block_index"];
-			ReceivedTime = b["received_time"] != null ? DateTimeUtil.UnixTimeStampToDateTime((long)b["received_time"]) : this.Time;
-            RelayedBy = b["relayed_by"] != null ? (string)b["relayed_by"] : null;
+	/// <summary>
+	/// This class is a full representation of a block. For simpler representations, see SimpleBlock and LatestBlock.
+	/// </summary>
+	public class Block : SimpleBlock
+	{
+		private DateTime receivedTime = DateTime.MinValue;
 
-            var txs = b["tx"].Select(x => new Transaction((JObject)x, Height, false)).ToList();
-            Transactions = new ReadOnlyCollection<Transaction>(txs);
-        }
+		[JsonConstructor]
+		private Block() : base()
+		{
+		}
 
-        /// <summary>
-        /// Block version as specified by the protocol
-        /// </summary>
-        public int Version { get; private set; }
+		/// <summary>
+		/// Block version as specified by the protocol
+		/// </summary>
+		[JsonProperty("ver")]
+		public int Version { get; private set; }
 
-        /// <summary>
-        /// Hash of the previous block
-        /// </summary>
-        public string PreviousBlockHash { get; private set; }
+		/// <summary>
+		/// Hash of the previous block
+		/// </summary>
+		[JsonProperty("prev_block")]
+		public string PreviousBlockHash { get; private set; }
 
-        /// <summary>
-        /// Merkle root of the block
-        /// </summary>
-        public string MerkleRoot { get; private set; }
+		/// <summary>
+		/// Merkle root of the block
+		/// </summary>
+		[JsonProperty("mrkl_root")]
+		public string MerkleRoot { get; private set; }
 
-        /// <summary>
-        /// Representation of the difficulty target for this block
-        /// </summary>
-        public long Bits { get; private set; }
+		/// <summary>
+		/// Representation of the difficulty target for this block
+		/// </summary>
+		[JsonProperty("bits")]
+		public long Bits { get; private set; }
 
-        /// <summary>
-        /// Total transaction fees from this block
-        /// </summary>
-        public BitcoinValue Fees { get; private set; }
+		/// <summary>
+		/// Total transaction fees from this block
+		/// </summary>
+		[JsonProperty("fee")]
+		[JsonConverter(typeof(BitcoinValueJsonConverter))]
+		public BitcoinValue Fees { get; private set; }
 
-        /// <summary>
-        /// Block nonce
-        /// </summary>
-        public long Nonce { get; private set; }
+		/// <summary>
+		/// Block nonce
+		/// </summary>
+		[JsonProperty("nonce")]
+		public long Nonce { get; private set; }
 
-        /// <summary>
-        /// Serialized size of this block
-        /// </summary>
-        public long Size { get; private set; }
+		/// <summary>
+		/// Serialized size of this block
+		/// </summary>
+		[JsonProperty("size")]
+		public long Size { get; private set; }
 
-        /// <summary>
-        /// Index of this block
-        /// </summary>
-        public long Index { get; private set; }
+		/// <summary>
+		/// Index of this block
+		/// </summary>
+		[JsonProperty("block_index")]
+		public long Index { get; private set; }
 
-        /// <summary>
-        /// The time this block was received by Blockchain.info
-        /// </summary>
-        public DateTime ReceivedTime { get; private set; }
+		/// <summary>
+		/// The time this block was received by Blockchain.info
+		/// </summary>
+		[JsonProperty("received_time")]
+		[JsonConverter(typeof(UnixDateTimeJsonConverter))]
+		public DateTime ReceivedTime
+		{
+			get
+			{
+				if (this.receivedTime == DateTime.MinValue)
+				{
+					return this.Time;
+				}
+				return this.receivedTime;
+			}
+			private set
+			{
+				this.receivedTime = value;
+			}
+		}
 
-        /// <summary>
-        /// IP address that relayed the block
-        /// </summary>
-        public string RelayedBy { get; private set; }
+		/// <summary>
+		/// IP address that relayed the block
+		/// </summary>
+		[JsonProperty("relayed_by")]
+		public string RelayedBy { get; private set; }
 
-        /// <summary>
-        /// Transactions in the block
-        /// </summary>
-        public ReadOnlyCollection<Transaction> Transactions { get; private set; }
-    }
+		/// <summary>
+		/// Transactions in the block
+		/// </summary>
+		[JsonProperty("tx")] //TODO
+		public ReadOnlyCollection<Transaction> Transactions { get; private set; }
+	}
 }

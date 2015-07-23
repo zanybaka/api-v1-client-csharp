@@ -1,33 +1,28 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 
 namespace Info.Blockchain.API.BlockExplorer
 {
-    /// <summary>
-    /// Used as a response to the `GetLatestBlock` method in the `BlockExplorer` class.
-    /// </summary>
-    public class LatestBlock : SimpleBlock
-    {
-        public LatestBlock(JObject b) : base(b, true)
-        {
-            Index = (long)b["block_index"];
+	/// <summary>
+	/// Used as a response to the `GetLatestBlock` method in the `BlockExplorer` class.
+	/// </summary>
+	public class LatestBlock : SimpleBlock
+	{
+		[JsonConstructor]
+		private LatestBlock() : base(true)
+		{
+		}
 
-            var txs = b["txIndexes"].AsJEnumerable().Select(x => (long)x).ToList();
-            TransactionIndexes = new ReadOnlyCollection<long>(txs);
-        }
+		/// <summary>
+		/// Block index
+		/// </summary>
+		[JsonProperty("block_index")]
+		public long Index { get; private set; }
 
-        /// <summary>
-        /// Block index
-        /// </summary>
-        public long Index { get; private set; }
-
-        /// <summary>
-        /// Transaction indexes included in this block
-        /// </summary>
-        public ReadOnlyCollection<long> TransactionIndexes { get; private set; }
-    }
+		/// <summary>
+		/// Transaction indexes included in this block
+		/// </summary>
+		[JsonProperty("txIndexes")]
+		public ReadOnlyCollection<long> TransactionIndexes { get; private set; }
+	}
 }

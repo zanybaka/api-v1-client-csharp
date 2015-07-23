@@ -1,95 +1,79 @@
-﻿using Info.Blockchain.API.Utilities;
-using Newtonsoft.Json.Linq;
+﻿using Info.Blockchain.API.Json;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
 
 namespace Info.Blockchain.API.BlockExplorer
 {
-    /// <summary>
-    /// Represents a transaction.
-    /// </summary>
-    public class Transaction
-    {
-        public Transaction(JObject t, long? blockHeight = null, bool? doubleSpend = null)
-        {
-            DoubleSpend = doubleSpend != null ? doubleSpend.Value : (bool)t["double_spend"];
-            BlockHeight = blockHeight != null ? blockHeight.Value : -1;
-            
-            // this mitigates the bug where unconfirmed txs lack the block height field
-            if (BlockHeight == -1)
-            {
-                JToken height = t["block_height"];
-                if (height != null)
-                {
-                    BlockHeight = (long)t["block_height"];
-                }
-            }
+	/// <summary>
+	/// Represents a transaction.
+	/// </summary>
+	public class Transaction
+	{
+		[JsonConstructor]
+		private Transaction()
+		{
+		}
 
-            Time = DateTimeUtil.UnixTimeStampToDateTime((long)t["time"]);
-            RelayedBy = (string)t["relayed_by"];
-            Hash = (string)t["hash"];
-            Index = (long)t["tx_index"];
-            Version = (int)t["ver"];
-            Size = (long)t["size"];
+		/// <summary>
+		/// Whether the transaction is a double spend
+		/// </summary>
+		[JsonProperty("double_spend")]
+		public bool DoubleSpend { get; private set; }
 
-            var ins = t["inputs"].AsJEnumerable().Select(x => new Input((JObject)x)).ToList();
-            Inputs = new ReadOnlyCollection<Input>(ins);
+		/// <summary>
+		/// Block height of the parent block. -1 for unconfirmed transactions.
+		/// </summary>
+		[JsonProperty("block_height")]
+		public long BlockHeight { get; private set; } = -1;
 
-            var outs = t["out"].AsJEnumerable().Select(x => new Output((JObject)x)).ToList();
-            Outputs = new ReadOnlyCollection<Output>(outs);
-        }
+		/// <summary>
+		/// Timestamp of the transaction
+		/// </summary>
+		[JsonProperty("time")]
+		[JsonConverter(typeof(UnixDateTimeJsonConverter))]
+		public DateTime Time { get; private set; }
 
-        /// <summary>
-        /// Whether the transaction is a double spend
-        /// </summary>
-        public bool DoubleSpend { get; private set; }
+		/// <summary>
+		/// IP address that relayed the transaction
+		/// </summary>
+		[JsonProperty("relayed_by")]
+		public string RelayedBy { get; private set; }
 
-        /// <summary>
-        /// Block height of the parent block. -1 for unconfirmed transactions.
-        /// </summary>
-        public long BlockHeight { get; private set; }
+		/// <summary>
+		/// Transaction hash
+		/// </summary>
+		[JsonProperty("hash")]
+		public string Hash { get; private set; }
 
-        /// <summary>
-        /// Timestamp of the transaction
-        /// </summary>
-        public DateTime Time { get; private set; }
+		/// <summary>
+		/// Transaction index
+		/// </summary>
+		[JsonProperty("tx_index")]
+		public long Index { get; private set; }
 
-        /// <summary>
-        /// IP address that relayed the transaction
-        /// </summary>
-        public string RelayedBy { get; private set; }
+		/// <summary>
+		/// Transaction format version
+		/// </summary>
+		[JsonProperty("ver")]
+		public int Version { get; private set; }
 
-        /// <summary>
-        /// Transaction hash
-        /// </summary>
-        public string Hash { get; private set; }
+		/// <summary>
+		/// Serialized size of the transaction
+		/// </summary>
+		[JsonProperty("size")]
+		public long Size { get; private set; }
 
-        /// <summary>
-        /// Transaction index
-        /// </summary>
-        public long Index { get; private set; }
+		/// <summary>
+		/// List of inputs
+		/// </summary>
+		[JsonProperty("inputs")]
+		public ReadOnlyCollection<Input> Inputs { get; private set; }
 
-        /// <summary>
-        /// Transaction format version
-        /// </summary>
-        public int Version { get; private set; }
-
-        /// <summary>
-        /// Serialized size of the transaction
-        /// </summary>
-        public long Size { get; private set; }
-
-        /// <summary>
-        /// List of inputs
-        /// </summary>
-        public ReadOnlyCollection<Input> Inputs { get; private set; }
-
-        /// <summary>
-        /// List of outputs
-        /// </summary>
-        public ReadOnlyCollection<Output> Outputs { get; private set; }
-    }
+		/// <summary>
+		/// List of outputs
+		/// </summary>
+		[JsonProperty("out")]
+		public ReadOnlyCollection<Output> Outputs { get; private set; }
+	}
 }
