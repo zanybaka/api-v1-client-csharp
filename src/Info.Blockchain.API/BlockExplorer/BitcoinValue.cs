@@ -18,7 +18,7 @@
 
 		public decimal Bits => this.btc * BitcoinValue.BitsPerBitcoin;
 
-		public decimal Satoshis => this.btc * BitcoinValue.SatoshisPerBitcoin;
+		public long Satoshis => (long)this.btc * BitcoinValue.SatoshisPerBitcoin;
 
 		public static BitcoinValue Zero => new BitcoinValue();
 

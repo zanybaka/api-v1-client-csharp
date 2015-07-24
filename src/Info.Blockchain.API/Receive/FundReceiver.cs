@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using Info.Blockchain.API.Abstractions;
+using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace Info.Blockchain.API.Receive
 {
@@ -6,28 +8,25 @@ namespace Info.Blockchain.API.Receive
 	/// This class reflects the functionality documented at at https://blockchain.info/api/api_receive. 
 	/// It allows merchants to create forwarding addresses and be notified upon payment.
 	/// </summary>
-	public class Receive
+	public class FundReceiver
 	{
+		private IHttpClient httpClient { get; }
+		internal FundReceiver(IHttpClient httpClient)
+		{
+			this.httpClient = httpClient;
+		}
+
 		/// <summary>
 		/// Calls the 'api/receive' endpoint and creates a forwarding address.
 		/// </summary>
 		/// <param name="receivingAddress">Destination address where the payment should be sent</param>
 		/// <param name="callbackUrl">Callback URI that will be called upon payment</param>
-		/// <param name="apiCode">Blockchain.info API code</param>
 		/// <returns>An instance of the ReceiveResponse class</returns>
-		/// <exception cref="APIException">If the server returns an error</exception>
-		public static ReceiveResponse ReceiveFunds(string receivingAddress, string callbackUrl, string apiCode = null)
+		/// <exception cref="ServerApiException">If the server returns an error</exception>
+		public async Task<ReceiveResponse> ReceiveFundsAsync(string receivingAddress, string callbackUrl)
 		{
-			var req = new NameValueCollection();
-			req["address"] = receivingAddress;
-			req["callback"] = callbackUrl;
-			req["method"] = "create";
-
-			if (apiCode != null)
-				req["api_code"] = apiCode;
-
-			string response = HttpClientUtil.Post("api/receive", req);
-			ReceiveResponse receiveResponse = JsonConvert.DeserializeObject<ReceiveResponse>(response);
+			ReceiveRequest request = new ReceiveRequest(receivingAddress, callbackUrl);
+			ReceiveResponse receiveResponse = await this.httpClient.PostAsync<ReceiveRequest, ReceiveResponse>("api/receive", request);
 			return receiveResponse;
 		}
 	}

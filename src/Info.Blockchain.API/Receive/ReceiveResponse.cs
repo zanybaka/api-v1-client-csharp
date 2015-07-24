@@ -2,6 +2,25 @@
 
 namespace Info.Blockchain.API.Receive
 {
+
+	public class ReceiveRequest
+	{
+		[JsonProperty("address")]
+		public string ReceivingAddress { get; }
+		[JsonProperty("callback")]
+		public string CallbackUrl { get; }
+		[JsonProperty("method")]
+		public string Method { get; }
+
+		public ReceiveRequest(string receivingAddress, string callbackUrl)
+		{
+			this.ReceivingAddress = receivingAddress;
+			this.CallbackUrl = callbackUrl;
+			this.Method = "create";
+		}
+	}
+
+
 	/// <summary>
 	/// This class is used as a response object to the `Receive.receive` method. 
 	/// </summary>

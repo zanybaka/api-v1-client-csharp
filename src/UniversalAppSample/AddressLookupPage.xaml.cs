@@ -1,4 +1,5 @@
-﻿using Info.Blockchain.API.BlockExplorer;
+﻿using Info.Blockchain.API;
+using Info.Blockchain.API.BlockExplorer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,17 +29,19 @@ namespace UniversalAppSample
 				//TODO
 			}
 
-			BlockExplorer blockExplorer = new BlockExplorer();
-			Address address = await blockExplorer.GetAddressAsync(addressString);
-
-			this.TotalSentValue.Text = this.ToBtcString(address.TotalSent);
-			this.TotalReceivedValue.Text = this.ToBtcString(address.TotalReceived);
-			this.FinalBalanceValue.Text = this.ToBtcString(address.FinalBalance);
-			this.Hash160Value.Text = address.Hash160;
-			this.TransactionList.Items.Clear();
-			foreach(Transaction transaction in address.Transactions)
+			using (BlockchainApiHelper apiHelper = new BlockchainApiHelper())
 			{
-				this.AddTransaction(transaction, address);
+				Address address = await apiHelper.BlockExpolorer.GetAddressAsync(addressString);
+				
+				this.TotalSentValue.Text = this.ToBtcString(address.TotalSent);
+				this.TotalReceivedValue.Text = this.ToBtcString(address.TotalReceived);
+				this.FinalBalanceValue.Text = this.ToBtcString(address.FinalBalance);
+				this.Hash160Value.Text = address.Hash160;
+				this.TransactionList.Items.Clear();
+				foreach (Transaction transaction in address.Transactions)
+				{
+					this.AddTransaction(transaction, address);
+				}
 			}
 		}
 
@@ -86,7 +89,6 @@ namespace UniversalAppSample
 		{
 			return value.ToString() + " BTC";
 		}
-
 
 	}
 }

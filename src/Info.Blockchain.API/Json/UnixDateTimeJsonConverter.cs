@@ -12,7 +12,7 @@ namespace Info.Blockchain.API.Json
 		{
 			if (reader.Value is long)
 			{
-				double millisecondsAfterEpoch = (long)reader.Value / 1000d;
+				double millisecondsAfterEpoch = (long)reader.Value * 1000d;
 				return epoch.AddMilliseconds(millisecondsAfterEpoch);
 			}
 			return null;

@@ -96,7 +96,7 @@ namespace Info.Blockchain.API.BlockExplorer
 		/// <summary>
 		/// Transactions in the block
 		/// </summary>
-		[JsonProperty("tx")] //TODO
+		[JsonProperty("tx")] 
 		public ReadOnlyCollection<Transaction> Transactions { get; private set; }
 	}
 }
