@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Info.Blockchain.API.Abstractions;
 
@@ -38,6 +39,14 @@ namespace Info.Blockchain.API.ExchangeRates
 		/// <exception cref="ServerApiException">If the server returns an error</exception>
 		public async Task<double> ToBtcAsync(string currency, double value)
 		{
+			if (string.IsNullOrWhiteSpace(currency))
+			{
+				throw new ArgumentNullException(nameof(currency));
+			}
+			if (value <= 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(value), "Value must be greater than 0");
+			}
 			QueryString queryString = new QueryString();
 			queryString.Add("currency", currency);
 			queryString.Add("value", value.ToString());

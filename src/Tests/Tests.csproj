@@ -67,6 +67,7 @@
     <Compile Include="FakeHttpClient.cs" />
     <Compile Include="IntegrationTests\AddressTests.cs" />
     <Compile Include="IntegrationTests\BlockTests.cs" />
+    <Compile Include="IntegrationTests\CurrencyTests.cs" />
     <Compile Include="IntegrationTests\InventoryDataTests.cs" />
     <Compile Include="IntegrationTests\TransactionTests.cs" />
     <Compile Include="IntegrationTests\UnspentOutputTests.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="UnitTests\BlockTests.cs" />
     <Compile Include="IntegrationTests\CreateWalletTests.cs" />
     <Compile Include="UnitTests\CreateWalletTests.cs" />
+    <Compile Include="UnitTests\CurrencyTests.cs" />
     <Compile Include="UnitTests\InventoryDataTests.cs" />
     <Compile Include="UnitTests\TransactionTests.cs" />
     <Compile Include="UnitTests\UnitTestUtil.cs" />
