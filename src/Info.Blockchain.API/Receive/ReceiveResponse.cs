@@ -1,9 +1,11 @@
 ﻿using Newtonsoft.Json;
 
+// ReSharper disable UnusedAutoPropertyAccessor.Local
+
 namespace Info.Blockchain.API.Receive
 {
 
-	public class ReceiveRequest
+	internal class ReceiveRequest
 	{
 		[JsonProperty("address")]
 		public string ReceivingAddress { get; }

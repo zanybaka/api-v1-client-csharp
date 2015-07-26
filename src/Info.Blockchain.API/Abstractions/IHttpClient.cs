@@ -12,23 +12,6 @@ namespace Info.Blockchain.API.Abstractions
 		Task<TResponse> PostAsync<TPost, TResponse>(string route, TPost postObject, Func<string, TResponse> customDeserialization = null);
 	}
 
-	public class HttpResponse<T>
-	{
-		public T ResultObject { get; }
-
-		public HttpResponse(T resultObject)
-		{
-			this.ResultObject = resultObject;
-		}
-	}
-
-	public enum Method
-	{
-		Post,
-		Get
-	}
-
-
 	public class QueryString
 	{
 		private Dictionary<string, string> queryString { get; } = new Dictionary<string, string>();
@@ -53,8 +36,7 @@ namespace Info.Blockchain.API.Abstractions
 		public override string ToString()
 		{
 			IEnumerable<string> queryStringList = this.queryString.Select(kv => $"{kv.Key}={kv.Value}");
-			string queryString = "?" + string.Join("&", queryStringList);
-			return queryString;
+			return "?" + string.Join("&", queryStringList);
 		}
 	}
 }

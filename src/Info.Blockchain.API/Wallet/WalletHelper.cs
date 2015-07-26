@@ -1,11 +1,9 @@
-﻿using Info.Blockchain.API.Abstractions;
-using Info.Blockchain.API.BlockExplorer;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Info.Blockchain.API.Abstractions;
+using Info.Blockchain.API.BlockExplorer;
 
 namespace Info.Blockchain.API.Wallet
 {
@@ -24,6 +22,7 @@ namespace Info.Blockchain.API.Wallet
 
 		/// <summary>
 		/// </summary>
+		/// <param name="httpClient">IHttpClient to access Blockchain REST Api</param>
 		/// <param name="identifier">Wallet identifier (GUID)</param>
 		/// <param name="password">Decryption password</param>
 		/// <param name="secondPassword">Second password</param>
@@ -59,7 +58,7 @@ namespace Info.Blockchain.API.Wallet
 
 			SinglePaymentRequest paymentRequest = new SinglePaymentRequest(this.password, this.secondPassword, toAddress, amount.Satoshis, fromAddress, fee, note);
 
-			string route = string.Format("merchant/{0}/payment", this.identifier);
+			string route = $"merchant/{this.identifier}/payment";
 
 			PaymentResponse paymentResponse = await this.httpClient.PostAsync<SinglePaymentRequest, PaymentResponse>(route, paymentRequest);
 			return paymentResponse;
@@ -86,7 +85,7 @@ namespace Info.Blockchain.API.Wallet
 			ManyPaymentRequest paymentRequest = new ManyPaymentRequest(this.password, this.secondPassword, recipients, fromAddress, fee, note);
 
 
-			string route = string.Format("merchant/{0}/sendmany", this.identifier);
+			string route = $"merchant/{this.identifier}/sendmany";
 
 			PaymentResponse paymentResponse = await this.httpClient.PostAsync<ManyPaymentRequest, PaymentResponse>(route, paymentRequest);
 

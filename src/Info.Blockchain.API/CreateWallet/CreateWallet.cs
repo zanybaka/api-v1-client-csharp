@@ -1,17 +1,19 @@
 ﻿using Newtonsoft.Json;
 
+// ReSharper disable UnusedAutoPropertyAccessor.Local
+
 namespace Info.Blockchain.API.CreateWallet
 {
-	public class CreateWalletRequest
+	internal class CreateWalletRequest
 	{
 		[JsonProperty("email")]
-		private string Email { get; }
+		public string Email { get; }
 		[JsonProperty("label")]
-		private string Label { get; }
+		public string Label { get; }
 		[JsonProperty("password")]
-		private string Password { get; }
+		public string Password { get; }
 		[JsonProperty("priv")]
-		private string PrivateKey { get; }
+		public string PrivateKey { get; }
 
 		public CreateWalletRequest(string password, string privateKey = null, string label = null, string email = null)
 		{

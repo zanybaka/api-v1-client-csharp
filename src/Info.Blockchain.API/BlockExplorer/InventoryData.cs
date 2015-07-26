@@ -1,6 +1,7 @@
-﻿using Info.Blockchain.API.Json;
+﻿using System;
+using Info.Blockchain.API.Json;
 using Newtonsoft.Json;
-using System;
+// ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace Info.Blockchain.API.BlockExplorer
 {
@@ -48,7 +49,7 @@ namespace Info.Blockchain.API.BlockExplorer
 		/// message containing a hash for this transaction.
 		/// </summary>
 		[JsonProperty("initial_ip")]
-		public string InitialIP { get; private set; }
+		public string InitialIp { get; private set; }
 
 		/// <summary>
 		/// Number of nodes that Blockchain.info is currently connected to.

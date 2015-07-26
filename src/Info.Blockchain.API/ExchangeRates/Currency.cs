@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+// ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace Info.Blockchain.API.ExchangeRates
 {
@@ -34,7 +35,7 @@ namespace Info.Blockchain.API.ExchangeRates
 		/// 15 minutes delayed market price
 		/// </summary>
 		[JsonProperty("15m")]
-		public double Price15m { get; private set; }
+		public double Price15M { get; private set; }
 
 		/// <summary>
 		/// Currency symbol

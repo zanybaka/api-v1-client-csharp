@@ -1,17 +1,16 @@
-﻿using Info.Blockchain.API.Abstractions;
-using Newtonsoft.Json;
-using System;
-using System.Linq;
+﻿using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Info.Blockchain.API.Abstractions;
+using Newtonsoft.Json;
 
 namespace Info.Blockchain.API
 {
-	public class DotNetHttpClient : IHttpClient
+	internal class DotNetHttpClient : IHttpClient
 	{
-		private const string baseUri = "https://blockchain.info/";
-		private const int timeoutMs = 10000;
+		private const string BASE_URI = "https://blockchain.info/";
+		private const int TIMEOUT_MS = 10000;
 		private HttpClient httpClient { get; }
 
 		public string ApiCode { get; set; }
@@ -19,10 +18,10 @@ namespace Info.Blockchain.API
 		public DotNetHttpClient(string apiCode)
 		{
 			this.ApiCode = apiCode;
-			this.httpClient = new HttpClient()
+			this.httpClient = new HttpClient
 			{
-				BaseAddress = new Uri(baseUri),
-				Timeout = TimeSpan.FromMilliseconds(timeoutMs)
+				BaseAddress = new Uri(DotNetHttpClient.BASE_URI),
+				Timeout = TimeSpan.FromMilliseconds(DotNetHttpClient.TIMEOUT_MS)
 			};
 		}
 

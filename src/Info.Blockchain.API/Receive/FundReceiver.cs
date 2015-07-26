@@ -1,6 +1,5 @@
-﻿using Info.Blockchain.API.Abstractions;
-using Newtonsoft.Json;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Info.Blockchain.API.Abstractions;
 
 namespace Info.Blockchain.API.Receive
 {

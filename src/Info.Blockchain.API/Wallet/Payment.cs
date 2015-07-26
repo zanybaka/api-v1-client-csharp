@@ -1,68 +1,69 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Info.Blockchain.API.BlockExplorer;
 using Newtonsoft.Json;
-using System.Linq;
+// ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace Info.Blockchain.API.Wallet
 {
 	/// <summary>
 	/// Used as a request object to the `sendMany` methods in the `Wallet` class.
 	/// </summary>
-	public class ManyPaymentRequest
+	internal class ManyPaymentRequest
 	{
 		[JsonProperty("fee")]
-		public BitcoinValue? fee { get; }
+		public BitcoinValue? Fee { get; }
 		[JsonProperty("from")]
-		public string fromAddress { get; }
+		public string FromAddress { get; }
 		[JsonProperty("note")]
-		public string note { get; }
+		public string Note { get; }
 		[JsonProperty("main_password")]
-		public string password { get; }
+		public string Password { get; }
 		[JsonProperty("second_password")]
-		public string secondPassword { get; }
+		public string SecondPassword { get; }
 		[JsonProperty("recipients")]
-		public Dictionary<string, long> recipients { get; }
+		public Dictionary<string, long> Recipients { get; }
 
 		public ManyPaymentRequest(string password, string secondPassword, Dictionary<string, BitcoinValue> recipients, string fromAddress = null, BitcoinValue? fee = null, string note = null)
 		{
-			this.recipients = recipients.ToDictionary(kv => kv.Key, kv => kv.Value.Satoshis);
-			this.fromAddress = fromAddress;
-			this.fee = fee;
-			this.note = note;
-			this.password = password;
-			this.secondPassword = secondPassword;
+			this.Recipients = recipients.ToDictionary(kv => kv.Key, kv => kv.Value.Satoshis);
+			this.FromAddress = fromAddress;
+			this.Fee = fee;
+			this.Note = note;
+			this.Password = password;
+			this.SecondPassword = secondPassword;
 		}
 	}
 
 	/// <summary>
 	/// Used as a request object to the `send` methods in the `Wallet` class.
 	/// </summary>
-	public class SinglePaymentRequest
+	internal class SinglePaymentRequest
 	{
 		[JsonProperty("fee")]
-		public BitcoinValue? fee { get; }
+		public BitcoinValue? Fee { get; }
 		[JsonProperty("from")]
-		public string fromAddress { get; }
+		public string FromAddress { get; }
 		[JsonProperty("note")]
-		public string note { get; }
+		public string Note { get; }
 		[JsonProperty("main_password")]
-		public string password { get; }
+		public string Password { get; }
 		[JsonProperty("second_password")]
-		public string secondPassword { get; }
+		public string SecondPassword { get; }
 		[JsonProperty("to")]
-		public string toAddress { get; }
+		public string ToAddress { get; }
 		[JsonProperty("amount")]
-		public long sendAmount { get; }
+		public long SendAmount { get; }
 
 		public SinglePaymentRequest(string password, string secondPassword, string toAddress, long sendAmount, string fromAddress = null, BitcoinValue? fee = null, string note = null)
 		{
-			this.toAddress = toAddress;
-			this.sendAmount = sendAmount;
-			this.fromAddress = fromAddress;
-			this.fee = fee;
-			this.note = note;
-			this.password = password;
-			this.secondPassword = secondPassword;
+			this.ToAddress = toAddress;
+			this.SendAmount = sendAmount;
+			this.FromAddress = fromAddress;
+			this.Fee = fee;
+			this.Note = note;
+			this.Password = password;
+			this.SecondPassword = secondPassword;
 		}
 	}
 

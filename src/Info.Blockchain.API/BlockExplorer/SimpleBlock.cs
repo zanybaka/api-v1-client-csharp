@@ -1,8 +1,9 @@
-﻿using Info.Blockchain.API.Json;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
+using Info.Blockchain.API.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+
 // ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace Info.Blockchain.API.BlockExplorer
@@ -13,6 +14,7 @@ namespace Info.Blockchain.API.BlockExplorer
 	public class SimpleBlock
 	{
 		[JsonConstructor]
+		// ReSharper disable once UnusedMember.Local
 		private SimpleBlock()
 		{
 

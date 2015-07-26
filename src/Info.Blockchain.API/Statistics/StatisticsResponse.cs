@@ -1,6 +1,7 @@
 ﻿using Info.Blockchain.API.BlockExplorer;
 using Info.Blockchain.API.Json;
 using Newtonsoft.Json;
+// ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace Info.Blockchain.API.Statistics
 {
@@ -18,65 +19,65 @@ namespace Info.Blockchain.API.Statistics
 		/// Trade volume in the past 24 hours (in BTC)
 		/// </summary>
 		[JsonProperty("trade_volume_btc")]
-		public double TradeVolumeBTC { get; private set; }
+		public double TradeVolumeBtc { get; private set; }
 
 		/// <summary>
 		/// Trade volume in the past 24 hours (in USD)
 		/// </summary>
 		[JsonProperty("trade_volume_usd")]
-		public double TradeVolumeUSD { get; private set; }
+		public double TradeVolumeUsd { get; private set; }
 
 		/// <summary>
 		/// Miners' revenue in BTC
 		/// </summary>
 		[JsonProperty("miners_revenue_btc")]
-		public double MinersRevenueBTC { get; private set; }
+		public double MinersRevenueBtc { get; private set; }
 
 		/// <summary>
 		/// Miners' revenue in USD
 		/// </summary>
 		[JsonProperty("miners_revenue_usd")]
-		public double MinersRevenueUSD { get; private set; }
+		public double MinersRevenueUsd { get; private set; }
 
 		/// <summary>
 		/// Current market price in USD
 		/// </summary>
 		[JsonProperty("market_price_usd")]
-		public double MarketPriceUSD { get; private set; }
+		public double MarketPriceUsd { get; private set; }
 
 		/// <summary>
 		/// Estimated transaction volume in the past 24 hours
 		/// </summary>
 		[JsonProperty("estimated_transaction_volume_usd")]
-		public double EstimatedTransactionVolumeUSD { get; private set; }
+		public double EstimatedTransactionVolumeUsd { get; private set; }
 
 		/// <summary>
 		/// Total fees in the past 24 hours
 		/// </summary>
 		[JsonProperty("total_fees_btc")]
 		[JsonConverter(typeof(BitcoinValueJsonConverter))]
-		public BitcoinValue TotalFeesBTC { get; private set; }
+		public BitcoinValue TotalFeesBtc { get; private set; }
 
 		/// <summary>
 		/// Total BTC sent in the past 24 hours
 		/// </summary>
 		[JsonProperty("total_btc_sent")]
 		[JsonConverter(typeof(BitcoinValueJsonConverter))]
-		public BitcoinValue TotalBTCSent { get; private set; }
+		public BitcoinValue TotalBtcSent { get; private set; }
 
 		/// <summary>
 		/// Estimated BTC sent in the past 24 hours
 		/// </summary>
 		[JsonProperty("estimated_btc_sent")]
 		[JsonConverter(typeof(BitcoinValueJsonConverter))]
-		public BitcoinValue EstimatedBTCSent { get; private set; }
+		public BitcoinValue EstimatedBtcSent { get; private set; }
 
 		/// <summary>
 		/// Number of BTC mined in the past 24 hours
 		/// </summary>
 		[JsonProperty("n_btc_mined")]
 		[JsonConverter(typeof(BitcoinValueJsonConverter))]
-		public BitcoinValue BTCMined { get; private set; }
+		public BitcoinValue BtcMined { get; private set; }
 
 		/// <summary>
 		/// Current difficulty
@@ -125,7 +126,7 @@ namespace Info.Blockchain.API.Statistics
 		/// </summary>
 		[JsonProperty("totalbc")]
 		[JsonConverter(typeof(BitcoinValueJsonConverter))]
-		public BitcoinValue TotalBTC { get; private set; }
+		public BitcoinValue TotalBtc { get; private set; }
 
 		/// <summary>
 		/// Total number of blocks in existence

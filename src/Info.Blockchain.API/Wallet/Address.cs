@@ -1,6 +1,7 @@
 ﻿using Info.Blockchain.API.BlockExplorer;
 using Info.Blockchain.API.Json;
 using Newtonsoft.Json;
+// ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace Info.Blockchain.API.Wallet
 {

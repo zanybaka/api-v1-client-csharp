@@ -1,8 +1,8 @@
-﻿using Info.Blockchain.API.Json;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Info.Blockchain.API.Json;
+using Newtonsoft.Json;
 
 namespace Info.Blockchain.API.BlockExplorer
 {
@@ -12,6 +12,7 @@ namespace Info.Blockchain.API.BlockExplorer
 	public class Address
 	{
 		[JsonConstructor]
+		// ReSharper disable once UnusedMember.Local
 		private Address()
 		{
 		}

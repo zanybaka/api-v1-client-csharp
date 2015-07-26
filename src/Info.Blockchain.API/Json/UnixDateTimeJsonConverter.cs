@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System;
 
 namespace Info.Blockchain.API.Json
 {
@@ -35,7 +35,7 @@ namespace Info.Blockchain.API.Json
 
 		internal static double DateTimeToUnixSeconds(DateTime dateTime)
 		{
-			return (dateTime - epoch).TotalSeconds;
+			return (dateTime - UnixDateTimeJsonConverter.epoch).TotalSeconds;
         }
 
 		private static DateTime UnixSecondsToDateTime(double unixSeconds)
@@ -44,8 +44,8 @@ namespace Info.Blockchain.API.Json
 		}
 		private static DateTime UnixMillisToDateTime(double unixMillis)
 		{
-			DateTime dateTime = epoch.AddMilliseconds(unixMillis);
-			if (dateTime < GenesisBlockDate)
+			DateTime dateTime = UnixDateTimeJsonConverter.epoch.AddMilliseconds(unixMillis);
+			if (dateTime < UnixDateTimeJsonConverter.GenesisBlockDate)
 			{
 				throw new ArgumentOutOfRangeException(nameof(unixMillis), "No date can be before the genesis block (2009-01-03T18:15:05+00:00)");
 			}

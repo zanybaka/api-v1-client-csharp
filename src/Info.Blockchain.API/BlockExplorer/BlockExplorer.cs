@@ -1,10 +1,9 @@
-﻿using Info.Blockchain.API.Abstractions;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Info.Blockchain.API.Abstractions;
 using Info.Blockchain.API.Json;
 
 namespace Info.Blockchain.API.BlockExplorer
@@ -81,7 +80,7 @@ namespace Info.Blockchain.API.BlockExplorer
 			{
 				throw new ArgumentNullException(nameof(hashOrIndex));
 			}
-			Block block = await this.httpClient.GetAsync<Block>("rawblock/" + hashOrIndex, customDeserialization: Block.Deserialize);
+			Block block = await this.httpClient.GetAsync("rawblock/" + hashOrIndex, customDeserialization: Block.Deserialize);
 			return block;
 		}
 
@@ -169,7 +168,7 @@ namespace Info.Blockchain.API.BlockExplorer
 			QueryString queryString = new QueryString();
 			queryString.Add("format", "json");
 
-			var blocks = await this.httpClient.GetAsync<ReadOnlyCollection<Block>>("block-height/" + height, queryString, Block.DeserializeMultiple);
+			var blocks = await this.httpClient.GetAsync("block-height/" + height, queryString, Block.DeserializeMultiple);
 			return blocks;
 		}
 

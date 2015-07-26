@@ -1,7 +1,8 @@
-﻿using Info.Blockchain.API.Json;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
+using Info.Blockchain.API.Json;
+using Newtonsoft.Json;
+
 // ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace Info.Blockchain.API.BlockExplorer
