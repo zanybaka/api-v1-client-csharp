@@ -17,13 +17,13 @@ namespace Info.Blockchain.API.BlockExplorer
 		/// <summary>
 		/// Block index
 		/// </summary>
-		[JsonProperty("block_index")]
+		[JsonProperty("block_index", Required = Required.Always)]
 		public long Index { get; private set; }
 
 		/// <summary>
 		/// Transaction indexes included in this block
 		/// </summary>
-		[JsonProperty("txIndexes")]
+		[JsonProperty("txIndexes", Required = Required.Always)]
 		public ReadOnlyCollection<long> TransactionIndexes { get; private set; }
 	}
 }

@@ -87,37 +87,57 @@ namespace Info.Blockchain.API.BlockExplorer
 		/// <summary>
 		/// Gets data for a single address asynchronously.
 		/// </summary>
-		/// <param name="address">Base58check or hash160 address string</param>
+		/// <param name="addressOrHash">Base58check or hash160 address string</param>
 		/// <param name="maxTransactionCount">Max amount of transactions to retrieve</param>
 		/// <returns>An instance of the Address class</returns>
 		/// <exception cref="ServerApiException">If the server returns an error</exception>
-		public async Task<Address> GetAddressAsync(string address, int? maxTransactionCount = null)
+		public async Task<Address> GetAddressAsync(string addressOrHash, int? maxTransactionCount = null)
 		{
-			if (string.IsNullOrWhiteSpace(address))
+			if (string.IsNullOrWhiteSpace(addressOrHash))
 			{
-				throw new ArgumentNullException(address);
+				throw new ArgumentNullException(addressOrHash);
 			}
-			Address addressObj = await this.GetAddressWithOffsetAsync(address);
+			if (maxTransactionCount != null && maxTransactionCount < 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(maxTransactionCount), "Max transaction count must be greater than or equal to zero");
+			}
+
+			Address addressObj = await this.GetAddressWithOffsetAsync(addressOrHash);
 			List<Transaction> transactionList = await this.GetTransactionsAsync(addressObj, maxTransactionCount);
 			return new Address(addressObj, transactionList);
 		}
 
-		private async Task<List<Transaction>> GetTransactionsAsync(Address address, long? maxTransactionCount = null)
+		private async Task<List<Transaction>> GetTransactionsAsync(Address address, int? maxTransactionCount = null)
 		{
+			const int maxTransactionsPerRequest = 50;
 			if (address == null)
 			{
 				throw new ArgumentNullException(nameof(address));
 			}
-			const int maxTransactionLimit = 50;
-			int transactionsPerRequest = maxTransactionCount == null || maxTransactionCount >= maxTransactionLimit ? maxTransactionLimit : (int)maxTransactionCount.Value;
+			if (maxTransactionCount != null && maxTransactionCount < 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(maxTransactionCount), "Max transaction count must be greater than or equal to zero");
+			}
 
+			if (maxTransactionCount != null && maxTransactionCount < maxTransactionsPerRequest)
+			{
+				return address.Transactions.Take(maxTransactionCount.Value).ToList();
+			}
 
-			maxTransactionCount = maxTransactionCount ?? address.TransactionCount;
+			maxTransactionCount = maxTransactionCount ?? (int)address.TransactionCount;
 			List<Task<Address>> tasks = new List<Task<Address>>();
 
-			for (int offset = 50; offset <= maxTransactionCount.Value; offset += 50)
+			int offset;
+			for (offset = maxTransactionsPerRequest; offset <= maxTransactionCount.Value - maxTransactionsPerRequest; offset += maxTransactionsPerRequest)
 			{
-				Task<Address> task = this.GetAddressWithOffsetAsync(address.AddressStr, transactionsPerRequest, offset);
+				Task<Address> task = this.GetAddressWithOffsetAsync(address.AddressStr, maxTransactionsPerRequest, offset);
+				tasks.Add(task);
+			}
+
+			if (offset < maxTransactionCount.Value)
+			{
+				int remainingTransactions = (int)maxTransactionCount.Value - offset;
+				Task<Address> task = this.GetAddressWithOffsetAsync(address.AddressStr, remainingTransactions, offset);
 				tasks.Add(task);
 			}
 
@@ -133,7 +153,7 @@ namespace Info.Blockchain.API.BlockExplorer
 			return transactions;
 		}
 
-		private async Task<Address> GetAddressWithOffsetAsync(string address, int transactionLimit = 50, int offset = 0)
+		private async Task<Address> GetAddressWithOffsetAsync(string addressOrHash, int transactionLimit = 50, int offset = 0)
 		{
 			if (transactionLimit > 50 || transactionLimit < 1)
 			{
@@ -147,8 +167,9 @@ namespace Info.Blockchain.API.BlockExplorer
 			QueryString queryString = new QueryString();
 			queryString.Add("offset", offset.ToString());
 			queryString.Add("limit", transactionLimit.ToString());
+			queryString.Add("format", "json");
 
-			Address addressObj = await this.httpClient.GetAsync<Address>("rawaddr/" + address, queryString);
+			Address addressObj = await this.httpClient.GetAsync<Address>("address/" + addressOrHash, queryString);
 			return addressObj;
 		}
 

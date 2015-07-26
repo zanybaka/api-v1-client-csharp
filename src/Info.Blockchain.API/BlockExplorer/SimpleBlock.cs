@@ -29,19 +29,19 @@ namespace Info.Blockchain.API.BlockExplorer
 		/// <summary>
 		/// Block height
 		/// </summary>
-		[JsonProperty("height")]
+		[JsonProperty("height", Required = Required.Always)]
 		public long Height { get; private set; }
 
 		/// <summary>
 		/// Block hash
 		/// </summary>
-		[JsonProperty("hash")]
+		[JsonProperty("hash", Required = Required.Always)]
 		public string Hash { get; private set; }
 
 		/// <summary>
 		/// Block timestamp set by the miner
 		/// </summary>
-		[JsonProperty("time")]
+		[JsonProperty("time", Required = Required.Always)]
 		[JsonConverter(typeof(UnixDateTimeJsonConverter))]
 		public DateTime Time { get; private set; }
 

@@ -20,7 +20,7 @@ namespace Info.Blockchain.API.BlockExplorer
 		/// <summary>
 		/// Whether the transaction is a double spend
 		/// </summary>
-		[JsonProperty("double_spend", Required = Required.Always)]
+		[JsonProperty("double_spend")]
 		public bool DoubleSpend { get; private set; }
 
 		/// <summary>

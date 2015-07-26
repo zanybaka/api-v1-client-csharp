@@ -10,7 +10,7 @@ namespace Info.Blockchain.API
 	internal class DotNetHttpClient : IHttpClient
 	{
 		private const string BASE_URI = "https://blockchain.info/";
-		private const int TIMEOUT_MS = 10000;
+		private const int TIMEOUT_MS = 100000;
 		private HttpClient httpClient { get; }
 
 		public string ApiCode { get; set; }
