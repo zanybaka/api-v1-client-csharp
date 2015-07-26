@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Info.Blockchain.API.BlockExplorer;
+﻿using Info.Blockchain.API.BlockExplorer;
 using Xunit;
 
 namespace Info.Blockchain.API.Tests.IntegrationTests

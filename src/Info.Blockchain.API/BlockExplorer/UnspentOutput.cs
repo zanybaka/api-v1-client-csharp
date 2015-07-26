@@ -1,5 +1,9 @@
-﻿using Info.Blockchain.API.Json;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using Info.Blockchain.API.Json;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
 // ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace Info.Blockchain.API.BlockExplorer
@@ -50,5 +54,11 @@ namespace Info.Blockchain.API.BlockExplorer
 		/// </summary>
 		[JsonProperty("confirmations", Required = Required.Always)]
 		public long Confirmations { get; private set; }
+
+		public static ReadOnlyCollection<UnspentOutput> DeserializeMultiple(string outputsJson)
+		{
+			JObject jObject = JObject.Parse(outputsJson);
+			return jObject["unspent_outputs"].ToObject<ReadOnlyCollection<UnspentOutput>>();
+		}
 	}
 }

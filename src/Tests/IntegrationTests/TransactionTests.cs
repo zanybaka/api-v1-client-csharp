@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Info.Blockchain.API.BlockExplorer;
 using KellermanSoftware.CompareNetObjects;
@@ -33,6 +34,17 @@ namespace Info.Blockchain.API.Tests.IntegrationTests
 				CompareLogic compareLogic = new CompareLogic();
 				ComparisonResult comparisonResult = compareLogic.Compare(knownTransaction, receivedTransaction);
 				Assert.True(comparisonResult.AreEqual);
+			}
+		}
+
+		[Fact]
+		public async void GetUnconfirmedTransaction_Valid()
+		{
+			using (BlockchainApiHelper apiHelper = new BlockchainApiHelper())
+			{
+				ReadOnlyCollection<Transaction> unconfirmedTransactions = await apiHelper.BlockExpolorer.GetUnconfirmedTransactionsAsync();
+				
+				Assert.NotNull(unconfirmedTransactions);
 			}
 		}
 	}

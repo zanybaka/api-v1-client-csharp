@@ -201,12 +201,16 @@ namespace Info.Blockchain.API.BlockExplorer
 		/// <exception cref="ServerApiException">If the server returns an error</exception>
 		public async Task<ReadOnlyCollection<UnspentOutput>> GetUnspentOutputsAsync(string address)
 		{
+			if (string.IsNullOrWhiteSpace(address))
+			{
+				throw new ArgumentNullException(nameof(address));
+			}
 			QueryString queryString = new QueryString();
 			queryString.Add("active", address);
 			try
 			{
-				List<UnspentOutput> unspentOuputs = await this.httpClient.GetAsync<List<UnspentOutput>>("unspent", queryString);
-				return new ReadOnlyCollection<UnspentOutput>(unspentOuputs);
+				ReadOnlyCollection<UnspentOutput> unspentOuputs = await this.httpClient.GetAsync("unspent", queryString, UnspentOutput.DeserializeMultiple);
+				return unspentOuputs;
 			}
 			catch (ServerApiException ex)
 			{
@@ -239,10 +243,10 @@ namespace Info.Blockchain.API.BlockExplorer
 		public async Task<ReadOnlyCollection<Transaction>> GetUnconfirmedTransactionsAsync()
 		{
 			QueryString queryString = new QueryString();
-			queryString.Add("format", " json");
+			queryString.Add("format", "json");
 
-			List<Transaction> transactions = await this.httpClient.GetAsync<List<Transaction>>("unconfirmed-transactions", queryString);
-			return new ReadOnlyCollection<Transaction>(transactions);
+			ReadOnlyCollection<Transaction> transactions = await this.httpClient.GetAsync("unconfirmed-transactions", queryString, Transaction.DeserializeMultiple);
+			return transactions;
 		}
 
 		/// <summary>
