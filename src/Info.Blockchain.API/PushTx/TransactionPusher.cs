@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Info.Blockchain.API.Abstractions;
 
 namespace Info.Blockchain.API.PushTx
@@ -22,7 +23,11 @@ namespace Info.Blockchain.API.PushTx
 		/// <exception cref="ServerApiException">If the server returns an error</exception>
 		public async Task PushTransactionAsync(string transactionString)
 		{
-			await this.httpClient.PostAsync<string, object>("pushtx", transactionString);
+			if (string.IsNullOrWhiteSpace(transactionString))
+			{
+				throw new ArgumentNullException(nameof(transactionString));
+			}
+			await this.httpClient.PostAsync<string, object>("pushtx", transactionString, multiPartContent: true);
 		}
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Info.Blockchain.API.Abstractions;
 using Newtonsoft.Json;
@@ -37,7 +38,7 @@ namespace Info.Blockchain.API
 				route += queryString.ToString();
 			}
 			HttpResponseMessage response = await this.httpClient.GetAsync(route);
-			this.ValidateResponse(response);
+			await this.ValidateResponse(response);
 			string responseString = await response.Content.ReadAsStringAsync();
 			var responseObject = customDeserialization == null
 				? JsonConvert.DeserializeObject<T>(responseString)
@@ -45,14 +46,25 @@ namespace Info.Blockchain.API
 			return responseObject;
 		}
 
-		public async Task<TResponse> PostAsync<TPost, TResponse>(string route, TPost postObject, Func<string, TResponse> customDeserialization = null)
+		public async Task<TResponse> PostAsync<TPost, TResponse>(string route, TPost postObject, Func<string, TResponse> customDeserialization = null, bool multiPartContent = false)
 		{
 			if (this.ApiCode != null)
 			{
 				route += "?api_code=" + this.ApiCode;
 			}
 			string json = JsonConvert.SerializeObject(postObject);
-			HttpContent httpContent = new StringContent(json);
+			HttpContent httpContent;
+			if (multiPartContent)
+			{
+				httpContent = new MultipartFormDataContent
+				{
+					new StringContent(json, Encoding.UTF8, "application/x-www-form-urlencoded")
+				};
+			}
+			else
+			{
+				httpContent = new StringContent(json, Encoding.UTF8, "application/x-www-form-urlencoded");
+			}
 			HttpResponseMessage response = await this.httpClient.PostAsync(route, httpContent);
 			await this.ValidateResponse(response);
 			string responseString = await response.Content.ReadAsStringAsync();

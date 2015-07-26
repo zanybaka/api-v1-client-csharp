@@ -69,6 +69,7 @@
     <Compile Include="IntegrationTests\BlockTests.cs" />
     <Compile Include="IntegrationTests\CurrencyTests.cs" />
     <Compile Include="IntegrationTests\InventoryDataTests.cs" />
+    <Compile Include="IntegrationTests\TransactionPusherTests.cs" />
     <Compile Include="IntegrationTests\TransactionTests.cs" />
     <Compile Include="IntegrationTests\UnspentOutputTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="UnitTests\CreateWalletTests.cs" />
     <Compile Include="UnitTests\CurrencyTests.cs" />
     <Compile Include="UnitTests\InventoryDataTests.cs" />
+    <Compile Include="UnitTests\TransactionPusherTests.cs" />
     <Compile Include="UnitTests\TransactionTests.cs" />
     <Compile Include="UnitTests\UnitTestUtil.cs" />
     <Compile Include="UnitTests\UnspentOutputTests.cs" />

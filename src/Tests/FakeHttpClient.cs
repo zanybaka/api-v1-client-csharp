@@ -16,7 +16,7 @@ namespace Info.Blockchain.API.Tests
 			return Task.FromResult(default(T));
 		}
 
-		public Task<TResponse> PostAsync<TPost, TResponse>(string route, TPost postObject, Func<string, TResponse> customDeserialization = null)
+		public Task<TResponse> PostAsync<TPost, TResponse>(string route, TPost postObject, Func<string, TResponse> customDeserialization = null, bool multiPartContent = false)
 		{
 			return Task.FromResult(default(TResponse));
 		}
