@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Info.Blockchain.API.Abstractions;
 
 namespace Info.Blockchain.API.Receive
@@ -24,8 +25,19 @@ namespace Info.Blockchain.API.Receive
 		/// <exception cref="ServerApiException">If the server returns an error</exception>
 		public async Task<ReceiveResponse> ReceiveFundsAsync(string receivingAddress, string callbackUrl)
 		{
-			ReceiveRequest request = new ReceiveRequest(receivingAddress, callbackUrl);
-			ReceiveResponse receiveResponse = await this.httpClient.PostAsync<ReceiveRequest, ReceiveResponse>("api/receive", request);
+			if (string.IsNullOrWhiteSpace(receivingAddress))
+			{
+				throw new ArgumentNullException(nameof(receivingAddress));
+			}
+			if (string.IsNullOrWhiteSpace(callbackUrl))
+			{
+				throw new ArgumentNullException(nameof(callbackUrl));
+			}
+			QueryString queryString = new QueryString();
+			queryString.Add("method", "create");
+			queryString.Add("address", receivingAddress);
+			queryString.Add("callback", callbackUrl);
+			ReceiveResponse receiveResponse = await this.httpClient.GetAsync<ReceiveResponse>("api/receive", queryString);
 			return receiveResponse;
 		}
 	}

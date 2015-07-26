@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Info.Blockchain.API.Abstractions;
+using Info.Blockchain.API.CreateWallet;
+using Info.Blockchain.API.Receive;
 using Xunit;
 
 namespace Info.Blockchain.API.Tests.UnitTests
@@ -31,6 +34,47 @@ namespace Info.Blockchain.API.Tests.UnitTests
 					await apiHelper.WalletCreator.Create("password");
 				}
 			});
+		}
+
+
+		[Fact]
+		public async void CreateWallet_MockRequest_Valid()
+		{
+			using (BlockchainApiHelper apiHelper = new BlockchainApiHelper(httpClient: new MockCreateWalletHttpClient()))
+			{
+				CreateWalletResponse walletResponse = await apiHelper.WalletCreator.Create("Password");
+				Assert.NotNull(walletResponse);
+
+				Assert.Equal(walletResponse.Address, "12AaMuRnzw6vW6s2KPRAGeX53meTf8JbZS");
+				Assert.Equal(walletResponse.Identifier, "4b8cd8e9-9480-44cc-b7f2-527e98ee3287");
+				Assert.Equal(walletResponse.Link, "https://blockchain.info/wallet/4b8cd8e9-9480-44cc-b7f2-527e98ee3287");
+			}
+		}
+
+		public class MockCreateWalletHttpClient : IHttpClient
+		{
+			public void Dispose()
+			{
+			}
+
+			public string ApiCode { get; set; } = "Test";
+
+			public Task<T> GetAsync<T>(string route, QueryString queryString = null, Func<string, T> customDeserialization = null)
+			{
+				throw new NotImplementedException();
+			}
+
+			public Task<TResponse> PostAsync<TPost, TResponse>(string route, TPost postObject,
+				Func<string, TResponse> customDeserialization = null,
+				bool multiPartContent = false)
+			{
+				CreateWalletResponse walletResponse = ReflectionUtil.DeserializeFile<CreateWalletResponse>("create_wallet_mock");
+				if (walletResponse is TResponse)
+				{
+					return Task.FromResult((TResponse) (object) walletResponse);
+				}
+				return Task.FromResult(default(TResponse));
+			}
 		}
 	}
 }

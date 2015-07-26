@@ -29,7 +29,10 @@ namespace Info.Blockchain.API
 			else
 			{
 				this.httpClient = httpClient;
-				this.httpClient.ApiCode = apiCode;
+				if (apiCode != null)
+				{
+					this.httpClient.ApiCode = apiCode;
+				}
 			}
 
 			this.BlockExpolorer = new BlockExplorer.BlockExplorer(this.httpClient);

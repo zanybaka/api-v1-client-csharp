@@ -1,0 +1,6 @@
+﻿{
+    "fee_percent":0,
+    "destination":"1A8JiWcwvpY7tAopUkSnGuEYHmzGYfZPiq",
+    "input_address":"1KZoUuPWFAeyVySHAGqvTUDoX6P3ntuLNF",
+    "callback_url":"http://yoururl.com"
+}
