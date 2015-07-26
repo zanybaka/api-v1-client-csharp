@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -20,30 +21,32 @@ namespace Info.Blockchain.API
 			this.ApiCode = apiCode;
 			this.httpClient = new HttpClient()
 			{
-				BaseAddress = new Uri(DotNetHttpClient.baseUri),
+				BaseAddress = new Uri(baseUri),
 				Timeout = TimeSpan.FromMilliseconds(timeoutMs)
 			};
 		}
 
-		public async Task<T> GetAsync<T>(string route, QueryString queryString = null)
+		public async Task<T> GetAsync<T>(string route, QueryString queryString = null, Func<string, T> customDeserialization = null)
 		{
 			//TODO check to see if the route has a query string already
-			if(this.ApiCode != null && queryString != null)
+			if (this.ApiCode != null)
 			{
-				queryString.Add("api_code", this.ApiCode);
+				queryString?.Add("api_code", this.ApiCode);
 			}
 			if (queryString != null && queryString.Count > 0)
 			{
 				route += queryString.ToString();
 			}
-			HttpResponseMessage response = await httpClient.GetAsync(route);
+			HttpResponseMessage response = await this.httpClient.GetAsync(route);
 			this.ValidateResponse(response);
 			string responseString = await response.Content.ReadAsStringAsync();
-			T responseObject = JsonConvert.DeserializeObject<T>(responseString);
+			var responseObject = customDeserialization == null
+				? JsonConvert.DeserializeObject<T>(responseString)
+				: customDeserialization(responseString);
 			return responseObject;
 		}
 
-		public async Task<TResponse> PostAsync<TPost, TResponse>(string route, TPost postObject)
+		public async Task<TResponse> PostAsync<TPost, TResponse>(string route, TPost postObject, Func<string, TResponse> customDeserialization = null)
 		{
 			if (this.ApiCode != null)
 			{
@@ -51,19 +54,25 @@ namespace Info.Blockchain.API
 			}
 			string json = JsonConvert.SerializeObject(postObject);
 			HttpContent httpContent = new StringContent(json);
-			HttpResponseMessage response = await httpClient.PostAsync(route, httpContent);
+			HttpResponseMessage response = await this.httpClient.PostAsync(route, httpContent);
 			this.ValidateResponse(response);
 			string responseString = await response.Content.ReadAsStringAsync();
 			TResponse responseObject = JsonConvert.DeserializeObject<TResponse>(responseString);
 			return responseObject;
 		}
 
-		private void ValidateResponse(HttpResponseMessage response)
+		private async void ValidateResponse(HttpResponseMessage response)
 		{
-			if (!response.IsSuccessStatusCode)
+			if (response.IsSuccessStatusCode)
 			{
-				throw new ServerApiException(response.ReasonPhrase, response.StatusCode);
+				return;
 			}
+			string responseContent = await response.Content.ReadAsStringAsync();
+			if (string.Equals(responseContent, "Block Not Found"))
+			{
+				throw new ServerApiException("Block Not Found", HttpStatusCode.NotFound);
+			}
+			throw new ServerApiException(response.ReasonPhrase, response.StatusCode);
 		}
 
 		public void Dispose()

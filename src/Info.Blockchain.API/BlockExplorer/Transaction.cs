@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.ObjectModel;
+// ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace Info.Blockchain.API.BlockExplorer
 {
@@ -18,62 +19,62 @@ namespace Info.Blockchain.API.BlockExplorer
 		/// <summary>
 		/// Whether the transaction is a double spend
 		/// </summary>
-		[JsonProperty("double_spend")]
+		[JsonProperty("double_spend", Required = Required.Always)]
 		public bool DoubleSpend { get; private set; }
 
 		/// <summary>
 		/// Block height of the parent block. -1 for unconfirmed transactions.
 		/// </summary>
-		[JsonProperty("block_height")]
+		[JsonProperty("block_height", Required = Required.Always)]
 		public long BlockHeight { get; private set; } = -1;
 
 		/// <summary>
 		/// Timestamp of the transaction
 		/// </summary>
-		[JsonProperty("time")]
+		[JsonProperty("time", Required = Required.Always)]
 		[JsonConverter(typeof(UnixDateTimeJsonConverter))]
 		public DateTime Time { get; private set; }
 
 		/// <summary>
 		/// IP address that relayed the transaction
 		/// </summary>
-		[JsonProperty("relayed_by")]
+		[JsonProperty("relayed_by", Required = Required.Always)]
 		public string RelayedBy { get; private set; }
 
 		/// <summary>
 		/// Transaction hash
 		/// </summary>
-		[JsonProperty("hash")]
+		[JsonProperty("hash", Required = Required.Always)]
 		public string Hash { get; private set; }
 
 		/// <summary>
 		/// Transaction index
 		/// </summary>
-		[JsonProperty("tx_index")]
+		[JsonProperty("tx_index", Required = Required.Always)]
 		public long Index { get; private set; }
 
 		/// <summary>
 		/// Transaction format version
 		/// </summary>
-		[JsonProperty("ver")]
+		[JsonProperty("ver", Required = Required.Always)]
 		public int Version { get; private set; }
 
 		/// <summary>
 		/// Serialized size of the transaction
 		/// </summary>
-		[JsonProperty("size")]
+		[JsonProperty("size", Required = Required.Always)]
 		public long Size { get; private set; }
 
 		/// <summary>
 		/// List of inputs
 		/// </summary>
-		[JsonProperty("inputs")]
+		[JsonProperty("inputs", Required = Required.Always)]
 		public ReadOnlyCollection<Input> Inputs { get; private set; }
 
 		/// <summary>
 		/// List of outputs
 		/// </summary>
-		[JsonProperty("out")]
+		[JsonProperty("out", Required = Required.Always)]
 		public ReadOnlyCollection<Output> Outputs { get; private set; }
 	}
 }

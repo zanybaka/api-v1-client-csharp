@@ -59,7 +59,7 @@ namespace Info.Blockchain.API.Wallet
 
 			SinglePaymentRequest paymentRequest = new SinglePaymentRequest(this.password, this.secondPassword, toAddress, amount.Satoshis, fromAddress, fee, note);
 
-			string route = string.Format("merchant/{0}/payment", identifier);
+			string route = string.Format("merchant/{0}/payment", this.identifier);
 
 			PaymentResponse paymentResponse = await this.httpClient.PostAsync<SinglePaymentRequest, PaymentResponse>(route, paymentRequest);
 			return paymentResponse;
@@ -86,7 +86,7 @@ namespace Info.Blockchain.API.Wallet
 			ManyPaymentRequest paymentRequest = new ManyPaymentRequest(this.password, this.secondPassword, recipients, fromAddress, fee, note);
 
 
-			string route = string.Format("merchant/{0}/sendmany", identifier);
+			string route = string.Format("merchant/{0}/sendmany", this.identifier);
 
 			PaymentResponse paymentResponse = await this.httpClient.PostAsync<ManyPaymentRequest, PaymentResponse>(route, paymentRequest);
 
@@ -102,7 +102,7 @@ namespace Info.Blockchain.API.Wallet
 		public async Task<BitcoinValue> GetBalanceAsync()
 		{
 			QueryString queryString = this.BuildBasicQueryString();
-			string route = $"merchant/{identifier}/balance";
+			string route = $"merchant/{this.identifier}/balance";
             BitcoinValue bitcoinValue = await this.httpClient.GetAsync<BitcoinValue>(route, queryString);
 			return bitcoinValue;
 		}
@@ -119,7 +119,7 @@ namespace Info.Blockchain.API.Wallet
 			QueryString queryString = this.BuildBasicQueryString();
 			queryString.Add("confirmations", confirmations.ToString());
 
-			string route = $"merchant/{identifier}/list";
+			string route = $"merchant/{this.identifier}/list";
 
 			List<Address> addressList = await this.httpClient.GetAsync<List<Address>>(route, queryString);
 			return addressList;
@@ -216,10 +216,10 @@ namespace Info.Blockchain.API.Wallet
 		{
 			QueryString queryString = new QueryString();
 
-			queryString.Add("password", password);
-			if (secondPassword != null)
+			queryString.Add("password", this.password);
+			if (this.secondPassword != null)
 			{
-				queryString.Add("second_password", secondPassword);
+				queryString.Add("second_password", this.secondPassword);
 			}
 
 			return queryString;

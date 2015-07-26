@@ -8,8 +8,8 @@ namespace Info.Blockchain.API.Abstractions
 	public interface IHttpClient : IDisposable
 	{
 		string ApiCode { get; set; }
-		Task<T> GetAsync<T>(string route, QueryString queryString = null);
-		Task<TResponse> PostAsync<TPost, TResponse>(string route, TPost postObject);
+		Task<T> GetAsync<T>(string route, QueryString queryString = null, Func<string, T> customDeserialization = null);
+		Task<TResponse> PostAsync<TPost, TResponse>(string route, TPost postObject, Func<string, TResponse> customDeserialization = null);
 	}
 
 	public class HttpResponse<T>

@@ -14,19 +14,19 @@
 
 		public decimal Btc => this.btc;
 
-		public decimal MilliBits => this.btc * BitcoinValue.MilliBitsPerBitcoin;
+		public decimal MilliBits => this.btc * MilliBitsPerBitcoin;
 
-		public decimal Bits => this.btc * BitcoinValue.BitsPerBitcoin;
+		public decimal Bits => this.btc * BitsPerBitcoin;
 
-		public long Satoshis => (long)this.btc * BitcoinValue.SatoshisPerBitcoin;
+		public long Satoshis => (long)this.btc * SatoshisPerBitcoin;
 
 		public static BitcoinValue Zero => new BitcoinValue();
 
-		public static BitcoinValue FromSatoshis(long satoshis) => new BitcoinValue((decimal)satoshis / BitcoinValue.SatoshisPerBitcoin);
+		public static BitcoinValue FromSatoshis(long satoshis) => new BitcoinValue((decimal)satoshis / SatoshisPerBitcoin);
 
-		public static BitcoinValue FromBits(decimal bits) => new BitcoinValue(bits / BitcoinValue.BitsPerBitcoin);
+		public static BitcoinValue FromBits(decimal bits) => new BitcoinValue(bits / BitsPerBitcoin);
 
-		public static BitcoinValue FromMilliBits(decimal mBtc) => new BitcoinValue(mBtc / BitcoinValue.MilliBitsPerBitcoin);
+		public static BitcoinValue FromMilliBits(decimal mBtc) => new BitcoinValue(mBtc / MilliBitsPerBitcoin);
 
 		public static BitcoinValue operator +(BitcoinValue x, BitcoinValue y)
 		{

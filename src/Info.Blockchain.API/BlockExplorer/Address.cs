@@ -40,40 +40,40 @@ namespace Info.Blockchain.API.BlockExplorer
 		/// Hash160 representation of the address
 		/// </summary>
 		[JsonProperty("hash160")]
-		public string Hash160 { get; private set; }
+		public string Hash160 { get; }
 
 		/// <summary>
 		/// Base58Check representation of the address
 		/// </summary>
 		[JsonProperty("address")]
-		public string AddressStr { get; private set; }
+		public string AddressStr { get; }
 
 		/// <summary>
 		/// Total amount received
 		/// </summary>
 		[JsonProperty("total_received")]
 		[JsonConverter(typeof(BitcoinValueJsonConverter))]
-		public BitcoinValue TotalReceived { get; private set; }
+		public BitcoinValue TotalReceived { get; }
 
 		/// <summary>
 		/// Total amount sent
 		/// </summary>
 		[JsonProperty("total_sent")]
 		[JsonConverter(typeof(BitcoinValueJsonConverter))]
-		public BitcoinValue TotalSent { get; private set; }
+		public BitcoinValue TotalSent { get; }
 
 		/// <summary>
 		/// Final balance of the address
 		/// </summary>
 		[JsonProperty("final_balance")]
 		[JsonConverter(typeof(BitcoinValueJsonConverter))]
-		public BitcoinValue FinalBalance { get; private set; }
+		public BitcoinValue FinalBalance { get; }
 
 		/// <summary>
 		/// Total count of all transactions of this address
 		/// </summary>
 		[JsonProperty("n_tx")]
-		public long TransactionCount { get; private set; }
+		public long TransactionCount { get; }
 
 		/// <summary>
 		/// List of transactions associated with this address

@@ -20,9 +20,17 @@ namespace Info.Blockchain.API
 		public StatisticsExplorer StatisticsExplorer { get; }
 
 
-		public BlockchainApiHelper(string apiCode = null)
+		public BlockchainApiHelper(string apiCode = null, IHttpClient httpClient = null)
 		{
-			this.httpClient = new DotNetHttpClient(apiCode);
+			if (httpClient == null)
+			{
+				this.httpClient = new DotNetHttpClient(apiCode);
+			}
+			else
+			{
+				this.httpClient = httpClient;
+				this.httpClient.ApiCode = apiCode;
+			}
 
 			this.BlockExpolorer = new BlockExplorer.BlockExplorer(this.httpClient);
 			this.WalletCreator = new WalletCreator(this.httpClient);
