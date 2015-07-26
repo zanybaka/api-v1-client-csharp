@@ -2,9 +2,9 @@
 {
 	internal static class UnitTestUtil
 	{
-		internal static BlockchainApiHelper GetFakeHelper()
+		internal static BlockchainApiHelper GetFakeHelper(string apiCode = null)
 		{
-			return new BlockchainApiHelper(httpClient: new FakeHttpClient());
+			return new BlockchainApiHelper(apiCode, new FakeHttpClient());
 		}
 	}
 }

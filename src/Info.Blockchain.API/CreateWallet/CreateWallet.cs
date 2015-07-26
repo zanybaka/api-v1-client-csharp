@@ -37,19 +37,19 @@ namespace Info.Blockchain.API.CreateWallet
 		/// <summary>
 		/// Wallet identifier (GUID)
 		/// </summary>
-		[JsonProperty("guid")]
+		[JsonProperty("guid", Required = Required.Always)]
 		public string Identifier { get; private set; }
 
 		/// <summary>
 		/// First address in the wallet
 		/// </summary>
-		[JsonProperty("address")]
+		[JsonProperty("address", Required = Required.Always)]
 		public string Address { get; private set; }
 
 		/// <summary>
 		/// Link to the wallet
 		/// </summary>
-		[JsonProperty("link")]
+		[JsonProperty("link", Required = Required.Always)]
 		public string Link { get; private set; }
 	}
 }

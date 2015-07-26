@@ -54,13 +54,13 @@ namespace Info.Blockchain.API
 			string json = JsonConvert.SerializeObject(postObject);
 			HttpContent httpContent = new StringContent(json);
 			HttpResponseMessage response = await this.httpClient.PostAsync(route, httpContent);
-			this.ValidateResponse(response);
+			await this.ValidateResponse(response);
 			string responseString = await response.Content.ReadAsStringAsync();
 			TResponse responseObject = JsonConvert.DeserializeObject<TResponse>(responseString);
 			return responseObject;
 		}
 
-		private async void ValidateResponse(HttpResponseMessage response)
+		private async Task ValidateResponse(HttpResponseMessage response)
 		{
 			if (response.IsSuccessStatusCode)
 			{
@@ -71,7 +71,7 @@ namespace Info.Blockchain.API
 			{
 				throw new ServerApiException("Block Not Found", HttpStatusCode.NotFound);
 			}
-			throw new ServerApiException(response.ReasonPhrase, response.StatusCode);
+			throw new ServerApiException(response.ReasonPhrase + ": " + responseContent, response.StatusCode);
 		}
 
 		public void Dispose()
