@@ -1,138 +1,142 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Info.Blockchain.API.BlockExplorer;
+using Info.Blockchain.API.Json;
+using Newtonsoft.Json;
 
 namespace Info.Blockchain.API.Statistics
 {
-    /// <summary>
-    /// This class is used as a response object to the 'get' method in the 'Statistics' class
-    /// </summary>
-    public class StatisticsResponse
-    {
-        public StatisticsResponse(JObject s)
-        {
-            TradeVolumeBTC = (double)s["trade_volume_btc"];
-            TradeVolumeUSD = (double)s["trade_volume_usd"];
-            MinersRevenueBTC = (double)s["miners_revenue_btc"];
-            MinersRevenueUSD = (double)s["miners_revenue_usd"];
-            MarketPriceUSD = (double)s["market_price_usd"];
-            EstimatedTransactionVolumeUSD = (double)s["estimated_transaction_volume_usd"];
-            TotalFeesBTC = (long)s["total_fees_btc"];
-            TotalBTCSent = (long)s["total_btc_sent"];
-            EstimatedBTCSent = (long)s["estimated_btc_sent"];
-            BTCMined = (long)s["n_btc_mined"];
-            Difficulty = (double)s["difficulty"];
-            MinutesBetweenBlocks = (double)s["minutes_between_blocks"];
-            NumberOfTransactions = (long)s["n_tx"];
-            HashRate = (double)s["hash_rate"];
-            Timestamp = (long)s["timestamp"];
-            MinedBlocks = (long)s["n_blocks_mined"];
-            BlocksSize = (long)s["blocks_size"];
-            TotalBTC = (long)s["totalbc"];
-            TotalBlocks = (long)s["n_blocks_total"];
-            NextRetarget = (long)s["nextretarget"];
-        }
+	/// <summary>
+	/// This class is used as a response object to the 'get' method in the 'Statistics' class
+	/// </summary>
+	public class StatisticsResponse
+	{
+		[JsonConstructor]
+		private StatisticsResponse()
+		{
+		}
 
-        /// <summary>
-        /// Trade volume in the past 24 hours (in BTC)
-        /// </summary>
-        public double TradeVolumeBTC { get; private set; }
+		/// <summary>
+		/// Trade volume in the past 24 hours (in BTC)
+		/// </summary>
+		[JsonProperty("trade_volume_btc")]
+		public double TradeVolumeBTC { get; private set; }
 
-        /// <summary>
-        /// Trade volume in the past 24 hours (in USD)
-        /// </summary>
-        public double TradeVolumeUSD { get; private set; }
+		/// <summary>
+		/// Trade volume in the past 24 hours (in USD)
+		/// </summary>
+		[JsonProperty("trade_volume_usd")]
+		public double TradeVolumeUSD { get; private set; }
 
-        /// <summary>
-        /// Miners' revenue in BTC
-        /// </summary>
-        public double MinersRevenueBTC { get; private set; }
+		/// <summary>
+		/// Miners' revenue in BTC
+		/// </summary>
+		[JsonProperty("miners_revenue_btc")]
+		public double MinersRevenueBTC { get; private set; }
 
-        /// <summary>
-        /// Miners' revenue in USD
-        /// </summary>
-        public double MinersRevenueUSD { get; private set; }
+		/// <summary>
+		/// Miners' revenue in USD
+		/// </summary>
+		[JsonProperty("miners_revenue_usd")]
+		public double MinersRevenueUSD { get; private set; }
 
-        /// <summary>
-        /// Current market price in USD
-        /// </summary>
-        public double MarketPriceUSD { get; private set; }
+		/// <summary>
+		/// Current market price in USD
+		/// </summary>
+		[JsonProperty("market_price_usd")]
+		public double MarketPriceUSD { get; private set; }
 
-        /// <summary>
-        /// Estimated transaction volume in the past 24 hours
-        /// </summary>
-        public double EstimatedTransactionVolumeUSD { get; private set; }
+		/// <summary>
+		/// Estimated transaction volume in the past 24 hours
+		/// </summary>
+		[JsonProperty("estimated_transaction_volume_usd")]
+		public double EstimatedTransactionVolumeUSD { get; private set; }
 
-        /// <summary>
-        /// Total fees in the past 24 hours (in satoshi)
-        /// </summary>
-        public long TotalFeesBTC { get; private set; }
+		/// <summary>
+		/// Total fees in the past 24 hours
+		/// </summary>
+		[JsonProperty("total_fees_btc")]
+		[JsonConverter(typeof(BitcoinValueJsonConverter))]
+		public BitcoinValue TotalFeesBTC { get; private set; }
 
-        /// <summary>
-        /// Total BTC sent in the past 24 hours (in satoshi)
-        /// </summary>
-        public long TotalBTCSent { get; private set; }
+		/// <summary>
+		/// Total BTC sent in the past 24 hours
+		/// </summary>
+		[JsonProperty("total_btc_sent")]
+		[JsonConverter(typeof(BitcoinValueJsonConverter))]
+		public BitcoinValue TotalBTCSent { get; private set; }
 
-        /// <summary>
-        /// Estimated BTC sent in the past 24 hours (in satoshi)
-        /// </summary>
-        public long EstimatedBTCSent { get; private set; }
+		/// <summary>
+		/// Estimated BTC sent in the past 24 hours
+		/// </summary>
+		[JsonProperty("estimated_btc_sent")]
+		[JsonConverter(typeof(BitcoinValueJsonConverter))]
+		public BitcoinValue EstimatedBTCSent { get; private set; }
 
-        /// <summary>
-        /// Number of BTC mined in the past 24 hours (in satoshi)
-        /// </summary>
-        public long BTCMined { get; private set; }
+		/// <summary>
+		/// Number of BTC mined in the past 24 hours
+		/// </summary>
+		[JsonProperty("n_btc_mined")]
+		[JsonConverter(typeof(BitcoinValueJsonConverter))]
+		public BitcoinValue BTCMined { get; private set; }
 
-        /// <summary>
-        /// Current difficulty
-        /// </summary>
-        public double Difficulty { get; private set; }
+		/// <summary>
+		/// Current difficulty
+		/// </summary>
+		[JsonProperty("difficulty")]
+		public double Difficulty { get; private set; }
 
-        /// <summary>
-        /// Minutes between blocks
-        /// </summary>
-        public double MinutesBetweenBlocks { get; private set; }
+		/// <summary>
+		/// Minutes between blocks
+		/// </summary>
+		[JsonProperty("minutes_between_blocks")]
+		public double MinutesBetweenBlocks { get; private set; }
 
-        /// <summary>
-        /// Number of transactions in the past 24 hours
-        /// </summary>
-        public long NumberOfTransactions { get; private set; }
+		/// <summary>
+		/// Number of transactions in the past 24 hours
+		/// </summary>
+		[JsonProperty("n_tx")]
+		public long NumberOfTransactions { get; private set; }
 
-        /// <summary>
-        /// Current hashrate in GH/s
-        /// </summary>
-        public double HashRate { get; set; }
+		/// <summary>
+		/// Current hashrate in GH/s
+		/// </summary>
+		[JsonProperty("hash_rate")]
+		public double HashRate { get; set; }
 
-        /// <summary>
-        /// Timestamp of when this report was compiled (in ms)
-        /// </summary>
-        public long Timestamp { get; private set; }
+		/// <summary>
+		/// Timestamp of when this report was compiled (in ms)
+		/// </summary>
+		[JsonProperty("timestamp")]
+		public long Timestamp { get; private set; }
 
-        /// <summary>
-        /// Number of blocks mined in the past 24 hours
-        /// </summary>
-        public long MinedBlocks { get; private set; }
+		/// <summary>
+		/// Number of blocks mined in the past 24 hours
+		/// </summary>
+		[JsonProperty("n_blocks_mined")]
+		public long MinedBlocks { get; private set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public long BlocksSize { get; private set; }
+		/// <summary>
+		/// 
+		/// </summary>
+		[JsonProperty("blocks_size")]
+		public long BlocksSize { get; private set; }
 
-        /// <summary>
-        /// Total BTC in existence (in satoshi)
-        /// </summary>
-        public long TotalBTC { get; private set; }
+		/// <summary>
+		/// Total BTC in existence
+		/// </summary>
+		[JsonProperty("totalbc")]
+		[JsonConverter(typeof(BitcoinValueJsonConverter))]
+		public BitcoinValue TotalBTC { get; private set; }
 
-        /// <summary>
-        /// Total number of blocks in existence
-        /// </summary>
-        public long TotalBlocks { get; private set; }
+		/// <summary>
+		/// Total number of blocks in existence
+		/// </summary>
+		[JsonProperty("n_blocks_total")]
+		public long TotalBlocks { get; private set; }
 
-        /// <summary>
-        /// The next block height where the difficulty retarget will occur
-        /// </summary>
-        public long NextRetarget { get; private set; }
-    }
+		/// <summary>
+		/// The next block height where the difficulty retarget will occur
+		/// </summary>
+		[JsonProperty("nextretarget")]
+		public long NextRetarget { get; private set; }
+	}
 }
