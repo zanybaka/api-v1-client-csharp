@@ -296,11 +296,15 @@ namespace Info.Blockchain.API.BlockExplorer
 		/// <exception cref="ServerApiException">If the server returns an error</exception>
 		public async Task<InventoryData> GetInventoryDataAsync(string hash)
 		{
+			if (string.IsNullOrWhiteSpace(hash))
+			{
+				throw new ArgumentNullException(nameof(hash));
+			}
 			QueryString queryString = new QueryString();
 			queryString.Add("format", "json");
 
-			InventoryData invertoryData = await this.httpClient.GetAsync<InventoryData>("inv/" + hash, queryString);
-			return invertoryData;
+			InventoryData inventoryData = await this.httpClient.GetAsync<InventoryData>("inv/" + hash, queryString);
+			return inventoryData;
 		}
 	}
 }

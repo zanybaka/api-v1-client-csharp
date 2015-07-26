@@ -66,12 +66,15 @@
   <ItemGroup>
     <Compile Include="FakeHttpClient.cs" />
     <Compile Include="IntegrationTests\BlockTests.cs" />
+    <Compile Include="IntegrationTests\InventoryDataTests.cs" />
     <Compile Include="IntegrationTests\TransactionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReflectionUtil.cs" />
     <Compile Include="UnitTests\BitcoinValueTests.cs" />
     <Compile Include="UnitTests\BlockTests.cs" />
+    <Compile Include="UnitTests\InventoryDataTests.cs" />
     <Compile Include="UnitTests\TransactionTests.cs" />
+    <Compile Include="UnitTests\UnitTestUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="JsonObjects\single_transaction.json" />

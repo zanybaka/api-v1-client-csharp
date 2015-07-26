@@ -23,13 +23,13 @@ namespace Info.Blockchain.API.BlockExplorer
 		/// <summary>
 		/// Sequence number of the input
 		/// </summary>
-		[JsonProperty("sequence")]
+		[JsonProperty("sequence", Required = Required.Always)]
 		public long Sequence { get; private set; }
 
 		/// <summary>
 		/// Script signature
 		/// </summary>
-		[JsonProperty("script")]
+		[JsonProperty("script", Required = Required.Always)]
 		public string ScriptSignature { get; private set; }
 	}
 }

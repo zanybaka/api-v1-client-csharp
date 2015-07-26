@@ -12,17 +12,12 @@ namespace Info.Blockchain.API.Tests.UnitTests
 {
 	public class TransactionTests
 	{
-		private BlockchainApiHelper GetFakeHelper()
-		{
-			return new BlockchainApiHelper(httpClient: new FakeHttpClient());
-		}
-
 		[Fact]
 		public async void GetTransaction_BadIds_ArgumentExecption()
 		{
 			await Assert.ThrowsAsync<ArgumentNullException>(async () =>
 			{
-				using (BlockchainApiHelper apiHelper = this.GetFakeHelper())
+				using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
 				{
 					await apiHelper.BlockExpolorer.GetTransactionAsync(null);
 				}
@@ -30,7 +25,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
 
 			await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () =>
 			{
-				using (BlockchainApiHelper apiHelper = this.GetFakeHelper())
+				using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
 				{
 					await apiHelper.BlockExpolorer.GetTransactionByIndexAsync(-1);
 				}
