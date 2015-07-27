@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Info.Blockchain.API.Abstractions;
 using Info.Blockchain.API.BlockExplorer;
+using Info.Blockchain.API.Json;
+using Newtonsoft.Json;
 
 namespace Info.Blockchain.API.Wallet
 {
@@ -55,12 +57,30 @@ namespace Info.Blockchain.API.Wallet
 			{
 				throw new ArgumentException("Amount sent must be greater than 0", nameof(amount));
 			}
-
-			SinglePaymentRequest paymentRequest = new SinglePaymentRequest(this.password, this.secondPassword, toAddress, amount.Satoshis, fromAddress, fee, note);
+			QueryString queryString = new QueryString();
+			queryString.Add("password", this.password);
+			queryString.Add("to", toAddress);
+			queryString.Add("amount", amount.Satoshis.ToString());
+			if (!string.IsNullOrWhiteSpace(this.secondPassword))
+			{
+				queryString.Add("second_password", this.secondPassword);
+			}
+			if (!string.IsNullOrWhiteSpace(fromAddress))
+			{
+				queryString.Add("from", fromAddress);
+			}
+			if (!string.IsNullOrWhiteSpace(note))
+			{
+				queryString.Add("note", note);
+			}
+			if (fee != null)
+			{
+				queryString.Add("fee", fee.ToString());
+			}
 
 			string route = $"merchant/{this.identifier}/payment";
 
-			PaymentResponse paymentResponse = await this.httpClient.PostAsync<SinglePaymentRequest, PaymentResponse>(route, paymentRequest);
+			PaymentResponse paymentResponse = await this.httpClient.GetAsync<PaymentResponse>(route, queryString);
 			return paymentResponse;
 		}
 
@@ -82,12 +102,30 @@ namespace Info.Blockchain.API.Wallet
 				throw new ArgumentException("Sending bitcoin from your wallet requires at least one receipient.", nameof(recipients));
 			}
 
-			ManyPaymentRequest paymentRequest = new ManyPaymentRequest(this.password, this.secondPassword, recipients, fromAddress, fee, note);
-
+			QueryString queryString = new QueryString();
+			queryString.Add("password", this.password);
+			string recipientsJson = JsonConvert.SerializeObject(recipients, Formatting.None, new BitcoinValueJsonConverter());
+			queryString.Add("recipients", recipientsJson);
+			if (!string.IsNullOrWhiteSpace(this.secondPassword))
+			{
+				queryString.Add("second_password", this.secondPassword);
+			}
+			if (!string.IsNullOrWhiteSpace(fromAddress))
+			{
+				queryString.Add("from", fromAddress);
+			}
+			if (!string.IsNullOrWhiteSpace(note))
+			{
+				queryString.Add("note", note);
+			}
+			if (fee != null)
+			{
+				queryString.Add("fee", fee.ToString());
+			}
 
 			string route = $"merchant/{this.identifier}/sendmany";
 
-			PaymentResponse paymentResponse = await this.httpClient.PostAsync<ManyPaymentRequest, PaymentResponse>(route, paymentRequest);
+			PaymentResponse paymentResponse = await this.httpClient.GetAsync<PaymentResponse>(route, queryString);
 
 			return paymentResponse;
 		}
@@ -115,12 +153,16 @@ namespace Info.Blockchain.API.Wallet
 		/// <exception cref="ServerApiException">If the server returns an error</exception>
 		public async Task<List<Address>> ListAddressesAsync(int confirmations = 0)
 		{
+			if (confirmations < 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(confirmations), "Confirmations must be a positive number");
+			}
 			QueryString queryString = this.BuildBasicQueryString();
 			queryString.Add("confirmations", confirmations.ToString());
 
 			string route = $"merchant/{this.identifier}/list";
 
-			List<Address> addressList = await this.httpClient.GetAsync<List<Address>>(route, queryString);
+			List<Address> addressList = await this.httpClient.GetAsync<List<Address>>(route, queryString, Address.DeserializeMultiple);
 			return addressList;
 		}
 
@@ -134,6 +176,14 @@ namespace Info.Blockchain.API.Wallet
 		/// <exception cref="ServerApiException">If the server returns an error</exception>
 		public async Task<Address> GetAddressAsync(string address, int confirmations = 0)
 		{
+			if (string.IsNullOrWhiteSpace(address))
+			{
+				throw new ArgumentNullException(nameof(address));
+			}
+			if (confirmations < 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(confirmations), "Confirmations must be a positive number");
+			}
 			QueryString queryString = this.BuildBasicQueryString();
 			queryString.Add("confirmations", confirmations.ToString());
 			queryString.Add("address", address);
@@ -169,11 +219,15 @@ namespace Info.Blockchain.API.Wallet
 		/// <exception cref="ServerApiException">If the server returns an error</exception>
 		public async Task<string> ArchiveAddress(string address)
 		{
+			if (string.IsNullOrWhiteSpace(address))
+			{
+				throw new ArgumentNullException(nameof(address));
+			}
 			QueryString queryString = this.BuildBasicQueryString();
 			queryString.Add("address", address);
 
 			string route = $"merchant/{this.identifier}/archive_address";
-            string archiveAddress = await this.httpClient.GetAsync<string>(route, queryString);
+            string archiveAddress = await this.httpClient.GetAsync<string>(route, queryString, Address.DeserializeArchived);
 
 			return archiveAddress;
 		}
@@ -190,7 +244,7 @@ namespace Info.Blockchain.API.Wallet
 			queryString.Add("address", address);
 
 			string route = $"merchant/{this.identifier}/unarchive_address";
-            string activeAddress = await this.httpClient.GetAsync<string>(route, queryString);
+            string activeAddress = await this.httpClient.GetAsync<string>(route, queryString, Address.DeserializeUnArchived);
 			return activeAddress;
 		}
 
@@ -203,11 +257,15 @@ namespace Info.Blockchain.API.Wallet
 		/// <exception cref="ServerApiException">If the server returns an error</exception>
 		public async Task<List<string>> Consolidate(int days = 0)
 		{
+			if (days < 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(days), "Days must be a positive number");
+			}
 			QueryString queryString = this.BuildBasicQueryString();
 			queryString.Add("days", days.ToString());
 
 			string route = $"merchant/{this.identifier}/auto_consolidate";
-            List<string> addresses = await this.httpClient.GetAsync<List<string>>(route, queryString);
+            List<string> addresses = await this.httpClient.GetAsync<List<string>>(route, queryString, Address.DeserializeConsolidated);
 			return addresses;
 		}
 

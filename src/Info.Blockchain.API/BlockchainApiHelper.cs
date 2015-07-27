@@ -50,7 +50,7 @@ namespace Info.Blockchain.API
 		/// <param name="identifier">Wallet identifier (GUID)</param>
 		/// <param name="password">Decryption password</param>
 		/// <param name="secondPassword">Second password</param>
-		public WalletHelper CreateWalletHelper(string identifier, string password, string secondPassword)
+		public WalletHelper CreateWalletHelper(string identifier, string password, string secondPassword = null)
 		{
 			return new WalletHelper(this.httpClient, identifier, password, secondPassword);
 		}

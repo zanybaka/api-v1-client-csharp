@@ -70,9 +70,11 @@
     <Compile Include="IntegrationTests\CurrencyTests.cs" />
     <Compile Include="IntegrationTests\InventoryDataTests.cs" />
     <Compile Include="IntegrationTests\ReceiveTests.cs" />
+    <Compile Include="IntegrationTests\StatisticsTests.cs" />
     <Compile Include="IntegrationTests\TransactionPusherTests.cs" />
     <Compile Include="IntegrationTests\TransactionTests.cs" />
     <Compile Include="IntegrationTests\UnspentOutputTests.cs" />
+    <Compile Include="IntegrationTests\WalletTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReflectionUtil.cs" />
     <Compile Include="UnitTests\AddressTests.cs" />
@@ -87,6 +89,7 @@
     <Compile Include="UnitTests\TransactionTests.cs" />
     <Compile Include="UnitTests\UnitTestUtil.cs" />
     <Compile Include="UnitTests\UnspentOutputTests.cs" />
+    <Compile Include="UnitTests\WalletTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="JsonObjects\single_transaction.json" />

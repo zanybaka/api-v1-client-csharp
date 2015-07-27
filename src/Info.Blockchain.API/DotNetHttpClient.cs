@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Info.Blockchain.API.Abstractions;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Info.Blockchain.API
 {
@@ -38,8 +39,7 @@ namespace Info.Blockchain.API
 				route += queryString.ToString();
 			}
 			HttpResponseMessage response = await this.httpClient.GetAsync(route);
-			await this.ValidateResponse(response);
-			string responseString = await response.Content.ReadAsStringAsync();
+			string responseString = await this.ValidateResponse(response);
 			var responseObject = customDeserialization == null
 				? JsonConvert.DeserializeObject<T>(responseString)
 				: customDeserialization(responseString);
@@ -66,17 +66,23 @@ namespace Info.Blockchain.API
 				httpContent = new StringContent(json, Encoding.UTF8, "application/x-www-form-urlencoded");
 			}
 			HttpResponseMessage response = await this.httpClient.PostAsync(route, httpContent);
-			await this.ValidateResponse(response);
-			string responseString = await response.Content.ReadAsStringAsync();
+			string responseString = await this.ValidateResponse(response);
 			TResponse responseObject = JsonConvert.DeserializeObject<TResponse>(responseString);
 			return responseObject;
 		}
 
-		private async Task ValidateResponse(HttpResponseMessage response)
+		private async Task<string> ValidateResponse(HttpResponseMessage response)
 		{
 			if (response.IsSuccessStatusCode)
 			{
-				return;
+				string responseString = await response.Content.ReadAsStringAsync();
+				if (responseString != null && responseString.StartsWith("{\"error\":"))
+				{
+					JObject jObject = JObject.Parse(responseString);
+					string message = jObject["error"].ToObject<string>();
+					throw new ServerApiException(message, HttpStatusCode.BadRequest);
+				}
+				return responseString;
 			}
 			string responseContent = await response.Content.ReadAsStringAsync();
 			if (string.Equals(responseContent, "Block Not Found"))
