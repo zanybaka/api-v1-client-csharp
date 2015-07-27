@@ -1,6 +1,6 @@
-﻿using Info.Blockchain.API.Abstractions;
-using Newtonsoft.Json;
+﻿using System;
 using System.Threading.Tasks;
+using Info.Blockchain.API.Abstractions;
 
 namespace Info.Blockchain.API.CreateWallet
 {
@@ -28,6 +28,14 @@ namespace Info.Blockchain.API.CreateWallet
 		/// <exception cref="ServerApiException">If the server returns an error</exception>
 		public async Task<CreateWalletResponse> Create(string password, string privateKey = null, string label = null, string email = null)
 		{
+			if (string.IsNullOrWhiteSpace(password))
+			{
+				throw new ArgumentNullException(nameof(password));
+			}
+			if (string.IsNullOrWhiteSpace(this.httpClient.ApiCode))
+			{
+				throw new ArgumentNullException("Api code must be specified", innerException: null);
+			}
 			CreateWalletRequest request = new CreateWalletRequest(password, privateKey, label, email);
 			CreateWalletResponse walletResponse = await this.httpClient.PostAsync<CreateWalletRequest, CreateWalletResponse>("api/v2/create_wallet", request);
 			return walletResponse;

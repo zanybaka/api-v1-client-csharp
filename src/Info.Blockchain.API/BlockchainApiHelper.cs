@@ -24,12 +24,15 @@ namespace Info.Blockchain.API
 		{
 			if (httpClient == null)
 			{
-				this.httpClient = new DotNetHttpClient(apiCode);
+				this.httpClient = new BlockchainHttpClient(apiCode);
 			}
 			else
 			{
 				this.httpClient = httpClient;
-				this.httpClient.ApiCode = apiCode;
+				if (apiCode != null)
+				{
+					this.httpClient.ApiCode = apiCode;
+				}
 			}
 
 			this.BlockExpolorer = new BlockExplorer.BlockExplorer(this.httpClient);
@@ -47,7 +50,7 @@ namespace Info.Blockchain.API
 		/// <param name="identifier">Wallet identifier (GUID)</param>
 		/// <param name="password">Decryption password</param>
 		/// <param name="secondPassword">Second password</param>
-		public WalletHelper CreateWalletHelper(string identifier, string password, string secondPassword)
+		public WalletHelper CreateWalletHelper(string identifier, string password, string secondPassword = null)
 		{
 			return new WalletHelper(this.httpClient, identifier, password, secondPassword);
 		}

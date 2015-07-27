@@ -1,6 +1,6 @@
-﻿using Info.Blockchain.API.BlockExplorer;
+﻿using System;
+using Info.Blockchain.API.BlockExplorer;
 using Newtonsoft.Json;
-using System;
 
 namespace Info.Blockchain.API.Json
 {

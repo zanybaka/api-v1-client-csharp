@@ -3,31 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
-using Info.Blockchain.API.BlockExplorer;
-using KellermanSoftware.CompareNetObjects;
 using Xunit;
 
 namespace Info.Blockchain.API.Tests.UnitTests
 {
-	public class TransactionTests
+	public class CurrencyTests
 	{
 		[Fact]
-		public async void GetTransaction_BadIds_ArgumentExecption()
+		public async void ToBtc_NullCurrency_ArgumentNullException()
 		{
 			await Assert.ThrowsAsync<ArgumentNullException>(async () =>
 			{
 				using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
 				{
-					await apiHelper.BlockExpolorer.GetTransactionAsync(null);
+					await apiHelper.ExchangeRateExplorer.ToBtcAsync(null, 1);
 				}
 			});
+		}
 
+		[Fact]
+		public async void ToBtc_NegativeValue_ArgumentOutOfRangeException()
+		{
 			await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () =>
 			{
 				using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
 				{
-					await apiHelper.BlockExpolorer.GetTransactionByIndexAsync(-1);
+					await apiHelper.ExchangeRateExplorer.ToBtcAsync("USD", -1);
 				}
 			});
 		}

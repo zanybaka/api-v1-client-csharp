@@ -9,7 +9,7 @@ namespace Info.Blockchain.API
 	/// </summary>
 	public abstract class ApiExceptionBase : Exception
 	{
-		public ApiExceptionBase(string message)
+		protected ApiExceptionBase(string message)
 			: base(message)
 		{
 		}
@@ -36,7 +36,7 @@ namespace Info.Blockchain.API
 		public HttpStatusCode StatusCode { get; }
 		public ServerApiException(string message, HttpStatusCode statusCode = HttpStatusCode.InternalServerError) : base(message)
 		{
-
+			this.StatusCode = statusCode;
 		}
 	}
 }

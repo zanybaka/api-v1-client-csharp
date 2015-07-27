@@ -9,25 +9,8 @@ namespace Info.Blockchain.API.Abstractions
 	{
 		string ApiCode { get; set; }
 		Task<T> GetAsync<T>(string route, QueryString queryString = null, Func<string, T> customDeserialization = null);
-		Task<TResponse> PostAsync<TPost, TResponse>(string route, TPost postObject, Func<string, TResponse> customDeserialization = null);
+		Task<TResponse> PostAsync<TPost, TResponse>(string route, TPost postObject, Func<string, TResponse> customDeserialization = null, bool multiPartContent = false);
 	}
-
-	public class HttpResponse<T>
-	{
-		public T ResultObject { get; }
-
-		public HttpResponse(T resultObject)
-		{
-			this.ResultObject = resultObject;
-		}
-	}
-
-	public enum Method
-	{
-		Post,
-		Get
-	}
-
 
 	public class QueryString
 	{
@@ -53,8 +36,7 @@ namespace Info.Blockchain.API.Abstractions
 		public override string ToString()
 		{
 			IEnumerable<string> queryStringList = this.queryString.Select(kv => $"{kv.Key}={kv.Value}");
-			string queryString = "?" + string.Join("&", queryStringList);
-			return queryString;
+			return "?" + string.Join("&", queryStringList);
 		}
 	}
 }

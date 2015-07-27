@@ -1,10 +1,9 @@
-﻿using Info.Blockchain.API.Abstractions;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Info.Blockchain.API.Abstractions;
 using Info.Blockchain.API.Json;
 
 namespace Info.Blockchain.API.BlockExplorer
@@ -81,44 +80,64 @@ namespace Info.Blockchain.API.BlockExplorer
 			{
 				throw new ArgumentNullException(nameof(hashOrIndex));
 			}
-			Block block = await this.httpClient.GetAsync<Block>("rawblock/" + hashOrIndex, customDeserialization: Block.Deserialize);
+			Block block = await this.httpClient.GetAsync("rawblock/" + hashOrIndex, customDeserialization: Block.Deserialize);
 			return block;
 		}
 
 		/// <summary>
 		/// Gets data for a single address asynchronously.
 		/// </summary>
-		/// <param name="address">Base58check or hash160 address string</param>
+		/// <param name="addressOrHash">Base58check or hash160 address string</param>
 		/// <param name="maxTransactionCount">Max amount of transactions to retrieve</param>
 		/// <returns>An instance of the Address class</returns>
 		/// <exception cref="ServerApiException">If the server returns an error</exception>
-		public async Task<Address> GetAddressAsync(string address, int? maxTransactionCount = null)
+		public async Task<Address> GetAddressAsync(string addressOrHash, int? maxTransactionCount = null)
 		{
-			if (string.IsNullOrWhiteSpace(address))
+			if (string.IsNullOrWhiteSpace(addressOrHash))
 			{
-				throw new ArgumentNullException(address);
+				throw new ArgumentNullException(addressOrHash);
 			}
-			Address addressObj = await this.GetAddressWithOffsetAsync(address);
+			if (maxTransactionCount != null && maxTransactionCount < 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(maxTransactionCount), "Max transaction count must be greater than or equal to zero");
+			}
+
+			Address addressObj = await this.GetAddressWithOffsetAsync(addressOrHash);
 			List<Transaction> transactionList = await this.GetTransactionsAsync(addressObj, maxTransactionCount);
 			return new Address(addressObj, transactionList);
 		}
 
-		private async Task<List<Transaction>> GetTransactionsAsync(Address address, long? maxTransactionCount = null)
+		private async Task<List<Transaction>> GetTransactionsAsync(Address address, int? maxTransactionCount = null)
 		{
+			const int maxTransactionsPerRequest = 50;
 			if (address == null)
 			{
 				throw new ArgumentNullException(nameof(address));
 			}
-			const int maxTransactionLimit = 50;
-			int transactionsPerRequest = maxTransactionCount == null || maxTransactionCount >= maxTransactionLimit ? maxTransactionLimit : (int)maxTransactionCount.Value;
+			if (maxTransactionCount != null && maxTransactionCount < 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(maxTransactionCount), "Max transaction count must be greater than or equal to zero");
+			}
 
+			if (maxTransactionCount != null && maxTransactionCount < maxTransactionsPerRequest)
+			{
+				return address.Transactions.Take(maxTransactionCount.Value).ToList();
+			}
 
-			maxTransactionCount = maxTransactionCount ?? address.TransactionCount;
+			maxTransactionCount = maxTransactionCount ?? (int)address.TransactionCount;
 			List<Task<Address>> tasks = new List<Task<Address>>();
 
-			for (int offset = 50; offset <= maxTransactionCount.Value; offset += 50)
+			int offset;
+			for (offset = maxTransactionsPerRequest; offset <= maxTransactionCount.Value - maxTransactionsPerRequest; offset += maxTransactionsPerRequest)
 			{
-				Task<Address> task = this.GetAddressWithOffsetAsync(address.AddressStr, transactionsPerRequest, offset);
+				Task<Address> task = this.GetAddressWithOffsetAsync(address.AddressStr, maxTransactionsPerRequest, offset);
+				tasks.Add(task);
+			}
+
+			if (offset < maxTransactionCount.Value)
+			{
+				int remainingTransactions = (int)maxTransactionCount.Value - offset;
+				Task<Address> task = this.GetAddressWithOffsetAsync(address.AddressStr, remainingTransactions, offset);
 				tasks.Add(task);
 			}
 
@@ -134,7 +153,7 @@ namespace Info.Blockchain.API.BlockExplorer
 			return transactions;
 		}
 
-		private async Task<Address> GetAddressWithOffsetAsync(string address, int transactionLimit = 50, int offset = 0)
+		private async Task<Address> GetAddressWithOffsetAsync(string addressOrHash, int transactionLimit = 50, int offset = 0)
 		{
 			if (transactionLimit > 50 || transactionLimit < 1)
 			{
@@ -148,8 +167,9 @@ namespace Info.Blockchain.API.BlockExplorer
 			QueryString queryString = new QueryString();
 			queryString.Add("offset", offset.ToString());
 			queryString.Add("limit", transactionLimit.ToString());
+			queryString.Add("format", "json");
 
-			Address addressObj = await this.httpClient.GetAsync<Address>("rawaddr/" + address, queryString);
+			Address addressObj = await this.httpClient.GetAsync<Address>("address/" + addressOrHash, queryString);
 			return addressObj;
 		}
 
@@ -169,7 +189,7 @@ namespace Info.Blockchain.API.BlockExplorer
 			QueryString queryString = new QueryString();
 			queryString.Add("format", "json");
 
-			var blocks = await this.httpClient.GetAsync<ReadOnlyCollection<Block>>("block-height/" + height, queryString, Block.DeserializeMultiple);
+			var blocks = await this.httpClient.GetAsync("block-height/" + height, queryString, Block.DeserializeMultiple);
 			return blocks;
 		}
 
@@ -181,12 +201,16 @@ namespace Info.Blockchain.API.BlockExplorer
 		/// <exception cref="ServerApiException">If the server returns an error</exception>
 		public async Task<ReadOnlyCollection<UnspentOutput>> GetUnspentOutputsAsync(string address)
 		{
+			if (string.IsNullOrWhiteSpace(address))
+			{
+				throw new ArgumentNullException(nameof(address));
+			}
 			QueryString queryString = new QueryString();
 			queryString.Add("active", address);
 			try
 			{
-				List<UnspentOutput> unspentOuputs = await this.httpClient.GetAsync<List<UnspentOutput>>("unspent", queryString);
-				return new ReadOnlyCollection<UnspentOutput>(unspentOuputs);
+				ReadOnlyCollection<UnspentOutput> unspentOuputs = await this.httpClient.GetAsync("unspent", queryString, UnspentOutput.DeserializeMultiple);
+				return unspentOuputs;
 			}
 			catch (ServerApiException ex)
 			{
@@ -219,10 +243,10 @@ namespace Info.Blockchain.API.BlockExplorer
 		public async Task<ReadOnlyCollection<Transaction>> GetUnconfirmedTransactionsAsync()
 		{
 			QueryString queryString = new QueryString();
-			queryString.Add("format", " json");
+			queryString.Add("format", "json");
 
-			List<Transaction> transactions = await this.httpClient.GetAsync<List<Transaction>>("unconfirmed-transactions", queryString);
-			return new ReadOnlyCollection<Transaction>(transactions);
+			ReadOnlyCollection<Transaction> transactions = await this.httpClient.GetAsync("unconfirmed-transactions", queryString, Transaction.DeserializeMultiple);
+			return transactions;
 		}
 
 		/// <summary>
@@ -297,11 +321,15 @@ namespace Info.Blockchain.API.BlockExplorer
 		/// <exception cref="ServerApiException">If the server returns an error</exception>
 		public async Task<InventoryData> GetInventoryDataAsync(string hash)
 		{
+			if (string.IsNullOrWhiteSpace(hash))
+			{
+				throw new ArgumentNullException(nameof(hash));
+			}
 			QueryString queryString = new QueryString();
 			queryString.Add("format", "json");
 
-			InventoryData invertoryData = await this.httpClient.GetAsync<InventoryData>("inv/" + hash, queryString);
-			return invertoryData;
+			InventoryData inventoryData = await this.httpClient.GetAsync<InventoryData>("inv/" + hash, queryString);
+			return inventoryData;
 		}
 	}
 }

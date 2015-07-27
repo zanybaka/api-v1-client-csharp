@@ -1,7 +1,9 @@
-﻿using Info.Blockchain.API.Json;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
+using Info.Blockchain.API.Json;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
 // ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace Info.Blockchain.API.BlockExplorer
@@ -19,13 +21,13 @@ namespace Info.Blockchain.API.BlockExplorer
 		/// <summary>
 		/// Whether the transaction is a double spend
 		/// </summary>
-		[JsonProperty("double_spend", Required = Required.Always)]
+		[JsonProperty("double_spend")]
 		public bool DoubleSpend { get; private set; }
 
 		/// <summary>
 		/// Block height of the parent block. -1 for unconfirmed transactions.
 		/// </summary>
-		[JsonProperty("block_height", Required = Required.Always)]
+		[JsonProperty("block_height")]
 		public long BlockHeight { get; private set; } = -1;
 
 		/// <summary>
@@ -76,5 +78,12 @@ namespace Info.Blockchain.API.BlockExplorer
 		/// </summary>
 		[JsonProperty("out", Required = Required.Always)]
 		public ReadOnlyCollection<Output> Outputs { get; private set; }
+
+		public static ReadOnlyCollection<Transaction> DeserializeMultiple(string transactionsJson)
+		{
+			JObject jObject = JObject.Parse(transactionsJson);
+
+			return jObject["txs"].ToObject<ReadOnlyCollection<Transaction>>();
+		}
 	}
 }

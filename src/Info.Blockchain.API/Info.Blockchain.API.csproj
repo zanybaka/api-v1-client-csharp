@@ -37,7 +37,7 @@
     <Compile Include="Abstractions\IHttpClient.cs" />
     <Compile Include="ApiException.cs" />
     <Compile Include="BlockchainApiHelper.cs" />
-    <Compile Include="DotNetHttpClient.cs" />
+    <Compile Include="BlockchainHttpClient.cs" />
     <Compile Include="BlockExplorer\Address.cs" />
     <Compile Include="BlockExplorer\BitcoinValue.cs" />
     <Compile Include="BlockExplorer\Block.cs" />

@@ -1,8 +1,9 @@
-﻿using Info.Blockchain.API.Json;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using Info.Blockchain.API.Json;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Local
@@ -113,15 +114,14 @@ namespace Info.Blockchain.API.BlockExplorer
 			return blockJObject.ToObject<Block>();
 		}
 
-		public static ReadOnlyCollection<Block> DeserializeMultiple(string blocksJson)
+		public new static ReadOnlyCollection<Block> DeserializeMultiple(string blocksJson)
 		{
 			JObject blocksJObject = JObject.Parse(blocksJson);
-			List<Block> blocks = new List<Block>();
-			foreach (JToken jToken in blocksJObject["blocks"].AsJEnumerable())
-			{
-				Block block = Deserialize(jToken.ToString());
-				blocks.Add(block);
-			}
+
+			List<Block> blocks = blocksJObject["blocks"]
+				.AsJEnumerable()
+				.Select(jToken => Block.Deserialize(jToken.ToString())).
+				ToList();
 			return new ReadOnlyCollection<Block>(blocks);
 		}
 	}
