@@ -79,6 +79,7 @@
     <Compile Include="ReflectionUtil.cs" />
     <Compile Include="UnitTests\AddressTests.cs" />
     <Compile Include="UnitTests\BitcoinValueTests.cs" />
+    <Compile Include="UnitTests\BlockchainApiHelperTests.cs" />
     <Compile Include="UnitTests\BlockTests.cs" />
     <Compile Include="IntegrationTests\CreateWalletTests.cs" />
     <Compile Include="UnitTests\CreateWalletTests.cs" />
