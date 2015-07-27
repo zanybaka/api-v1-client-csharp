@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Info.Blockchain.API
 {
-	internal class DotNetHttpClient : IHttpClient
+	internal class BlockchainHttpClient : IHttpClient
 	{
 		private const string BASE_URI = "https://blockchain.info/";
 		private const int TIMEOUT_MS = 100000;
@@ -17,26 +17,42 @@ namespace Info.Blockchain.API
 
 		public string ApiCode { get; set; }
 
-		public DotNetHttpClient(string apiCode)
+		public BlockchainHttpClient(string apiCode)
 		{
 			this.ApiCode = apiCode;
 			this.httpClient = new HttpClient
 			{
-				BaseAddress = new Uri(DotNetHttpClient.BASE_URI),
-				Timeout = TimeSpan.FromMilliseconds(DotNetHttpClient.TIMEOUT_MS)
+				BaseAddress = new Uri(BlockchainHttpClient.BASE_URI),
+				Timeout = TimeSpan.FromMilliseconds(BlockchainHttpClient.TIMEOUT_MS)
 			};
 		}
 
 		public async Task<T> GetAsync<T>(string route, QueryString queryString = null, Func<string, T> customDeserialization = null)
 		{
-			//TODO check to see if the route has a query string already
+			if (route == null)
+			{
+				throw new ArgumentNullException(nameof(route));
+			}
+
 			if (this.ApiCode != null)
 			{
 				queryString?.Add("api_code", this.ApiCode);
 			}
 			if (queryString != null && queryString.Count > 0)
 			{
-				route += queryString.ToString();
+
+				int queryStringIndex = route.IndexOf('?');
+				if (queryStringIndex >= 0)
+				{
+					//Append to querystring
+					string queryStringValue = queryStringIndex.ToString();
+					queryStringValue = "&" + queryStringValue.Substring(1); //replace questionmark with &
+					route += queryStringValue;
+				}
+				else
+				{
+					route += queryString.ToString();
+				}
 			}
 			HttpResponseMessage response = await this.httpClient.GetAsync(route);
 			string responseString = await this.ValidateResponse(response);
@@ -48,6 +64,10 @@ namespace Info.Blockchain.API
 
 		public async Task<TResponse> PostAsync<TPost, TResponse>(string route, TPost postObject, Func<string, TResponse> customDeserialization = null, bool multiPartContent = false)
 		{
+			if (route == null)
+			{
+				throw new ArgumentNullException(nameof(route));
+			}
 			if (this.ApiCode != null)
 			{
 				route += "?api_code=" + this.ApiCode;

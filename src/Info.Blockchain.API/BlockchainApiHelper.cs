@@ -24,7 +24,7 @@ namespace Info.Blockchain.API
 		{
 			if (httpClient == null)
 			{
-				this.httpClient = new DotNetHttpClient(apiCode);
+				this.httpClient = new BlockchainHttpClient(apiCode);
 			}
 			else
 			{
