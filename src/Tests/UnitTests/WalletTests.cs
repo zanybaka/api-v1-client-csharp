@@ -90,7 +90,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
 				}
 			});
 
-			await Assert.ThrowsAsync<ArgumentNullException>(async () =>
+			await Assert.ThrowsAsync<ArgumentException>(async () =>
 			{
 				using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
 				{
@@ -103,7 +103,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
 		[Fact]
 		public async void SendMany_NullReeipients_ArgumentNUllException()
 		{
-			await Assert.ThrowsAsync<ArgumentNullException>(async () =>
+			await Assert.ThrowsAsync<ArgumentException>(async () =>
 			{
 				using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
 				{
@@ -111,7 +111,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
 					await walletHelper.SendManyAsync(null);
 				}
 			});
-			await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () =>
+			await Assert.ThrowsAsync<ArgumentException>(async () =>
 			{
 				using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
 				{

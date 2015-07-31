@@ -5,8 +5,8 @@ using Info.Blockchain.API.Abstractions;
 namespace Info.Blockchain.API.CreateWallet
 {
 	/// <summary>
-	/// This class reflects the functionality documented at https://blockchain.info/api/create_walleti. 
-	/// It allows users to create new wallets as long as their API code has the 'generate wallet' permission. 
+	/// This class reflects the functionality documented at https://blockchain.info/api/create_walleti.
+	/// It allows users to create new wallets as long as their API code has the 'generate wallet' permission.
 	/// </summary>
 	public class WalletCreator
 	{
@@ -30,11 +30,11 @@ namespace Info.Blockchain.API.CreateWallet
 		{
 			if (string.IsNullOrWhiteSpace(password))
 			{
-				throw new ArgumentNullException(nameof(password));
+			throw new ArgumentNullException(nameof(password));
 			}
 			if (string.IsNullOrWhiteSpace(this.httpClient.ApiCode))
 			{
-				throw new ArgumentNullException("Api code must be specified", innerException: null);
+					throw new ArgumentNullException("Api code must be specified", innerException: null);
 			}
 			CreateWalletRequest request = new CreateWalletRequest(password, privateKey, label, email);
 			CreateWalletResponse walletResponse = await this.httpClient.PostAsync<CreateWalletRequest, CreateWalletResponse>("api/v2/create_wallet", request);

@@ -87,7 +87,7 @@ namespace Info.Blockchain.API.Wallet
 		/// <summary>
 		/// Sends bitcoin from your wallet to multiple addresses.
 		/// </summary>
-		/// <param name="recipients">Dictionary with the structure of 'address':amount 
+		/// <param name="recipients">Dictionary with the structure of 'address':amount
 		/// (string:BitcoinValue)</param>
 		/// <param name="fromAddress">Specific address to send from</param>
 		/// <param name="fee">Transaction fee. Must be greater than the default fee</param>
@@ -97,7 +97,7 @@ namespace Info.Blockchain.API.Wallet
 		public async Task<PaymentResponse> SendManyAsync(Dictionary<string, BitcoinValue> recipients,
 			string fromAddress = null, BitcoinValue? fee = null, string note = null)
 		{
-			if (recipients == null || !recipients.Any())
+			if (recipients == null || recipients.Count == 0)
 			{
 				throw new ArgumentException("Sending bitcoin from your wallet requires at least one receipient.", nameof(recipients));
 			}
@@ -131,7 +131,7 @@ namespace Info.Blockchain.API.Wallet
 		}
 
 		/// <summary>
-		/// Fetches the wallet balance. Includes unconfirmed transactions 
+		/// Fetches the wallet balance. Includes unconfirmed transactions
 		/// and possibly double spends.
 		/// </summary>
 		/// <returns>Wallet balance</returns>
@@ -147,7 +147,7 @@ namespace Info.Blockchain.API.Wallet
 		/// <summary>
 		/// Lists all active addresses in the wallet.
 		/// </summary>
-		/// <param name="confirmations">Minimum number of confirmations transactions 
+		/// <param name="confirmations">Minimum number of confirmations transactions
 		/// must have before being included in the balance of addresses (can be 0)</param>
 		/// <returns>A list of Address objects</returns>
 		/// <exception cref="ServerApiException">If the server returns an error</exception>
@@ -170,7 +170,7 @@ namespace Info.Blockchain.API.Wallet
 		/// Retrieves an address from the wallet.
 		/// </summary>
 		/// <param name="address"> Address in the wallet to look up</param>
-		/// <param name="confirmations">Minimum number of confirmations transactions 
+		/// <param name="confirmations">Minimum number of confirmations transactions
 		/// must have before being included in the balance of addresses (can be 0)</param>
 		/// <returns>An instance of the Address class</returns>
 		/// <exception cref="ServerApiException">If the server returns an error</exception>
@@ -240,6 +240,10 @@ namespace Info.Blockchain.API.Wallet
 		/// <exception cref="ServerApiException">If the server returns an error</exception>
 		public async Task<string> UnarchiveAddress(string address)
 		{
+			if (address == null)
+			{
+					throw new ArgumentNullException(nameof(address));
+			}
 			QueryString queryString = this.BuildBasicQueryString();
 			queryString.Add("address", address);
 
