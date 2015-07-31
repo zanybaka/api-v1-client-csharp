@@ -1,72 +1,74 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
+using Info.Blockchain.API.Json;
+using Newtonsoft.Json;
+// ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace Info.Blockchain.API.BlockExplorer
 {
-    /// <summary>
-    /// This class contains data related to inventory messages 
-    /// that Blockchain.info received for an object.
-    /// </summary>
-    public class InventoryData
-    {
-        public InventoryData(JObject i)
-        {
-            Hash = (string)i["hash"];
-            Type = (string)i["type"];
-            InitialTime = (long)i["initial_time"];
-            LastTime = (long)i["last_time"];
-            InitialIP = (string)i["initial_ip"];
-            NConnected = (int)i["nconnected"];
-            RelayedCount = (int)i["relayed_count"];
-            RelayedPercent = (int)i["relayed_percent"];
-        }
+	/// <summary>
+	/// This class contains data related to inventory messages 
+	/// that Blockchain.info received for an object.
+	/// </summary>
+	public class InventoryData
+	{
+		[JsonConstructor]
+		private InventoryData()
+		{
+		}
 
-        /// <summary>
-        /// Object hash
-        /// </summary>
-        public string Hash { get; private set; }
+		/// <summary>
+		/// Object hash
+		/// </summary>
+		[JsonProperty("hash", Required = Required.Always)]
+		public string Hash { get; private set; }
 
-        /// <summary>
-        /// Object type
-        /// </summary>
-        public string Type { get; private set; }
+		/// <summary>
+		/// Object type
+		/// </summary>
+		[JsonProperty("type", Required = Required.Always)]
+		public string Type { get; private set; }
 
-        /// <summary>
-        /// The time Blockchain.info first received an inventory message
-        /// containing a hash for this transaction (unix time in ms).
-        /// </summary>
-        public long InitialTime { get; private set; }
+		/// <summary>
+		/// The time Blockchain.info first received an inventory message
+		/// containing a hash for this transaction.
+		/// </summary>
+		[JsonProperty("initial_time", Required = Required.Always)]
+		[JsonConverter(typeof(UnixDateTimeJsonConverter), true)]
+		public DateTime InitialTime { get; private set; }
 
-        /// <summary>
-        /// The last time Blockchain.info received an inventory message 
-        /// containing a hash for this transaction (unix time in ms).
-        /// </summary>
-        public long LastTime { get; private set; }
+		/// <summary>
+		/// The last time Blockchain.info received an inventory message 
+		/// containing a hash for this transaction.
+		/// </summary>
+		[JsonProperty("last_time", Required = Required.Always)]
+		[JsonConverter(typeof(UnixDateTimeJsonConverter), true)]
+		public DateTime LastTime { get; private set; }
 
-        /// <summary>
-        /// IP of the peer from which Blockchain.info first received an inventory 
-        /// message containing a hash for this transaction.
-        /// </summary>
-        public string InitialIP { get; private set; }
+		/// <summary>
+		/// IP of the peer from which Blockchain.info first received an inventory 
+		/// message containing a hash for this transaction.
+		/// </summary>
+		[JsonProperty("initial_ip", Required = Required.Always)]
+		public string InitialIp { get; private set; }
 
-        /// <summary>
-        /// Number of nodes that Blockchain.info is currently connected to.
-        /// </summary>
-        public int NConnected { get; private set; }
-        
-        /// <summary>
-        /// Number of nodes Blockchain.info received an inventory message containing 
-        /// a hash for this transaction from.
-        /// </summary>
-        public int RelayedCount { get; private set; }
+		/// <summary>
+		/// Number of nodes that Blockchain.info is currently connected to.
+		/// </summary>
+		[JsonProperty("nconnected", Required = Required.Always)]
+		public int NConnected { get; private set; }
 
-        /// <summary>
-        /// Ratio of nodes that Blockchain.info received an inventory message
-        /// containing a hash for this transaction from and the number of connected nodes.
-        /// </summary>
-        public int RelayedPercent { get; private set; }
-    }
+		/// <summary>
+		/// Number of nodes Blockchain.info received an inventory message containing 
+		/// a hash for this transaction from.
+		/// </summary>
+		[JsonProperty("relayed_count", Required = Required.Always)]
+		public int RelayedCount { get; private set; }
+
+		/// <summary>
+		/// Ratio of nodes that Blockchain.info received an inventory message
+		/// containing a hash for this transaction from and the number of connected nodes.
+		/// </summary>
+		[JsonProperty("relayed_percent", Required = Required.Always)]
+		public int RelayedPercent { get; private set; }
+	}
 }

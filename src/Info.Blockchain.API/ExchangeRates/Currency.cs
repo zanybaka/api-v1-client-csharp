@@ -1,47 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Newtonsoft.Json;
+// ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace Info.Blockchain.API.ExchangeRates
 {
-    /// <summary>
-    /// This class is used in the response of the `GetTicker` method in the `ExchangeRates` class.
-    /// </summary>
-    public  class Currency
-    {
-        public Currency(double buy, double sell, double last, double price15m, string symbol)
-        {
-            Buy = buy;
-            Sell = sell;
-            Last = last;
-            Price15m = price15m;
-            Symbol = symbol;
-        }
+	/// <summary>
+	/// This class is used in the response of the `GetTicker` method in the `ExchangeRates` class.
+	/// </summary>
+	public class Currency
+	{
+		[JsonConstructor]
+		private Currency()
+		{
+		}
 
-        /// <summary>
-        /// Current buy price
-        /// </summary>
-        public double Buy { get; private set; }
+		/// <summary>
+		/// Current buy price
+		/// </summary>
+		[JsonProperty("buy", Required = Required.Always)]
+		public double Buy { get; private set; }
 
-        /// <summary>
-        /// Current sell price
-        /// </summary>
-        public double Sell { get; private set; }
+		/// <summary>
+		/// Current sell price
+		/// </summary>
+		[JsonProperty("sell", Required = Required.Always)]
+		public double Sell { get; private set; }
 
-        /// <summary>
-        /// Most recent market price
-        /// </summary>
-        public double Last { get; private set; }
+		/// <summary>
+		/// Most recent market price
+		/// </summary>
+		[JsonProperty("last", Required = Required.Always)]
+		public double Last { get; private set; }
 
-        /// <summary>
-        /// 15 minutes delayed market price
-        /// </summary>
-        public double Price15m { get; private set; }
+		/// <summary>
+		/// 15 minutes delayed market price
+		/// </summary>
+		[JsonProperty("15m", Required = Required.Always)]
+		public double Price15M { get; private set; }
 
-        /// <summary>
-        /// Currency symbol
-        /// </summary>
-        public string Symbol { get; private set; }
-    }
+		/// <summary>
+		/// Currency symbol
+		/// </summary>
+		[JsonProperty("symbol", Required = Required.Always)]
+		public string Symbol { get; private set; }
+	}
 }
