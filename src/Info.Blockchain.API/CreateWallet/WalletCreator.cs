@@ -5,7 +5,7 @@ using Info.Blockchain.API.Abstractions;
 namespace Info.Blockchain.API.CreateWallet
 {
 	/// <summary>
-	/// This class reflects the functionality documented at https://blockchain.info/api/create_walleti.
+	/// This class reflects the functionality documented at https://blockchain.info/api/create_wallet.
 	/// It allows users to create new wallets as long as their API code has the 'generate wallet' permission.
 	/// </summary>
 	public class WalletCreator
