@@ -69,7 +69,6 @@
     <Compile Include="IntegrationTests\BlockTests.cs" />
     <Compile Include="IntegrationTests\CurrencyTests.cs" />
     <Compile Include="IntegrationTests\InventoryDataTests.cs" />
-    <Compile Include="IntegrationTests\ReceiveTests.cs" />
     <Compile Include="IntegrationTests\StatisticsTests.cs" />
     <Compile Include="IntegrationTests\TransactionPusherTests.cs" />
     <Compile Include="IntegrationTests\TransactionTests.cs" />

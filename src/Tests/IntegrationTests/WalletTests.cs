@@ -19,17 +19,6 @@ namespace Info.Blockchain.API.Tests.IntegrationTests
 		private const string FIRST_ADDRESS = "17VYDFsDxBMovM1cKGEytgeqdijNcr4L5";
 
 		[Fact]
-		public async void GetWalletBalance_Valid()
-		{
-			using (BlockchainApiHelper apiHelper = new BlockchainApiHelper())
-			{
-				WalletHelper walletHelper = apiHelper.CreateWalletHelper(WalletTests.WALLET_ID, WalletTests.WALLET_PASSWORD, WalletTests.WALLET_PASSWORD2);
-				BitcoinValue bitcoinValue = await walletHelper.GetBalanceAsync();
-				Assert.Equal(bitcoinValue, BitcoinValue.Zero);
-			}
-		}
-
-		[Fact]
 		public async void SendPayment_SendBtc_NoFreeOutputs()
 		{
 			ServerApiException apiException = await Assert.ThrowsAsync<ServerApiException>(async () => {
@@ -76,18 +65,6 @@ namespace Info.Blockchain.API.Tests.IntegrationTests
 		}
 
 		[Fact]
-		public async void GetAddress_GetFirst_Valid()
-		{
-			using (BlockchainApiHelper apiHelper = new BlockchainApiHelper())
-			{
-				WalletHelper walletHelper = apiHelper.CreateWalletHelper(WalletTests.WALLET_ID, WalletTests.WALLET_PASSWORD, WalletTests.WALLET_PASSWORD2);
-				Address address = await walletHelper.GetAddressAsync(WalletTests.FIRST_ADDRESS);
-				Assert.NotNull(address);
-				Assert.Equal(address.AddressStr, WalletTests.FIRST_ADDRESS);
-			}
-		}
-
-		[Fact]
 		public async void GetAddresses_Valid()
 		{
 			using (BlockchainApiHelper apiHelper = new BlockchainApiHelper())
@@ -128,9 +105,6 @@ namespace Info.Blockchain.API.Tests.IntegrationTests
 
 				string unarchivedAddress = await walletHelper.UnarchiveAddress(archivedAddress);
 				Assert.NotNull(unarchivedAddress);
-
-				List<string> addressesConsolidated = await walletHelper.Consolidate();
-				Assert.NotNull(addressesConsolidated);
 			}
 		}
 	}

@@ -18,36 +18,6 @@ namespace Info.Blockchain.API.Tests.IntegrationTests
 		}
 
 		[Fact]
-		public async void GetBlock_ByHash_IsValid()
-		{
-			using (BlockchainApiHelper apiHelper = new BlockchainApiHelper())
-			{
-				Block knownBlock = this.GetSingleBlock();
-				Block receivedBlock = await apiHelper.BlockExpolorer.GetBlockAsync(knownBlock.Hash);
-				
-				ComparisonResult comparisonResult = new CompareLogic().Compare(knownBlock, receivedBlock);
-				bool areEqual = comparisonResult.AreEqual;
-				Assert.True(areEqual);
-			}
-		}
-
-
-		[Fact]
-		public async void GetBlock_ByIndex_IsValid()
-		{
-			using (BlockchainApiHelper apiHelper = new BlockchainApiHelper())
-			{
-				Block knownBlock = this.GetSingleBlock();
-				Block receivedBlock = await apiHelper.BlockExpolorer.GetBlockAsync(knownBlock.Index);
-
-				ComparisonResult comparisonResult = new CompareLogic().Compare(knownBlock, receivedBlock);
-				bool areEqual = comparisonResult.AreEqual;
-				Assert.True(areEqual);
-			}
-		}
-
-
-		[Fact]
 		public async void GetLatestBlock_NotNull()
 		{
 			using (BlockchainApiHelper apiHelper = new BlockchainApiHelper())
@@ -103,18 +73,6 @@ namespace Info.Blockchain.API.Tests.IntegrationTests
 				Assert.True(areEqual);
 			}
 		}
-
-		[Fact]
-		public async void GetBlocks_ByToday_NotNull()
-		{
-			using (BlockchainApiHelper apiHelper = new BlockchainApiHelper())
-			{
-				ReadOnlyCollection<SimpleBlock> receivedBlocks = await apiHelper.BlockExpolorer.GetBlocksAsync();
-				
-				Assert.NotNull(receivedBlocks);
-			}
-		}
-
 
 		[Fact]
 		public async void GetBlocks_ByPool_IsValid()
