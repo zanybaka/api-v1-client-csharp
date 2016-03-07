@@ -31,19 +31,6 @@ namespace Info.Blockchain.API.Tests.UnitTests
 		}
 
 		[Fact]
-		public async void Consolidate_NegativeDays_ArgumentOutOfRangeException()
-		{
-			await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () =>
-			{
-				using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
-				{
-					WalletHelper walletHelper = this.GetWalletHelper(apiHelper);
-					await walletHelper.Consolidate(-1);
-				}
-			});
-		}
-
-		[Fact]
 		public async void GetAddress_BadParameters_ArgumentExceptions()
 		{
 			await Assert.ThrowsAsync<ArgumentNullException>(async () =>
