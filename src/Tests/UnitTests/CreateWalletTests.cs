@@ -47,7 +47,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
 
 				Assert.Equal(walletResponse.Address, "12AaMuRnzw6vW6s2KPRAGeX53meTf8JbZS");
 				Assert.Equal(walletResponse.Identifier, "4b8cd8e9-9480-44cc-b7f2-527e98ee3287");
-				Assert.Equal(walletResponse.Link, "https://blockchain.info/wallet/4b8cd8e9-9480-44cc-b7f2-527e98ee3287");
+				Assert.Equal(walletResponse.Label, "My Blockchain Wallet");
 			}
 		}
 
