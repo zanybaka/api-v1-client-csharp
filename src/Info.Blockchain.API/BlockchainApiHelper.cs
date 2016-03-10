@@ -22,7 +22,7 @@ namespace Info.Blockchain.API
 		public StatisticsExplorer StatisticsExplorer { get; }
 
 
-		public BlockchainApiHelper(string apiCode = null, IHttpClient baseHttpClient = null, IHttpClient serviceHttpClient = null)
+		public BlockchainApiHelper(string serviceUrl, string apiCode = null, IHttpClient baseHttpClient = null, IHttpClient serviceHttpClient = null)
 		{
 			if (baseHttpClient == null)
 			{
@@ -37,7 +37,7 @@ namespace Info.Blockchain.API
 
             if (serviceHttpClient == null)
             {
-                this.serviceHttpClient = new BlockchainHttpClient(apiCode, "http://localhost");
+                this.serviceHttpClient = new BlockchainHttpClient(apiCode, serviceUrl);
             } else {
                 this.serviceHttpClient = serviceHttpClient;
                 if (apiCode != null)
