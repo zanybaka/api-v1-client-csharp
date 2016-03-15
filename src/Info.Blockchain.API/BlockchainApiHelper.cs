@@ -11,7 +11,7 @@ namespace Info.Blockchain.API
 {
 	public class BlockchainApiHelper : IDisposable
 	{
-		private IHttpClient baseHttpClient { get; }
+        private IHttpClient baseHttpClient { get; }
         private IHttpClient serviceHttpClient { get; }
 
         public BlockExplorer.BlockExplorer BlockExpolorer { get; }
