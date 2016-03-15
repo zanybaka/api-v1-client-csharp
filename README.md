@@ -21,8 +21,8 @@ The library consists of the following namespaces:
 * `Info.Blockchain.Api.Statistics` ([docs](docs/statistics.md)) ([api/charts_api][api5])
 * `Info.Blockchain.Api.Wallet` ([docs](docs/wallet.md)) ([api/blockchain\_wallet\_api][api6])
 
-In order to use Wallet and CreateWallet functionnality, you must provide an URL to an instance of [service-my-wallet-v3](https://github.com/blockchain/service-my-wallet-v3) as first parameter to BlockchainApiHelper.
-If you don't intend to use these functionnalities, this parameter can be null.
+In order to use Wallet and CreateWallet functionality, you must provide an URL to an instance of [service-my-wallet-v3](https://github.com/blockchain/service-my-wallet-v3) as first parameter to BlockchainApiHelper.
+If you don't intend to use these functionalities, this parameter can be null.
 
 ###Error handling
 
