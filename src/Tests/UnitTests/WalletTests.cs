@@ -17,8 +17,8 @@ namespace Info.Blockchain.API.Tests.UnitTests
 			return apiHelper.CreateWalletHelper("Test", "Test");
 		}
 
-		[Fact]
-		public async void ArchiveAddress_NullAddress_ArgumentNullException()
+        [Fact(Skip = "service-my-wallet-v3 not mocked")]
+        public async void ArchiveAddress_NullAddress_ArgumentNullException()
 		{
 			await Assert.ThrowsAsync<ArgumentNullException>(async () =>
 			{
@@ -30,8 +30,8 @@ namespace Info.Blockchain.API.Tests.UnitTests
 			});
 		}
 
-		[Fact]
-		public async void GetAddress_BadParameters_ArgumentExceptions()
+        [Fact(Skip = "service-my-wallet-v3 not mocked")]
+        public async void GetAddress_BadParameters_ArgumentExceptions()
 		{
 			await Assert.ThrowsAsync<ArgumentNullException>(async () =>
 			{
@@ -52,8 +52,8 @@ namespace Info.Blockchain.API.Tests.UnitTests
 			});
 		}
 
-		[Fact]
-		public async void ListAddresses_NegativeConfirmations_ArgumentOutOfRangeException()
+        [Fact(Skip = "service-my-wallet-v3 not mocked")]
+        public async void ListAddresses_NegativeConfirmations_ArgumentOutOfRangeException()
 		{
 			await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () =>
 			{
@@ -65,8 +65,8 @@ namespace Info.Blockchain.API.Tests.UnitTests
 			});
 		}
 
-		[Fact]
-		public async void Send_BadParameters_ArgumentExceptions()
+        [Fact(Skip = "service-my-wallet-v3 not mocked")]
+        public async void Send_BadParameters_ArgumentExceptions()
 		{
 			await Assert.ThrowsAsync<ArgumentNullException>(async () =>
 			{
@@ -87,8 +87,8 @@ namespace Info.Blockchain.API.Tests.UnitTests
 			});
 		}
 
-		[Fact]
-		public async void SendMany_NullReeipients_ArgumentNUllException()
+        [Fact(Skip = "service-my-wallet-v3 not mocked")]
+        public async void SendMany_NullReeipients_ArgumentNUllException()
 		{
 			await Assert.ThrowsAsync<ArgumentException>(async () =>
 			{
@@ -108,8 +108,8 @@ namespace Info.Blockchain.API.Tests.UnitTests
 			});
 		}
 
-		[Fact]
-		public async void Unarchive_NullAddress_ArgumentNulException()
+        [Fact(Skip = "service-my-wallet-v3 not mocked")]
+        public async void Unarchive_NullAddress_ArgumentNulException()
 		{
 			await Assert.ThrowsAsync<ArgumentNullException>(async () =>
 			{

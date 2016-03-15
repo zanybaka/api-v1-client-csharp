@@ -18,8 +18,8 @@ namespace Info.Blockchain.API.Tests.IntegrationTests
 		private const string WALLET_PASSWORD2 = "Password2!";
 		private const string FIRST_ADDRESS = "17VYDFsDxBMovM1cKGEytgeqdijNcr4L5";
 
-		[Fact]
-		public async void SendPayment_SendBtc_NoFreeOutputs()
+        [Fact(Skip = "service-my-wallet-v3 not mocked")]
+        public async void SendPayment_SendBtc_NoFreeOutputs()
 		{
 			ServerApiException apiException = await Assert.ThrowsAsync<ServerApiException>(async () => {
 				using (BlockchainApiHelper apiHelper = new BlockchainApiHelper())
@@ -32,8 +32,8 @@ namespace Info.Blockchain.API.Tests.IntegrationTests
 		}
 
 
-		[Fact]
-		public async void SendPayment_SendMultiBtc_NoFreeOutputs()
+        [Fact(Skip = "service-my-wallet-v3 not mocked")]
+        public async void SendPayment_SendMultiBtc_NoFreeOutputs()
 		{
 			ServerApiException apiException = await Assert.ThrowsAsync<ServerApiException>(async () => {
 				using (BlockchainApiHelper apiHelper = new BlockchainApiHelper())
@@ -49,8 +49,8 @@ namespace Info.Blockchain.API.Tests.IntegrationTests
 			Assert.Contains("No free", apiException.Message);
 		}
 
-		[Fact]
-		public async void ArchiveAddress_BaddAddress_ServerApiException()
+        [Fact(Skip = "service-my-wallet-v3 not mocked")]
+        public async void ArchiveAddress_BaddAddress_ServerApiException()
 		{
 			ServerApiException apiException = await Assert.ThrowsAsync<ServerApiException>(async () =>
 			{
@@ -64,8 +64,8 @@ namespace Info.Blockchain.API.Tests.IntegrationTests
 			Assert.Contains("Checksum", apiException.Message);
 		}
 
-		[Fact]
-		public async void GetAddresses_Valid()
+        [Fact(Skip = "service-my-wallet-v3 not mocked")]
+        public async void GetAddresses_Valid()
 		{
 			using (BlockchainApiHelper apiHelper = new BlockchainApiHelper())
 			{
@@ -77,8 +77,8 @@ namespace Info.Blockchain.API.Tests.IntegrationTests
 			}
 		}
 
-		[Fact]
-		public async void Unarchive_BadAddress_ServerApiException()
+        [Fact(Skip = "service-my-wallet-v3 not mocked")]
+        public async void Unarchive_BadAddress_ServerApiException()
 		{
 			ServerApiException apiException = await Assert.ThrowsAsync<ServerApiException>(async () => {
 				using (BlockchainApiHelper apiHelper = new BlockchainApiHelper())
@@ -90,8 +90,8 @@ namespace Info.Blockchain.API.Tests.IntegrationTests
 			Assert.Contains("Checksum", apiException.Message);
 		}
 
-		[Fact]
-		public async void NewAddress_ArchiveThenConsolidate_Valid()
+        [Fact(Skip = "service-my-wallet-v3 not mocked")]
+        public async void NewAddress_ArchiveThenConsolidate_Valid()
 		{
 			using (BlockchainApiHelper apiHelper = new BlockchainApiHelper())
 			{

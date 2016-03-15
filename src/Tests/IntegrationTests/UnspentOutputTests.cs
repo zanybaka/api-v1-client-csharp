@@ -16,7 +16,7 @@ namespace Info.Blockchain.API.Tests.IntegrationTests
 		{
 			using (BlockchainApiHelper apiHelper = new BlockchainApiHelper())
 			{
-				const string address = "13k5KUK2vswXRdjgjxgCorGoY2EFGMFTnu";
+				const string address = "1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa";
 				ReadOnlyCollection<UnspentOutput> outputs = await apiHelper.BlockExpolorer.GetUnspentOutputsAsync(address);
 				Assert.NotNull(outputs);
 			}
