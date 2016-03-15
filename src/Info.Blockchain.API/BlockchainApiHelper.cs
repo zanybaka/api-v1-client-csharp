@@ -22,8 +22,9 @@ namespace Info.Blockchain.API
 		public StatisticsExplorer StatisticsExplorer { get; }
 
 
-		public BlockchainApiHelper(string serviceUrl, string apiCode = null, IHttpClient baseHttpClient = null, IHttpClient serviceHttpClient = null)
+		public BlockchainApiHelper(string apiCode = null, IHttpClient baseHttpClient = null, string serviceUrl = null, IHttpClient serviceHttpClient = null)
 		{
+
 			if (baseHttpClient == null)
 			{
 				this.baseHttpClient = new BlockchainHttpClient(apiCode);
@@ -35,43 +36,60 @@ namespace Info.Blockchain.API
 				}
 			}
 
-            if (serviceHttpClient == null)
+            if (serviceHttpClient == null && serviceUrl != null)
             {
                 this.serviceHttpClient = new BlockchainHttpClient(apiCode, serviceUrl);
-            } else {
+            } else if (serviceHttpClient != null) {
                 this.serviceHttpClient = serviceHttpClient;
                 if (apiCode != null)
                 {
                     this.serviceHttpClient.ApiCode = apiCode;
                 }
+            } else
+            {
+                this.serviceHttpClient = null;
             }
 
-
-
             this.BlockExpolorer = new BlockExplorer.BlockExplorer(this.baseHttpClient);
-			this.WalletCreator = new WalletCreator(this.serviceHttpClient);
 			this.ExchangeRateExplorer = new ExchangeRateExplorer(this.baseHttpClient);
 			this.TransactionPusher = new TransactionPusher(this.baseHttpClient);
 			this.FundReceiver = new FundReceiver(this.baseHttpClient);
 			this.StatisticsExplorer = new StatisticsExplorer(this.baseHttpClient);
-		}
 
-		/// <summary>
-		/// Creates an instance of 'WalletHelper' based on the identifier allowing the use
-		/// of that wallet
-		/// </summary>
-		/// <param name="identifier">Wallet identifier (GUID)</param>
-		/// <param name="password">Decryption password</param>
-		/// <param name="secondPassword">Second password</param>
-		public WalletHelper CreateWalletHelper(string identifier, string password, string secondPassword = null)
+            if (this.serviceHttpClient != null)
+            {
+                this.WalletCreator = new WalletCreator(this.serviceHttpClient);
+            } else
+            {
+                this.WalletCreator = null;
+            }
+
+        }
+
+        /// <summary>
+        /// Creates an instance of 'WalletHelper' based on the identifier allowing the use
+        /// of that wallet
+        /// </summary>
+        /// <param name="identifier">Wallet identifier (GUID)</param>
+        /// <param name="password">Decryption password</param>
+        /// <param name="secondPassword">Second password</param>
+        public WalletHelper CreateWalletHelper(string identifier, string password, string secondPassword = null)
 		{
-			return new WalletHelper(this.serviceHttpClient, identifier, password, secondPassword);
+            if (this.serviceHttpClient == null)
+            {
+                throw new ClientApiException("In order to create wallets, you must provide a valid service_url to BlockchainApiHelper");
+            }
+
+            return new WalletHelper(serviceHttpClient, identifier, password, secondPassword);
 		}
 
 		public void Dispose()
 		{
             this.baseHttpClient.Dispose();
-			this.serviceHttpClient.Dispose();
+            if (this.serviceHttpClient != null)
+            {
+                this.serviceHttpClient.Dispose();
+            }
 		}
 	}
 }
