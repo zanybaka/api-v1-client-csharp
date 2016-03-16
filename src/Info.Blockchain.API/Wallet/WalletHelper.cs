@@ -252,27 +252,6 @@ namespace Info.Blockchain.API.Wallet
 			return activeAddress;
 		}
 
-		/// <summary>
-		/// Consolidates the wallet addresses.
-		/// </summary>
-		/// <param name="days">Addresses which have not received any
-		/// transactions in at least this many days will be consolidated.</param>
-		/// <returns>A list of consolidated addresses in the string format</returns>
-		/// <exception cref="ServerApiException">If the server returns an error</exception>
-		public async Task<List<string>> Consolidate(int days = 0)
-		{
-			if (days < 0)
-			{
-				throw new ArgumentOutOfRangeException(nameof(days), "Days must be a positive number");
-			}
-			QueryString queryString = this.BuildBasicQueryString();
-			queryString.Add("days", days.ToString());
-
-			string route = $"merchant/{this.identifier}/auto_consolidate";
-            List<string> addresses = await this.httpClient.GetAsync<List<string>>(route, queryString, Address.DeserializeConsolidated);
-			return addresses;
-		}
-
 		private QueryString BuildBasicQueryString()
 		{
 			QueryString queryString = new QueryString();

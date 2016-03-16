@@ -47,9 +47,9 @@ namespace Info.Blockchain.API.CreateWallet
 		public string Address { get; private set; }
 
 		/// <summary>
-		/// Link to the wallet
+		/// Wallet label
 		/// </summary>
-		[JsonProperty("link", Required = Required.Always)]
-		public string Link { get; private set; }
+		[JsonProperty("label", Required = Required.Always)]
+		public string Label { get; private set; }
 	}
 }
