@@ -11,18 +11,17 @@ namespace Info.Blockchain.API
 {
 	internal class BlockchainHttpClient : IHttpClient
 	{
-		private const string BASE_URI = "https://blockchain.info/";
-		private const int TIMEOUT_MS = 100000;
-		private HttpClient httpClient { get; }
+        private const int TIMEOUT_MS = 100000;
+        private const string BASE_URI = "https://blockchain.info";
+        private HttpClient httpClient { get; }
+        public string ApiCode { get; set; }
 
-		public string ApiCode { get; set; }
-
-		public BlockchainHttpClient(string apiCode)
-		{
+		public BlockchainHttpClient(string apiCode, string uri= BlockchainHttpClient.BASE_URI)
+        {
 			this.ApiCode = apiCode;
 			this.httpClient = new HttpClient
 			{
-				BaseAddress = new Uri(BlockchainHttpClient.BASE_URI),
+				BaseAddress = new Uri(uri),
 				Timeout = TimeSpan.FromMilliseconds(BlockchainHttpClient.TIMEOUT_MS)
 			};
 		}

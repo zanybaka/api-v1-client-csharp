@@ -34,7 +34,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
 		[Fact]
 		public async void ReceiveFunds_MockRequest_Valid()
 		{
-			using (BlockchainApiHelper apiHelper = new BlockchainApiHelper(httpClient: new MockReceiveHttpClient()))
+			using (BlockchainApiHelper apiHelper = new BlockchainApiHelper(baseHttpClient: new MockReceiveHttpClient()))
 			{
 				ReceiveResponse receiveResponse = await apiHelper.FundReceiver.ReceiveFundsAsync("MockAddress", "CallbackUrl");
 				Assert.NotNull(receiveResponse);
