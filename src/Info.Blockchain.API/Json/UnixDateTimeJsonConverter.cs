@@ -75,10 +75,6 @@ namespace Info.Blockchain.API.Json
 				throw new ArgumentOutOfRangeException(nameof(unixMillis),
 					"No date can be before the genesis block (2009-01-03T18:15:05+00:00)");
 			}
-			if (dateTime > DateTime.UtcNow)
-			{
-				throw new ArgumentOutOfRangeException(nameof(unixMillis), "No future date should exist as a value"); //TODO remove?
-			}
 			return dateTime;
 		}
 	}
