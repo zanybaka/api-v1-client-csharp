@@ -84,7 +84,6 @@
     <Compile Include="UnitTests\CreateWalletTests.cs" />
     <Compile Include="UnitTests\CurrencyTests.cs" />
     <Compile Include="UnitTests\InventoryDataTests.cs" />
-    <Compile Include="UnitTests\ReceiveTests.cs" />
     <Compile Include="UnitTests\TransactionPusherTests.cs" />
     <Compile Include="UnitTests\TransactionTests.cs" />
     <Compile Include="UnitTests\UnitTestUtil.cs" />
@@ -96,7 +95,6 @@
     <EmbeddedResource Include="JsonObjects\single_block.json" />
     <EmbeddedResource Include="JsonObjects\blocks_height_100000.json" />
     <EmbeddedResource Include="JsonObjects\blocks_timestamp_1293623863000.json" />
-    <EmbeddedResource Include="JsonObjects\receive_response_mock.json" />
     <EmbeddedResource Include="JsonObjects\create_wallet_mock.json" />
     <None Include="packages.config" />
   </ItemGroup>

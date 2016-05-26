@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Info.Blockchain.API.Abstractions;
 using Info.Blockchain.API.CreateWallet;
-using Info.Blockchain.API.Receive;
 using Xunit;
 
 namespace Info.Blockchain.API.Tests.UnitTests

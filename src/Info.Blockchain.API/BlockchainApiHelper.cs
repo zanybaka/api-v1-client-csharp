@@ -3,7 +3,6 @@ using Info.Blockchain.API.Abstractions;
 using Info.Blockchain.API.CreateWallet;
 using Info.Blockchain.API.ExchangeRates;
 using Info.Blockchain.API.PushTx;
-using Info.Blockchain.API.Receive;
 using Info.Blockchain.API.Statistics;
 using Info.Blockchain.API.Wallet;
 
@@ -18,7 +17,6 @@ namespace Info.Blockchain.API
 		public WalletCreator WalletCreator { get; }
 		public ExchangeRateExplorer ExchangeRateExplorer { get; }
 		public TransactionPusher TransactionPusher { get; }
-		public FundReceiver FundReceiver { get; }
 		public StatisticsExplorer StatisticsExplorer { get; }
 
 
@@ -53,7 +51,6 @@ namespace Info.Blockchain.API
             this.BlockExpolorer = new BlockExplorer.BlockExplorer(this.baseHttpClient);
 			this.ExchangeRateExplorer = new ExchangeRateExplorer(this.baseHttpClient);
 			this.TransactionPusher = new TransactionPusher(this.baseHttpClient);
-			this.FundReceiver = new FundReceiver(this.baseHttpClient);
 			this.StatisticsExplorer = new StatisticsExplorer(this.baseHttpClient);
 
             if (this.serviceHttpClient != null)
