@@ -19,7 +19,6 @@ namespace Info.Blockchain.API.Tests.UnitTests
 				Assert.NotNull(apiHelper.StatisticsExplorer);
 				Assert.NotNull(apiHelper.BlockExpolorer);
 				Assert.NotNull(apiHelper.ExchangeRateExplorer);
-				Assert.NotNull(apiHelper.FundReceiver);
 				Assert.NotNull(apiHelper.TransactionPusher);
 				Assert.Null(apiHelper.WalletCreator);
 			}
@@ -35,7 +34,6 @@ namespace Info.Blockchain.API.Tests.UnitTests
                 Assert.NotNull(apiHelper.StatisticsExplorer);
                 Assert.NotNull(apiHelper.BlockExpolorer);
                 Assert.NotNull(apiHelper.ExchangeRateExplorer);
-                Assert.NotNull(apiHelper.FundReceiver);
                 Assert.NotNull(apiHelper.TransactionPusher);
                 Assert.NotNull(apiHelper.WalletCreator);
             }
