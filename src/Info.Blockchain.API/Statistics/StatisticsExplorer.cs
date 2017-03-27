@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using Info.Blockchain.API.Abstractions;
+using System.Threading.Tasks;
+using Info.Blockchain.API.Client;
 
 namespace Info.Blockchain.API.Statistics
 {
@@ -9,7 +9,11 @@ namespace Info.Blockchain.API.Statistics
 	/// </summary>
 	public class StatisticsExplorer
 	{
-		private IHttpClient httpClient { get; }
+		private readonly IHttpClient httpClient;
+		public StatisticsExplorer()
+		{
+			httpClient = new BlockchainHttpClient();
+		}
 		internal StatisticsExplorer(IHttpClient httpClient)
 		{
 			this.httpClient = httpClient;
@@ -25,8 +29,7 @@ namespace Info.Blockchain.API.Statistics
 			QueryString queryString = new QueryString();
 			queryString.Add("format", "json");
 
-			StatisticsResponse statisticsResponse = await this.httpClient.GetAsync<StatisticsResponse>("stats", queryString);
-			return statisticsResponse;
+			return await httpClient.GetAsync<StatisticsResponse>("stats", queryString);
 		}
 	}
 }

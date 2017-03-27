@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using Info.Blockchain.API.Client;
+using Info.Blockchain.API.Data;
 using Info.Blockchain.API.ExchangeRates;
 using Xunit;
 
@@ -15,7 +13,7 @@ namespace Info.Blockchain.API.Tests.IntegrationTests
 		{
 			using (BlockchainApiHelper apiHelper = new BlockchainApiHelper())
 			{
-				Dictionary<string, Currency> currencies = await apiHelper.ExchangeRateExplorer.GetTickerAsync();
+				Dictionary<string, Currency> currencies = await apiHelper.exchangeRateExplorer.GetTickerAsync();
 				Assert.NotNull(currencies);
 				Assert.True(currencies.Count > 0);
 			}
@@ -26,7 +24,7 @@ namespace Info.Blockchain.API.Tests.IntegrationTests
 		{
 			using (BlockchainApiHelper apiHelper = new BlockchainApiHelper())
 			{
-				double btcValue = await apiHelper.ExchangeRateExplorer.ToBtcAsync("USD", 1000);
+				double btcValue = await apiHelper.exchangeRateExplorer.ToBtcAsync("USD", 1000);
 				Assert.True(btcValue > 0);
 			}
 		}

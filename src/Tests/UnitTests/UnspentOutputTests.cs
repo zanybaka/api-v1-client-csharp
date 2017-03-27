@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
+using Info.Blockchain.API.Client;
 using Xunit;
 
 namespace Info.Blockchain.API.Tests.UnitTests
@@ -16,7 +13,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
 			{
 				using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
 				{
-					await apiHelper.BlockExpolorer.GetUnspentOutputsAsync(null);
+					await apiHelper.blockExplorer.GetUnspentOutputsAsync(null);
 				}
 			});
 		}

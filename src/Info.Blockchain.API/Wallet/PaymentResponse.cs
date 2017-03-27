@@ -1,21 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Info.Blockchain.API.BlockExplorer;
 using Newtonsoft.Json;
-// ReSharper disable UnusedAutoPropertyAccessor.Local
 
-namespace Info.Blockchain.API.Wallet
+namespace Info.Blockchain.API.Data
 {
 	/// <summary>
 	/// Used as a response object to the `send` and `sendMany` methods in the `Wallet` class.
 	/// </summary>
 	public class PaymentResponse
 	{
-		[JsonConstructor]
-		private PaymentResponse()
-		{
-		}
-
 		/// <summary>
 		/// Response message from the server
 		/// </summary>

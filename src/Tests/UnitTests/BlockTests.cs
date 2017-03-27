@@ -1,4 +1,5 @@
 ﻿using System;
+using Info.Blockchain.API.Client;
 using Xunit;
 
 namespace Info.Blockchain.API.Tests.UnitTests
@@ -12,7 +13,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
 			{
 				using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
 				{
-					await apiHelper.BlockExpolorer.GetBlockAsync(-1);
+					await apiHelper.blockExplorer.GetBlockAsync(-1);
 				}
 			});
 
@@ -21,7 +22,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
 			{
 				using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
 				{
-					await apiHelper.BlockExpolorer.GetBlockAsync(null);
+					await apiHelper.blockExplorer.GetBlockAsync(null);
 				}
 			});
 		}
@@ -33,7 +34,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
 			{
 				using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
 				{
-					await apiHelper.BlockExpolorer.GetBlocksAsync(-1);
+					await apiHelper.blockExplorer.GetBlocksAsync(-1);
 				}
 			});
 
@@ -42,7 +43,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
 			{
 				using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
 				{
-					await apiHelper.BlockExpolorer.GetBlocksAsync(1000);
+					await apiHelper.blockExplorer.GetBlocksAsync(1000);
 				}
 			});
 
@@ -50,7 +51,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
 			{
 				using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
 				{
-					await apiHelper.BlockExpolorer.GetBlocksAsync(int.MaxValue);
+					await apiHelper.blockExplorer.GetBlocksAsync(int.MaxValue);
 				}
 			});
 
@@ -59,7 +60,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
 			{
 				using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
 				{
-					await apiHelper.BlockExpolorer.GetBlocksAsync(DateTime.MinValue);
+					await apiHelper.blockExplorer.GetBlocksAsync(DateTime.MinValue);
 				}
 			});
 
@@ -67,7 +68,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
 			{
 				using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
 				{
-					await apiHelper.BlockExpolorer.GetBlocksAsync(DateTime.MaxValue);
+					await apiHelper.blockExplorer.GetBlocksAsync(DateTime.MaxValue);
 				}
 			});
 		}
@@ -79,7 +80,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
 			{
 				using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
 				{
-					await apiHelper.BlockExpolorer.GetBlocksAtHeightAsync(-1);
+					await apiHelper.blockExplorer.GetBlocksAtHeightAsync(-1);
 				}
 			});
 		}

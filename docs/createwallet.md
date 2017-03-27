@@ -1,36 +1,39 @@
-##`Info.Blockchain.Api.CreateWallet` namespace
+## `Info.Blockchain.API.CreateWallet` namespace
 
-The `CreateWallet` namespace contains the `CreateWallet` class that reflects the functionality documented at https://blockchain.info/api/create_wallet. It allows users to create new wallets as long as their API code has the 'generate wallet' permission. 
+The CreateWallet namespace contains the CreateWallet class that reflects the functionality documented at https://blockchain.info/api/create_wallet. It allows users to create new wallets as long as their API code has the 'generate wallet' permission.
 
 Example usage:
 
 ```csharp
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Info.Blockchain.API;
+using Info.Blockchain.API.Client;
 using Info.Blockchain.API.CreateWallet;
 
 namespace TestApp
 {
     class Program
     {
-        static void Main(string[] args)
+        private static WalletCreator walletCreator;
+
+        static void main(string[] args)
         {
-            try
+            using (ApiHelper apiHelper = new ApiHelper(apiCode: "1770d5d9-bcea-4d28-ad21-6cbd5be018a8", serviceUrl: "http://127.0.0.1:3000/"))
             {
-                var newWallet = CreateWallet.Create("someComplicated123Password", "8fd2335e-720c-442b-9694-83bdd2983cc9");
+                try
+                {
+                    walletCreator = apiHelper.CreateWalletCreator();
 
-                Console.WriteLine("The new wallet identifier is: {0}", newWallet.Identifier);
+                    // create a new wallet
+                    var newWallet = _walletCreator.Create("someComplicated123Password", label: "some-optional-label").Result;
+                    Console.WriteLine("The new wallet identifier is: {0}", newWallet.Identifier);
+                }
+                catch (ClientApiException e)
+                {
+                    Console.WriteLine("Blockchain exception: " + e.Message);
+                }
             }
-            catch (APIException e)
-            {
-                Console.WriteLine("Blockchain exception: " + e.Message);
-            }
-
-            Console.ReadLine();
         }
     }
 }
-
 ```

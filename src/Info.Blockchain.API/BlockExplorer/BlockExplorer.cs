@@ -1,21 +1,27 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Info.Blockchain.API.Abstractions;
+using Info.Blockchain.API.Client;
 using Info.Blockchain.API.Json;
 
 namespace Info.Blockchain.API.BlockExplorer
 {
 	/// <summary>
-	/// The BlockExplorer class reflects the functionality documented at 
-	/// https://blockchain.info/api/blockchain_api. It can be used to query the block chain, 
+	/// The BlockExplorer class reflects the functionality documented at
+	/// https://blockchain.info/api/blockchain_api. It can be used to query the block chain,
 	/// fetch block, transaction and address data, get unspent outputs for an address etc.
 	/// </summary>
 	public class BlockExplorer
 	{
-		private IHttpClient httpClient { get; }
+		private readonly IHttpClient httpClient;
+		public const int MAX_TRANSACTIONS_PER_REQUEST = 50;
+
+		public BlockExplorer()
+		{
+			httpClient  = new BlockchainHttpClient();
+		}
 
 		internal BlockExplorer(IHttpClient httpClient)
 		{
@@ -34,7 +40,8 @@ namespace Info.Blockchain.API.BlockExplorer
 			{
 				throw new ArgumentOutOfRangeException(nameof(index), "Index must be a positive integer");
 			}
-			return await this.GetTransactionAsync(index.ToString());
+
+			return await GetTransactionAsync(index.ToString());
 		}
 
 		/// <summary>
@@ -49,8 +56,8 @@ namespace Info.Blockchain.API.BlockExplorer
 			{
 				throw new ArgumentNullException(nameof(hashOrIndex));
 			}
-			Transaction transaction = await this.httpClient.GetAsync<Transaction>("rawtx/" + hashOrIndex);
-			return transaction;
+
+			return await httpClient.GetAsync<Transaction>("rawtx/" + hashOrIndex);
 		}
 
 		/// <summary>
@@ -65,7 +72,8 @@ namespace Info.Blockchain.API.BlockExplorer
 			{
 				throw new ArgumentOutOfRangeException(nameof(index), "Index must be greater than zero");
 			}
-			return await this.GetBlockAsync(index.ToString());
+
+			return await GetBlockAsync(index.ToString());
 		}
 
 		/// <summary>
@@ -80,8 +88,7 @@ namespace Info.Blockchain.API.BlockExplorer
 			{
 				throw new ArgumentNullException(nameof(hashOrIndex));
 			}
-			Block block = await this.httpClient.GetAsync("rawblock/" + hashOrIndex, customDeserialization: Block.Deserialize);
-			return block;
+			return await httpClient.GetAsync<Block>("rawblock/" + hashOrIndex, customDeserialization: Block.Deserialize);
 		}
 
 		/// <summary>
@@ -91,7 +98,7 @@ namespace Info.Blockchain.API.BlockExplorer
 		/// <param name="maxTransactionCount">Max amount of transactions to retrieve</param>
 		/// <returns>An instance of the Address class</returns>
 		/// <exception cref="ServerApiException">If the server returns an error</exception>
-		public async Task<Address> GetAddressAsync(string addressOrHash, int? maxTransactionCount = null)
+		public async Task<Address> GetAddressAsync(string addressOrHash, int? maxTransactionCount = 0)
 		{
 			if (string.IsNullOrWhiteSpace(addressOrHash))
 			{
@@ -102,14 +109,13 @@ namespace Info.Blockchain.API.BlockExplorer
 				throw new ArgumentOutOfRangeException(nameof(maxTransactionCount), "Max transaction count must be greater than or equal to zero");
 			}
 
-			Address addressObj = await this.GetAddressWithOffsetAsync(addressOrHash);
-			List<Transaction> transactionList = await this.GetTransactionsAsync(addressObj, maxTransactionCount);
+			Address addressObj = await GetAddressWithOffsetAsync(addressOrHash);
+			List<Transaction> transactionList = await GetTransactionsAsync(addressObj, maxTransactionCount);
 			return new Address(addressObj, transactionList);
 		}
 
-		private async Task<List<Transaction>> GetTransactionsAsync(Address address, int? maxTransactionCount = null)
+		private async Task<List<Transaction>> GetTransactionsAsync(Address address, int? maxTransactionCount)
 		{
-			const int maxTransactionsPerRequest = 50;
 			if (address == null)
 			{
 				throw new ArgumentNullException(nameof(address));
@@ -119,7 +125,7 @@ namespace Info.Blockchain.API.BlockExplorer
 				throw new ArgumentOutOfRangeException(nameof(maxTransactionCount), "Max transaction count must be greater than or equal to zero");
 			}
 
-			if (maxTransactionCount != null && maxTransactionCount < maxTransactionsPerRequest)
+			if (maxTransactionCount != null && maxTransactionCount < MAX_TRANSACTIONS_PER_REQUEST)
 			{
 				return address.Transactions.Take(maxTransactionCount.Value).ToList();
 			}
@@ -128,9 +134,9 @@ namespace Info.Blockchain.API.BlockExplorer
 			List<Task<Address>> tasks = new List<Task<Address>>();
 
 			int offset;
-			for (offset = maxTransactionsPerRequest; offset <= maxTransactionCount.Value - maxTransactionsPerRequest; offset += maxTransactionsPerRequest)
+			for (offset = MAX_TRANSACTIONS_PER_REQUEST; offset <= maxTransactionCount.Value - MAX_TRANSACTIONS_PER_REQUEST; offset += MAX_TRANSACTIONS_PER_REQUEST)
 			{
-				Task<Address> task = this.GetAddressWithOffsetAsync(address.AddressStr, maxTransactionsPerRequest, offset);
+				Task<Address> task = this.GetAddressWithOffsetAsync(address.AddressStr, MAX_TRANSACTIONS_PER_REQUEST, offset);
 				tasks.Add(task);
 			}
 
@@ -169,12 +175,11 @@ namespace Info.Blockchain.API.BlockExplorer
 			queryString.Add("limit", transactionLimit.ToString());
 			queryString.Add("format", "json");
 
-			Address addressObj = await this.httpClient.GetAsync<Address>("address/" + addressOrHash, queryString);
-			return addressObj;
+			return await httpClient.GetAsync<Address>("address/" + addressOrHash, queryString);
 		}
 
 		/// <summary>
-		/// Gets a list of blocks at the specified height. Normally, only one block will be returned, 
+		/// Gets a list of blocks at the specified height. Normally, only one block will be returned,
 		/// but in case of a chain fork, multiple blocks may be present.
 		/// </summary>
 		/// <param name="height">Block height</param>
@@ -189,8 +194,7 @@ namespace Info.Blockchain.API.BlockExplorer
 			QueryString queryString = new QueryString();
 			queryString.Add("format", "json");
 
-			var blocks = await this.httpClient.GetAsync("block-height/" + height, queryString, Block.DeserializeMultiple);
-			return blocks;
+			return await httpClient.GetAsync("block-height/" + height, queryString, Block.DeserializeMultiple);
 		}
 
 		/// <summary>
@@ -209,14 +213,13 @@ namespace Info.Blockchain.API.BlockExplorer
 			queryString.Add("active", address);
 			try
 			{
-				ReadOnlyCollection<UnspentOutput> unspentOuputs = await this.httpClient.GetAsync("unspent", queryString, UnspentOutput.DeserializeMultiple);
-				return unspentOuputs;
+				return await httpClient.GetAsync("unspent", queryString, UnspentOutput.DeserializeMultiple);
 			}
-			catch (ServerApiException ex)
+			catch (Exception ex)
 			{
-				// the API isn't supposed to return an error code here. No free outputs is
-				// a legitimate situation. We are circumventing that by returning an empty list
-				if (ex.Message == "No free outputs to spend")
+				// Currently the API throws an internal error if there are no free outputs to spend. No free outputs is
+				// a legitimate situation. Therefore for the time being we are circumventing this by returning an empty list
+				if (ex.Message.Contains("outputs to spend"))
 				{
 					return new ReadOnlyCollection<UnspentOutput>(new List<UnspentOutput>());
 				}
@@ -231,8 +234,7 @@ namespace Info.Blockchain.API.BlockExplorer
 		/// <exception cref="ServerApiException">If the server returns an error</exception>
 		public async Task<LatestBlock> GetLatestBlockAsync()
 		{
-			LatestBlock latestBlock = await this.httpClient.GetAsync<LatestBlock>("latestblock");
-			return latestBlock;
+			return await httpClient.GetAsync<LatestBlock>("latestblock");
 		}
 
 		/// <summary>
@@ -245,8 +247,7 @@ namespace Info.Blockchain.API.BlockExplorer
 			QueryString queryString = new QueryString();
 			queryString.Add("format", "json");
 
-			ReadOnlyCollection<Transaction> transactions = await this.httpClient.GetAsync("unconfirmed-transactions", queryString, Transaction.DeserializeMultiple);
-			return transactions;
+			return await httpClient.GetAsync("unconfirmed-transactions", queryString, Transaction.DeserializeMultiple);
 		}
 
 		/// <summary>
@@ -256,19 +257,22 @@ namespace Info.Blockchain.API.BlockExplorer
 		/// <exception cref="ServerApiException">If the server returns an error</exception>
 		public async Task<ReadOnlyCollection<SimpleBlock>> GetBlocksAsync()
 		{
-			return await this.GetBlocksAsync(DateTime.Now); //TODO?
+			return await GetBlocksAsync();
 		}
 
 		/// <summary>
 		/// Gets a list of blocks mined on a specific day.
 		/// </summary>
-		/// <param name="dateTime">DateTime that falls 
+		/// <param name="dateTime">DateTime that falls
 		/// between 00:00 UTC and 23:59 UTC of the desired day.</param>
 		/// <returns>A list of SimpleBlock objects</returns>
 		/// <exception cref="ServerApiException">If the server returns an error</exception>
 		public async Task<ReadOnlyCollection<SimpleBlock>> GetBlocksAsync(DateTime dateTime)
 		{
-			if (dateTime < UnixDateTimeJsonConverter.GenesisBlockDate)
+			DateTimeOffset utcDate = DateTime.SpecifyKind(dateTime, DateTimeKind.Utc);
+			var unixMillis = (long)(utcDate.ToUnixTimeMilliseconds());
+
+			if (unixMillis < UnixDateTimeJsonConverter.GenesisBlockUnixMillis)
 			{
 				throw new ArgumentOutOfRangeException(nameof(dateTime), "Date must be greater than or equal to the genesis block creation date (2009-01-03T18:15:05+00:00)");
 			}
@@ -276,9 +280,8 @@ namespace Info.Blockchain.API.BlockExplorer
 			{
 				throw new ArgumentOutOfRangeException(nameof(dateTime), "Date must be in the past");
 			}
-			double unixTimestap = UnixDateTimeJsonConverter.DateTimeToUnixSeconds(dateTime);
-			string unixMillisstring = (unixTimestap * 1000).ToString(); //TODO?
-			return await this.GetBlocksAsync(unixMillisstring);
+
+			return await GetBlocksAsync(unixMillis);
 		}
 		/// <summary>
 		/// Gets a list of blocks mined on a specific day.
@@ -293,43 +296,25 @@ namespace Info.Blockchain.API.BlockExplorer
 			{
 				throw new ArgumentOutOfRangeException(nameof(unixMillis), "Date must be greater than or equal to the genesis block creation date (2009-01-03T18:15:05+00:00)");
 			}
-			return await this.GetBlocksAsync(unixMillis.ToString());
+			return await GetBlocksAsync(unixMillis.ToString());
 		}
 
 		/// <summary>
-		/// Gets a list of recent blocks by a specific mining pool.
+		/// Gets a list of recent blocks by a specific mining pool or up to a specified timestamp.
+        /// If neither is provided returns all blocks mined since midnight.
 		/// </summary>
-		/// <param name="poolNameOrTimestamp">Name of the mining pool or Unix timestamp in milliseconds that falls 
+		/// <param name="poolNameOrTimestamp">Name of the mining pool or Unix timestamp in milliseconds that falls
 		/// between 00:00 UTC and 23:59 UTC of the desired day.</param>
 		/// <returns>A list of SimpleBlock objects</returns>
 		/// <exception cref="ServerApiException">If the server returns an error</exception>
-		public async Task<ReadOnlyCollection<SimpleBlock>> GetBlocksAsync(string poolNameOrTimestamp)
+		public async Task<ReadOnlyCollection<SimpleBlock>> GetBlocksAsync(string poolNameOrTimestamp = "")
 		{
 			QueryString queryString = new QueryString();
 			queryString.Add("format", "json");
 
-			ReadOnlyCollection<SimpleBlock> simpleBlocks = await this.httpClient.GetAsync("blocks/" + poolNameOrTimestamp, queryString, SimpleBlock.DeserializeMultiple);
+			ReadOnlyCollection<SimpleBlock> simpleBlocks = await httpClient.GetAsync("blocks/" + poolNameOrTimestamp, queryString, SimpleBlock.DeserializeMultiple);
 
 			return simpleBlocks;
-		}
-
-		/// <summary>
-		/// Gets inventory data for an object.
-		/// </summary>
-		/// <param name="hash">Object hash</param>
-		/// <returns>An instance of the InventoryData class</returns>
-		/// <exception cref="ServerApiException">If the server returns an error</exception>
-		public async Task<InventoryData> GetInventoryDataAsync(string hash)
-		{
-			if (string.IsNullOrWhiteSpace(hash))
-			{
-				throw new ArgumentNullException(nameof(hash));
-			}
-			QueryString queryString = new QueryString();
-			queryString.Add("format", "json");
-
-			InventoryData inventoryData = await this.httpClient.GetAsync<InventoryData>("inv/" + hash, queryString);
-			return inventoryData;
 		}
 	}
 }

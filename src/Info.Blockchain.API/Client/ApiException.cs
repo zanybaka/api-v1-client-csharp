@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Net;
 
-namespace Info.Blockchain.API
+namespace Info.Blockchain.API.Client
 {
 	/// <summary>
-	/// The base exception for the BlockChain Api. Its only use is to detect if the 
+	/// The base exception for the BlockChain Api. Its only use is to detect if the
 	/// exception came from the api rather that another source
 	/// </summary>
 	public abstract class ApiExceptionBase : Exception

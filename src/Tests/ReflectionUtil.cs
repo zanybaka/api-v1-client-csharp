@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
 using System.Reflection;
 using Newtonsoft.Json;
@@ -11,7 +9,7 @@ namespace Info.Blockchain.API.Tests
 	{
 		public static T DeserializeFile<T>(string fileName, Func<string, T> customDeserialization = null)
 		{
-			Assembly assembly = Assembly.GetExecutingAssembly();
+			Assembly assembly = typeof(ReflectionUtil).GetTypeInfo().Assembly;
 
 			string resourceName = $"Info.Blockchain.API.Tests.JsonObjects.{fileName}.json";
 

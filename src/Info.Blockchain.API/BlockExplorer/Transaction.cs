@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
 using Info.Blockchain.API.Json;
 using Newtonsoft.Json;

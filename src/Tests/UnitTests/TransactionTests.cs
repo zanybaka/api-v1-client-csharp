@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
-using Info.Blockchain.API.BlockExplorer;
-using KellermanSoftware.CompareNetObjects;
 using Xunit;
+using Info.Blockchain.API.Client;
 
 namespace Info.Blockchain.API.Tests.UnitTests
 {
@@ -19,7 +13,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
 			{
 				using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
 				{
-					await apiHelper.BlockExpolorer.GetTransactionAsync(null);
+					await apiHelper.blockExplorer.GetTransactionAsync(null);
 				}
 			});
 
@@ -27,7 +21,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
 			{
 				using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
 				{
-					await apiHelper.BlockExpolorer.GetTransactionByIndexAsync(-1);
+					await apiHelper.blockExplorer.GetTransactionByIndexAsync(-1);
 				}
 			});
 		}

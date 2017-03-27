@@ -3,23 +3,22 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Info.Blockchain.API.Abstractions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Info.Blockchain.API
+namespace Info.Blockchain.API.Client
 {
-	internal class BlockchainHttpClient : IHttpClient
+	public class BlockchainHttpClient : IHttpClient
 	{
+		private const string BASE_URI = "https://blockchain.info";
         private const int TIMEOUT_MS = 100000;
-        private const string BASE_URI = "https://blockchain.info";
-        private HttpClient httpClient { get; }
-        public string ApiCode { get; set; }
+		private readonly HttpClient httpClient;
+		public string ApiCode { get; set; }
 
-		public BlockchainHttpClient(string apiCode, string uri= BlockchainHttpClient.BASE_URI)
-        {
-			this.ApiCode = apiCode;
-			this.httpClient = new HttpClient
+		public BlockchainHttpClient(string apiCode = null, string uri = BASE_URI)
+		{
+			ApiCode = apiCode;
+			httpClient = new HttpClient
 			{
 				BaseAddress = new Uri(uri),
 				Timeout = TimeSpan.FromMilliseconds(BlockchainHttpClient.TIMEOUT_MS)
@@ -33,13 +32,13 @@ namespace Info.Blockchain.API
 				throw new ArgumentNullException(nameof(route));
 			}
 
-			if (this.ApiCode != null)
+			if (ApiCode != null)
 			{
-				queryString?.Add("api_code", this.ApiCode);
+				queryString?.Add("api_code", ApiCode);
 			}
+
 			if (queryString != null && queryString.Count > 0)
 			{
-
 				int queryStringIndex = route.IndexOf('?');
 				if (queryStringIndex >= 0)
 				{
@@ -53,23 +52,23 @@ namespace Info.Blockchain.API
 					route += queryString.ToString();
 				}
 			}
-			HttpResponseMessage response = await this.httpClient.GetAsync(route);
-			string responseString = await this.ValidateResponse(response);
+			HttpResponseMessage response = await httpClient.GetAsync(route);
+			string responseString = await ValidateResponse(response);
 			var responseObject = customDeserialization == null
 				? JsonConvert.DeserializeObject<T>(responseString)
 				: customDeserialization(responseString);
 			return responseObject;
 		}
 
-		public async Task<TResponse> PostAsync<TPost, TResponse>(string route, TPost postObject, Func<string, TResponse> customDeserialization = null, bool multiPartContent = false)
+		public async Task<TResponse> PostAsync<TPost, TResponse>(string route, TPost postObject, Func<string, TResponse> customDeserialization = null, bool multiPartContent = false, string contentType = "application/x-www-form-urlencoded")
 		{
 			if (route == null)
 			{
 				throw new ArgumentNullException(nameof(route));
 			}
-			if (this.ApiCode != null)
+			if (ApiCode != null)
 			{
-				route += "?api_code=" + this.ApiCode;
+				route += "?api_code=" + ApiCode;
 			}
 			string json = JsonConvert.SerializeObject(postObject);
 			HttpContent httpContent;
@@ -77,14 +76,14 @@ namespace Info.Blockchain.API
 			{
 				httpContent = new MultipartFormDataContent
 				{
-					new StringContent(json, Encoding.UTF8, "application/x-www-form-urlencoded")
+					new StringContent(json, Encoding.UTF8, contentType)
 				};
 			}
 			else
 			{
-				httpContent = new StringContent(json, Encoding.UTF8, "application/x-www-form-urlencoded");
+				httpContent = new StringContent(json, Encoding.UTF8, contentType);
 			}
-			HttpResponseMessage response = await this.httpClient.PostAsync(route, httpContent);
+			HttpResponseMessage response = await httpClient.PostAsync(route, httpContent);
 			string responseString = await this.ValidateResponse(response);
 			TResponse responseObject = JsonConvert.DeserializeObject<TResponse>(responseString);
 			return responseObject;
@@ -113,7 +112,7 @@ namespace Info.Blockchain.API
 
 		public void Dispose()
 		{
-			this.httpClient.Dispose();
+			httpClient.Dispose();
 		}
 	}
 }

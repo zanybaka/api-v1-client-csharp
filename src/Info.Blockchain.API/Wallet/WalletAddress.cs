@@ -4,21 +4,13 @@ using Info.Blockchain.API.Json;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-// ReSharper disable UnusedAutoPropertyAccessor.Local
-
 namespace Info.Blockchain.API.Wallet
 {
 	/// <summary>
 	/// Used in combination with the `Wallet` class
 	/// </summary>
-	public class Address
+	public class WalletAddress
 	{
-		[JsonConstructor]
-		private Address()
-		{
-		}
-
-
 		/// <summary>
 		/// Balance in bitcoins
 		/// </summary>
@@ -63,10 +55,10 @@ namespace Info.Blockchain.API.Wallet
 			return jObject["consolidated"].ToObject<List<string>>();
 		}
 
-		public static List<Address> DeserializeMultiple(string json)
+		public static List<WalletAddress> DeserializeMultiple(string json)
 		{
 			JObject jObject = JObject.Parse(json);
-			return jObject["addresses"].ToObject<List<Address>>();
+			return jObject["addresses"].ToObject<List<WalletAddress>>();
 		}
 	}
 }

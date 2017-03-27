@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Info.Blockchain.API.BlockExplorer;
+﻿using Info.Blockchain.API.BlockExplorer;
 using Xunit;
 
 namespace Info.Blockchain.API.Tests.UnitTests
 {
-	public class BitcoinValueTests
+    public class BitcoinValueTests
 	{
 		[Fact]
 		public void BitcoinValue_ConvertSatoshis_ValidConversion()
@@ -18,7 +13,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
 			Assert.Equal(bitcoinValue.Satoshis, satoshis);
 			Assert.Equal(bitcoinValue.Bits, satoshis / 100m);
 			Assert.Equal(bitcoinValue.MilliBits, satoshis / 100000m);
-			Assert.Equal(bitcoinValue.Btc, satoshis / 100000000m);
+			Assert.Equal(bitcoinValue.GetBtc(), satoshis / 100000000m);
 		}
 
 		[Fact]
@@ -29,7 +24,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
 			Assert.Equal(bitcoinValue.Satoshis, bits * 100m);
 			Assert.Equal(bitcoinValue.Bits, bits);
 			Assert.Equal(bitcoinValue.MilliBits, bits / 1000m);
-			Assert.Equal(bitcoinValue.Btc, bits / 1000000m);
+			Assert.Equal(bitcoinValue.GetBtc(), bits / 1000000m);
 		}
 
 		[Fact]
@@ -40,7 +35,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
 			Assert.Equal(bitcoinValue.Satoshis, milliBits * 100000m);
 			Assert.Equal(bitcoinValue.Bits, milliBits * 1000m);
 			Assert.Equal(bitcoinValue.MilliBits, milliBits);
-			Assert.Equal(bitcoinValue.Btc, milliBits / 1000m);
+			Assert.Equal(bitcoinValue.GetBtc(), milliBits / 1000m);
 		}
 
 		[Fact]
@@ -51,13 +46,13 @@ namespace Info.Blockchain.API.Tests.UnitTests
 			Assert.Equal(bitcoinValue.Satoshis, btc * 100000000m);
 			Assert.Equal(bitcoinValue.Bits, btc * 1000000m);
 			Assert.Equal(bitcoinValue.MilliBits, btc * 1000m);
-			Assert.Equal(bitcoinValue.Btc, btc);
+			Assert.Equal(bitcoinValue.GetBtc(), btc);
 
 			bitcoinValue = new BitcoinValue(btc);
 			Assert.Equal(bitcoinValue.Satoshis, btc * 100000000m);
 			Assert.Equal(bitcoinValue.Bits, btc * 1000000m);
 			Assert.Equal(bitcoinValue.MilliBits, btc * 1000m);
-			Assert.Equal(bitcoinValue.Btc, btc);
+			Assert.Equal(bitcoinValue.GetBtc(), btc);
 		}
 
 		[Fact]
@@ -68,10 +63,10 @@ namespace Info.Blockchain.API.Tests.UnitTests
 			BitcoinValue value1 = BitcoinValue.FromBtc(btc1);
 			BitcoinValue value2 = BitcoinValue.FromBtc(btc2);
 			BitcoinValue value3 = value1 + value2;
-			Assert.Equal(value3.Btc, btc1 + btc2);
+			Assert.Equal(value3.GetBtc(), btc1 + btc2);
 
 			value3 = value2 + value1;
-			Assert.Equal(value3.Btc, btc1 + btc2);
+			Assert.Equal(value3.GetBtc(), btc1 + btc2);
 		}
 
 		[Fact]
@@ -82,20 +77,20 @@ namespace Info.Blockchain.API.Tests.UnitTests
 			BitcoinValue value1 = BitcoinValue.FromBtc(btc1);
 			BitcoinValue value2 = BitcoinValue.FromBtc(btc2);
 			BitcoinValue value3 = value1 - value2;
-			Assert.Equal(value3.Btc, btc1 - btc2);
+			Assert.Equal(value3.GetBtc(), btc1 - btc2);
 
 			value3 = value2 - value1;
-			Assert.Equal(value3.Btc, btc2 - btc1);
-			Assert.NotEqual(value3.Btc, btc1 - btc2);
+			Assert.Equal(value3.GetBtc(), btc2 - btc1);
+			Assert.NotEqual(value3.GetBtc(), btc1 - btc2);
 
 			value3 = value1 - value1;
-			Assert.Equal(value3.Btc, 0);
+			Assert.Equal(value3.GetBtc(), 0);
 		}
 
 		[Fact]
 		public void BitcoinValue_Zero_Valid()
 		{
-			Assert.Equal(BitcoinValue.Zero.Btc, 0);
+			Assert.Equal(BitcoinValue.Zero.GetBtc(), 0);
 		}
 
 		[Fact]

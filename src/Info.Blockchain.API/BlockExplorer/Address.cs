@@ -1,9 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Info.Blockchain.API.Json;
 using Newtonsoft.Json;
-// ReSharper disable AutoPropertyCanBeMadeGetOnly.Local
 
 namespace Info.Blockchain.API.BlockExplorer
 {
@@ -12,6 +11,7 @@ namespace Info.Blockchain.API.BlockExplorer
 	/// </summary>
 	public class Address
 	{
+
 		[JsonConstructor]
 		// ReSharper disable once UnusedMember.Local
 		private Address()
@@ -23,19 +23,20 @@ namespace Info.Blockchain.API.BlockExplorer
 		/// </summary>
 		/// <param name="address">Address to copy all properties from except the transactions</param>
 		/// <param name="transactions">Transaction list to associate to the address object</param>
-		internal Address(Address address, List<Transaction> transactions)
+		public Address(Address address, List<Transaction> transactions)
 		{
 			if (address == null)
 			{
 				throw new ArgumentNullException(nameof(address));
 			}
-			this.Hash160 = address.Hash160;
-			this.AddressStr = address.AddressStr;
-			this.TotalReceived = address.TotalReceived;
-			this.TotalSent = address.TotalSent;
-			this.FinalBalance = address.FinalBalance;
-			this.TransactionCount = address.TransactionCount;
-			this.Transactions = new ReadOnlyCollection<Transaction>(transactions);
+
+			Hash160 = address.Hash160;
+			AddressStr = address.AddressStr;
+			TotalReceived = address.TotalReceived;
+			TotalSent = address.TotalSent;
+			FinalBalance = address.FinalBalance;
+			TransactionCount = address.TransactionCount;
+			Transactions = new ReadOnlyCollection<Transaction>(transactions);
 		}
 
 		/// <summary>

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Info.Blockchain.API.Client;
 using Xunit;
 
 namespace Info.Blockchain.API.Tests.UnitTests
@@ -16,7 +13,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
 			{
 				using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
 				{
-					await apiHelper.ExchangeRateExplorer.ToBtcAsync(null, 1);
+					await apiHelper.exchangeRateExplorer.ToBtcAsync(null, 1);
 				}
 			});
 		}
@@ -28,7 +25,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
 			{
 				using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
 				{
-					await apiHelper.ExchangeRateExplorer.ToBtcAsync("USD", -1);
+					await apiHelper.exchangeRateExplorer.ToBtcAsync("USD", -1);
 				}
 			});
 		}

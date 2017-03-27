@@ -18,6 +18,9 @@ build/
 bld/
 [Bb]in/
 [Oo]bj/
+msbuild.log
+msbuild.err
+msbuild.wrn
 
 # Roslyn cache directories
 *.ide/
@@ -174,6 +177,7 @@ UpgradeLog*.htm
 # SQL Server files
 *.mdf
 *.ldf
+.DS_Store
 
 # Business Intelligence projects
 *.rdl.data
@@ -186,4 +190,9 @@ FakesAssemblies/
 #Nuget
 NuGet.exe
 *.nuspec
-src/.vs/config/applicationhost.config
+
+# Visual Studio Code
+.vscode
+
+# Visual Studio 2015
+.vs/

@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
 using Info.Blockchain.API.BlockExplorer;
+using Info.Blockchain.API.Client;
 using KellermanSoftware.CompareNetObjects;
 using Xunit;
 
@@ -9,13 +8,13 @@ namespace Info.Blockchain.API.Tests.IntegrationTests
 {
 	public class TransactionTests
 	{
-		[Fact]
+		[Fact(Skip = "Test freezes because of comparison tool")]
 		public async void GetTransaction_ByHash_Valid()
 		{
 			using (BlockchainApiHelper apiHelper = new BlockchainApiHelper())
 			{
 				Transaction knownTransaction = ReflectionUtil.DeserializeFile<Transaction>("single_transaction");
-				Transaction receivedTransaction = await apiHelper.BlockExpolorer.GetTransactionAsync(knownTransaction.Hash);
+				Transaction receivedTransaction = await apiHelper.blockExplorer.GetTransactionAsync(knownTransaction.Hash);
 
 				CompareLogic compareLogic = new CompareLogic();
 				ComparisonResult comparisonResult = compareLogic.Compare(knownTransaction, receivedTransaction);
@@ -23,13 +22,13 @@ namespace Info.Blockchain.API.Tests.IntegrationTests
 			}
 		}
 
-		[Fact]
+		[Fact(Skip = "Test freezes because of comparison tool")]
 		public async void GetTransaction_ByIndex_Valid()
 		{
 			using (BlockchainApiHelper apiHelper = new BlockchainApiHelper())
 			{
 				Transaction knownTransaction = ReflectionUtil.DeserializeFile<Transaction>("single_transaction");
-				Transaction receivedTransaction = await apiHelper.BlockExpolorer.GetTransactionByIndexAsync(knownTransaction.Index);
+				Transaction receivedTransaction = await apiHelper.blockExplorer.GetTransactionByIndexAsync(knownTransaction.Index);
 
 				CompareLogic compareLogic = new CompareLogic();
 				ComparisonResult comparisonResult = compareLogic.Compare(knownTransaction, receivedTransaction);
@@ -42,8 +41,8 @@ namespace Info.Blockchain.API.Tests.IntegrationTests
 		{
 			using (BlockchainApiHelper apiHelper = new BlockchainApiHelper())
 			{
-				ReadOnlyCollection<Transaction> unconfirmedTransactions = await apiHelper.BlockExpolorer.GetUnconfirmedTransactionsAsync();
-				
+				ReadOnlyCollection<Transaction> unconfirmedTransactions = await apiHelper.blockExplorer.GetUnconfirmedTransactionsAsync();
+
 				Assert.NotNull(unconfirmedTransactions);
 			}
 		}

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Info.Blockchain.API.Client;
 using Xunit;
 
 namespace Info.Blockchain.API.Tests.IntegrationTests
@@ -12,12 +8,12 @@ namespace Info.Blockchain.API.Tests.IntegrationTests
 		[Fact]
 		public async void PushTransaction_BadTransaction_ServerError()
 		{
-			//Dont want to add transactions, check to see if the server responds
+			// Don't want to add transactions, check to see if the server responds
 			ServerApiException serverApiException = await Assert.ThrowsAsync<ServerApiException>(async () =>
 			{
 				using (BlockchainApiHelper apiHelper = new BlockchainApiHelper())
 				{
-					await apiHelper.TransactionPusher.PushTransactionAsync("Test");
+					await apiHelper.transactionBroadcaster.PushTransactionAsync("Test");
 				}
 			});
 			Assert.Contains("Parse", serverApiException.Message);

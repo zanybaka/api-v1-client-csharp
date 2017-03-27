@@ -1,7 +1,6 @@
-﻿using Info.Blockchain.API.BlockExplorer;
+using Info.Blockchain.API.BlockExplorer;
 using Info.Blockchain.API.Json;
 using Newtonsoft.Json;
-// ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace Info.Blockchain.API.Statistics
 {
@@ -10,11 +9,6 @@ namespace Info.Blockchain.API.Statistics
 	/// </summary>
 	public class StatisticsResponse
 	{
-		[JsonConstructor]
-		private StatisticsResponse()
-		{
-		}
-
 		/// <summary>
 		/// Trade volume in the past 24 hours (in BTC)
 		/// </summary>
@@ -116,7 +110,7 @@ namespace Info.Blockchain.API.Statistics
 		public long MinedBlocks { get; private set; }
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		[JsonProperty("blocks_size", Required = Required.Always)]
 		public long BlocksSize { get; private set; }

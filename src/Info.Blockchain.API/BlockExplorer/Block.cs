@@ -1,13 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Info.Blockchain.API.Json;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-
-// ReSharper disable UnusedAutoPropertyAccessor.Local
-// ReSharper disable UnusedMember.Local
 
 namespace Info.Blockchain.API.BlockExplorer
 {
@@ -19,9 +16,7 @@ namespace Info.Blockchain.API.BlockExplorer
 		private DateTime receivedTime { get; set; } = DateTime.MinValue;
 
 		[JsonConstructor]
-		private Block()
-		{
-		}
+		private Block() {}
 
 		/// <summary>
 		/// Block version as specified by the protocol
@@ -98,7 +93,7 @@ namespace Info.Blockchain.API.BlockExplorer
 		/// <summary>
 		/// Transactions in the block
 		/// </summary>!
-		[JsonProperty("tx", Required = Required.Always)] 
+		[JsonProperty("tx", Required = Required.Always)]
 		public ReadOnlyCollection<Transaction> Transactions { get; private set; }
 
 

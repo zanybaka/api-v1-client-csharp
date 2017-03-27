@@ -7,7 +7,7 @@ namespace Info.Blockchain.API.Json
 	{
 		public override bool CanConvert(Type objectType)
 		{
-			return objectType == typeof(bool); 
+			return objectType == typeof(bool);
 		}
 
 		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)

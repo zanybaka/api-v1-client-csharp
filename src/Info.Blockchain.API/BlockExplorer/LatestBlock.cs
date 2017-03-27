@@ -1,6 +1,5 @@
 ﻿using System.Collections.ObjectModel;
 using Newtonsoft.Json;
-// ReSharper disable UnusedAutoPropertyAccessor.Local
 
 namespace Info.Blockchain.API.BlockExplorer
 {

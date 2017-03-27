@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Threading.Tasks;
-using Info.Blockchain.API.Abstractions;
-using Info.Blockchain.API.CreateWallet;
+using Info.Blockchain.API.Client;
 using Xunit;
 
 namespace Info.Blockchain.API.Tests.UnitTests
 {
-	public class TransactionPusherTests
+    public class TransactionPusherTests
 	{
 		[Fact]
 		public async void GetTransaction_BadIds_ArgumentExecption()
@@ -15,7 +13,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
 			{
 				using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
 				{
-					await apiHelper.TransactionPusher.PushTransactionAsync(null);
+					await apiHelper.transactionBroadcaster.PushTransactionAsync(null);
 				}
 			});
 		}

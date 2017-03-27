@@ -37,7 +37,7 @@ namespace Info.Blockchain.API.Json
 			}
 			if (value is double)
 			{
-				return this.convertFromMillis 
+				return this.convertFromMillis
 					? UnixDateTimeJsonConverter.UnixMillisToDateTime((double) value)
 					: UnixDateTimeJsonConverter.UnixSecondsToDateTime((double) value);
 			}
