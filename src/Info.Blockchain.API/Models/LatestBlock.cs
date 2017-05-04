@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using Newtonsoft.Json;
 
-namespace Info.Blockchain.API.BlockExplorer
+namespace Info.Blockchain.API.Models
 {
 	/// <summary>
 	/// Used as a response to the `GetLatestBlock` method in the `BlockExplorer` class.

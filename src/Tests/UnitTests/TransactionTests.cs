@@ -13,7 +13,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
 			{
 				using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
 				{
-					await apiHelper.blockExplorer.GetTransactionAsync(null);
+					await apiHelper.blockExplorer.GetTransactionByHashAsync(null);
 				}
 			});
 

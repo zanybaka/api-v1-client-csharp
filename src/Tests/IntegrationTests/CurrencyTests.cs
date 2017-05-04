@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Info.Blockchain.API.Client;
-using Info.Blockchain.API.Data;
-using Info.Blockchain.API.ExchangeRates;
+using Info.Blockchain.API.Models;
 using Xunit;
 
 namespace Info.Blockchain.API.Tests.IntegrationTests
@@ -28,5 +27,27 @@ namespace Info.Blockchain.API.Tests.IntegrationTests
 				Assert.True(btcValue > 0);
 			}
 		}
+
+        [Fact]
+        public async void FromBtc_ToUs_HasValue()
+        {
+            using (BlockchainApiHelper apiHelper = new BlockchainApiHelper())
+			{
+                var btc = new BitcoinValue(new decimal(0.4));
+				double btcValue = await apiHelper.exchangeRateExplorer.FromBtcAsync(btc);
+				Assert.True(btcValue > 0);
+			}
+        }
+
+        [Fact]
+        public async void FromBtc_ToGbp_HasValue()
+        {
+            using (BlockchainApiHelper apiHelper = new BlockchainApiHelper())
+			{
+                var btc = new BitcoinValue(new decimal(0.4));
+				double btcValue = await apiHelper.exchangeRateExplorer.FromBtcAsync(btc, "GBP");
+				Assert.True(btcValue > 0);
+			}
+        }
 	}
 }

@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Info.Blockchain.API.BlockExplorer;
+using Info.Blockchain.API.Models;
 using Info.Blockchain.API.Client;
-using Info.Blockchain.API.CreateWallet;
 using Xunit;
 
 namespace Info.Blockchain.API.Tests.UnitTests
@@ -12,7 +11,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
 
         private Wallet.Wallet GetWallet(BlockchainApiHelper apiHelper)
         {
-            return apiHelper.CreateWallet("Test", "Test");
+            return apiHelper.InitializeWallet("Test", "Test");
         }
 
         [Fact]
@@ -23,7 +22,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
                 using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
                 {
                     Wallet.Wallet wallet = GetWallet(apiHelper);
-                    await wallet.ArchiveAddress(null);
+                    await wallet.ArchiveAddressAsync(null);
                 }
             });
         }
@@ -37,28 +36,6 @@ namespace Info.Blockchain.API.Tests.UnitTests
                 {
                     Wallet.Wallet wallet = this.GetWallet(apiHelper);
                     await wallet.GetAddressAsync(null);
-                }
-            });
-
-            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () =>
-            {
-                using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
-                {
-                    Wallet.Wallet wallet = this.GetWallet(apiHelper);
-                    await wallet.GetAddressAsync("Test", -1);
-                }
-            });
-        }
-
-        [Fact]
-        public async void ListAddresses_NegativeConfirmations_ArgumentOutOfRangeException()
-        {
-            await Assert.ThrowsAsync<ArgumentOutOfRangeException>(async () =>
-            {
-                using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
-                {
-                    Wallet.Wallet wallet = this.GetWallet(apiHelper);
-                    await wallet.ListAddressesAsync(-1);
                 }
             });
         }
@@ -114,7 +91,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
                 using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
                 {
                     Wallet.Wallet wallet = this.GetWallet(apiHelper);
-                    await wallet.UnarchiveAddress(null);
+                    await wallet.UnarchiveAddressAsync(null);
                 }
             });
         }
@@ -126,7 +103,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
             {
                 using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper("APICODE"))
                 {
-                    await apiHelper.walletCreator.Create(null);
+                    await apiHelper.walletCreator.CreateAsync(null);
                 }
             });
         }
@@ -138,7 +115,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
             {
                 using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
                 {
-                    await apiHelper.walletCreator.Create("password");
+                    await apiHelper.walletCreator.CreateAsync("password");
                 }
             });
         }
@@ -149,7 +126,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
             using (BlockchainApiHelper apiHelper = new BlockchainApiHelper("123", new FakeWalletHttpClient(),
                                                         "123", new FakeWalletHttpClient()))
             {
-                CreateWalletResponse walletResponse = await apiHelper.walletCreator.Create("Password");
+                CreateWalletResponse walletResponse = await apiHelper.walletCreator.CreateAsync("Password");
                 Assert.NotNull(walletResponse);
 
                 Assert.Equal(walletResponse.Address, "12AaMuRnzw6vW6s2KPRAGeX53meTf8JbZS");

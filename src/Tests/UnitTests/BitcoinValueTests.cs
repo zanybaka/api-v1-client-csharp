@@ -1,4 +1,4 @@
-﻿using Info.Blockchain.API.BlockExplorer;
+﻿using Info.Blockchain.API.Models;
 using Xunit;
 
 namespace Info.Blockchain.API.Tests.UnitTests

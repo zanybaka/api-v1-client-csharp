@@ -1,5 +1,5 @@
 using System;
-using Info.Blockchain.API.CreateWallet;
+using Info.Blockchain.API.Wallet;
 using Info.Blockchain.API.ExchangeRates;
 using Info.Blockchain.API.PushTx;
 using Info.Blockchain.API.Statistics;
@@ -51,7 +51,7 @@ namespace Info.Blockchain.API.Client
             this.blockExplorer = new BlockExplorer.BlockExplorer(baseHttpClient);
             this.transactionBroadcaster = new TransactionPusher(baseHttpClient);
             this.exchangeRateExplorer = new ExchangeRateExplorer(baseHttpClient);
-            this.statisticsExplorer = new StatisticsExplorer(baseHttpClient);
+            this.statisticsExplorer = new StatisticsExplorer(new BlockchainHttpClient("https://api.blockchain.info"));
 
             if (serviceHttpClient != null)
             {
@@ -71,7 +71,7 @@ namespace Info.Blockchain.API.Client
         /// <param name="identifier">Wallet identifier (GUID)</param>
         /// <param name="password">Decryption password</param>
         /// <param name="secondPassword">Second password</param>
-        public Wallet.Wallet CreateWallet(string identifier, string password, string secondPassword = null)
+        public Wallet.Wallet InitializeWallet(string identifier, string password, string secondPassword = null)
         {
             if (serviceHttpClient == null)
             {

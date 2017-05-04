@@ -6,7 +6,7 @@ using Info.Blockchain.API.Json;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Info.Blockchain.API.BlockExplorer
+namespace Info.Blockchain.API.Models
 {
 	/// <summary>
 	/// This class is a full representation of a block. For simpler representations, see SimpleBlock and LatestBlock.

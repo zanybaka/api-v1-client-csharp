@@ -1,8 +1,9 @@
 using System;
 using System.Threading.Tasks;
 using Info.Blockchain.API.Client;
+using Info.Blockchain.API.Models;
 
-namespace Info.Blockchain.API.CreateWallet
+namespace Info.Blockchain.API.Wallet
 {
     /// <summary>
     /// This class reflects the functionality documented at https://blockchain.info/api/create_wallet.
@@ -31,7 +32,7 @@ namespace Info.Blockchain.API.CreateWallet
 		/// <param name="email">Email to associate with the new wallet</param>
 		/// <returns>An instance of the CreateWalletResponse class</returns>
 		/// <exception cref="ServerApiException">If the server returns an error</exception>
-		public async Task<CreateWalletResponse> Create(string password, string privateKey = null, string label = null, string email = null)
+		public async Task<CreateWalletResponse> CreateAsync(string password, string privateKey = null, string label = null, string email = null)
 		{
             if (string.IsNullOrWhiteSpace(password))
             {

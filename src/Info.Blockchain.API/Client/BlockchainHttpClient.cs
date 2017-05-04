@@ -44,7 +44,8 @@ namespace Info.Blockchain.API.Client
 				{
 					//Append to querystring
 					string queryStringValue = queryStringIndex.ToString();
-					queryStringValue = "&" + queryStringValue.Substring(1); //replace questionmark with &
+                    //replace questionmark with &
+					queryStringValue = "&" + queryStringValue.Substring(1);
 					route += queryStringValue;
 				}
 				else

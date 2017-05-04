@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Info.Blockchain.API.BlockExplorer;
 using Info.Blockchain.API.Client;
-using Info.Blockchain.API.Data;
+using Info.Blockchain.API.Models;
 using Info.Blockchain.API.Json;
 using Newtonsoft.Json;
 
@@ -42,11 +41,10 @@ namespace Info.Blockchain.API.Wallet
         /// <param name="amount">Amount to send</param>
         /// <param name="fromAddress">Specific address to send from</param>
         /// <param name="fee">Transaction fee. Must be greater than the default fee</param>
-        /// <param name="note">Public note to include with the transaction</param>
         /// <returns>An instance of the PaymentResponse class</returns>
         /// <exception cref="ServerApiException">If the server returns an error</exception>
         public async Task<PaymentResponse> SendAsync(string toAddress, BitcoinValue amount,
-            string fromAddress = null, BitcoinValue fee = null, string note = null)
+            string fromAddress = null, BitcoinValue fee = null)
         {
             if (string.IsNullOrWhiteSpace(toAddress))
             {
@@ -69,10 +67,6 @@ namespace Info.Blockchain.API.Wallet
             {
                 queryString.Add("from", fromAddress);
             }
-            if (!string.IsNullOrWhiteSpace(note))
-            {
-                queryString.Add("note", note);
-            }
             if (fee != null)
             {
                 queryString.Add("fee", fee.ToString());
@@ -91,11 +85,10 @@ namespace Info.Blockchain.API.Wallet
         /// (string:BitcoinValue)</param>
         /// <param name="fromAddress">Specific address to send from</param>
         /// <param name="fee">Transaction fee. Must be greater than the default fee</param>
-        /// <param name="note">Public note to include with the transaction</param>
         /// <returns>An instance of the PaymentResponse class</returns>
         /// <exception cref="ServerApiException">If the server returns an error</exception>
         public async Task<PaymentResponse> SendManyAsync(Dictionary<string, BitcoinValue> recipients,
-            string fromAddress = null, BitcoinValue fee = null, string note = null)
+            string fromAddress = null, BitcoinValue fee = null)
         {
             if (recipients == null || recipients.Count == 0)
             {
@@ -113,10 +106,6 @@ namespace Info.Blockchain.API.Wallet
             if (!string.IsNullOrWhiteSpace(fromAddress))
             {
                 queryString.Add("from", fromAddress);
-            }
-            if (!string.IsNullOrWhiteSpace(note))
-            {
-                queryString.Add("note", note);
             }
             if (fee != null)
             {
@@ -147,18 +136,11 @@ namespace Info.Blockchain.API.Wallet
         /// <summary>
         /// Lists all active addresses in the wallet.
         /// </summary>
-        /// <param name="confirmations">Minimum number of confirmations transactions
-        /// must have before being included in the balance of addresses (can be 0)</param>
         /// <returns>A list of Address objects</returns>
         /// <exception cref="ServerApiException">If the server returns an error</exception>
-        public async Task<List<WalletAddress>> ListAddressesAsync(int confirmations = 0)
+        public async Task<List<WalletAddress>> ListAddressesAsync()
         {
-            if (confirmations < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(confirmations), "Confirmations must be a positive number");
-            }
             QueryString queryString = BuildBasicQueryString();
-            queryString.Add("confirmations", confirmations.ToString());
 
             string route = $"merchant/{identifier}/list";
 
@@ -170,22 +152,15 @@ namespace Info.Blockchain.API.Wallet
         /// Retrieves an address from the wallet.
         /// </summary>
         /// <param name="address"> Address in the wallet to look up</param>
-        /// <param name="confirmations">Minimum number of confirmations transactions
-        /// must have before being included in the balance of addresses (can be 0)</param>
         /// <returns>An instance of the Address class</returns>
         /// <exception cref="ServerApiException">If the server returns an error</exception>
-        public async Task<WalletAddress> GetAddressAsync(string address, int confirmations = 0)
+        public async Task<WalletAddress> GetAddressAsync(string address)
         {
             if (string.IsNullOrWhiteSpace(address))
             {
                 throw new ArgumentNullException(nameof(address));
             }
-            if (confirmations < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(confirmations), "Confirmations must be a positive number");
-            }
             QueryString queryString = BuildBasicQueryString();
-            queryString.Add("confirmations", confirmations.ToString());
             queryString.Add("address", address);
 
             string route = $"merchant/{identifier}/address_balance";
@@ -199,7 +174,7 @@ namespace Info.Blockchain.API.Wallet
         /// <param name="label">Label to attach to this address</param>
         /// <returns>An instance of the Address class</returns>
         /// <exception cref="ServerApiException">If the server returns an error</exception>
-        public async Task<WalletAddress> NewAddress(string label = null)
+        public async Task<WalletAddress> NewAddressAsync(string label = null)
         {
             QueryString queryString = BuildBasicQueryString();
             if (label != null)
@@ -217,7 +192,7 @@ namespace Info.Blockchain.API.Wallet
         /// <param name="address">Address to archive</param>
         /// <returns>String representation of the archived address</returns>
         /// <exception cref="ServerApiException">If the server returns an error</exception>
-        public async Task<string> ArchiveAddress(string address)
+        public async Task<string> ArchiveAddressAsync(string address)
         {
             if (string.IsNullOrWhiteSpace(address))
             {
@@ -227,9 +202,7 @@ namespace Info.Blockchain.API.Wallet
             queryString.Add("address", address);
 
             string route = $"merchant/{identifier}/archive_address";
-            string archiveAddress = await httpClient.GetAsync<string>(route, queryString, WalletAddress.DeserializeArchived);
-
-            return archiveAddress;
+            return await httpClient.GetAsync<string>(route, queryString, WalletAddress.DeserializeArchived);
         }
 
         /// <summary>
@@ -238,7 +211,7 @@ namespace Info.Blockchain.API.Wallet
         /// <param name="address">Address to unarchive</param>
         /// <returns>String representation of the unarchived address</returns>
         /// <exception cref="ServerApiException">If the server returns an error</exception>
-        public async Task<string> UnarchiveAddress(string address)
+        public async Task<string> UnarchiveAddressAsync(string address)
         {
             if (address == null)
             {
@@ -248,8 +221,7 @@ namespace Info.Blockchain.API.Wallet
             queryString.Add("address", address);
 
             string route = $"merchant/{identifier}/unarchive_address";
-            string activeAddress = await httpClient.GetAsync<string>(route, queryString, WalletAddress.DeserializeUnArchived);
-            return activeAddress;
+            return await httpClient.GetAsync<string>(route, queryString, WalletAddress.DeserializeUnArchived);
         }
 
         private QueryString BuildBasicQueryString()

@@ -1,10 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Info.Blockchain.API.Json;
 using Newtonsoft.Json;
 
-namespace Info.Blockchain.API.BlockExplorer
+namespace Info.Blockchain.API.Models
 {
 	/// <summary>
 	/// Represents an address.
@@ -14,42 +12,19 @@ namespace Info.Blockchain.API.BlockExplorer
 
 		[JsonConstructor]
 		// ReSharper disable once UnusedMember.Local
-		private Address()
-		{
-		}
-
-		/// <summary>
-		/// Address object contructor to copy from another address and associate a list of transactions
-		/// </summary>
-		/// <param name="address">Address to copy all properties from except the transactions</param>
-		/// <param name="transactions">Transaction list to associate to the address object</param>
-		public Address(Address address, List<Transaction> transactions)
-		{
-			if (address == null)
-			{
-				throw new ArgumentNullException(nameof(address));
-			}
-
-			Hash160 = address.Hash160;
-			AddressStr = address.AddressStr;
-			TotalReceived = address.TotalReceived;
-			TotalSent = address.TotalSent;
-			FinalBalance = address.FinalBalance;
-			TransactionCount = address.TransactionCount;
-			Transactions = new ReadOnlyCollection<Transaction>(transactions);
-		}
+		public Address() {}
 
 		/// <summary>
 		/// Hash160 representation of the address
 		/// </summary>
-		[JsonProperty("hash160", Required = Required.Always)]
+		[JsonProperty("hash160")]
 		public string Hash160 { get; private set; }
 
 		/// <summary>
 		/// Base58Check representation of the address
 		/// </summary>
 		[JsonProperty("address", Required = Required.Always)]
-		public string AddressStr { get; private set; }
+		public string Base58Check { get; private set; }
 
 		/// <summary>
 		/// Total amount received
@@ -81,7 +56,7 @@ namespace Info.Blockchain.API.BlockExplorer
 		/// <summary>
 		/// List of transactions associated with this address
 		/// </summary>
-		[JsonProperty("txs", Required = Required.Always)]
+		[JsonProperty("txs")]
 		public ReadOnlyCollection<Transaction> Transactions { get; private set; }
 	}
 }

@@ -18,7 +18,7 @@ namespace Info.Blockchain.API.PushTx
         public TransactionPusher(IHttpClient httpClient)
         {
             this.httpClient = httpClient;
-}
+        }
 
         /// <summary>
         /// Pushes a hex encoded transaction to the network.

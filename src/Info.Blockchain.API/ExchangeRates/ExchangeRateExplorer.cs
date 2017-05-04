@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Info.Blockchain.API.Client;
+using Info.Blockchain.API.Models;
 
 namespace Info.Blockchain.API.ExchangeRates
 {
@@ -57,5 +58,28 @@ namespace Info.Blockchain.API.ExchangeRates
 
 			return await httpClient.GetAsync<double>("tobtc", queryString);
 		}
+
+        /// <summary>
+        /// Converts a BitcoinValue object to its value in the specified currency
+        /// </summary>
+        /// <param name="btc">BitcoinValue representing the value to convert from</param>
+        /// <param name="currency">Currency code (default USD)</param>
+        /// <returns>Converted value in currency of choice</returns>
+        public async Task<double> FromBtcAsync(BitcoinValue btc, string currency = "")
+        {
+            if (btc == null)
+            {
+                throw new ArgumentNullException(nameof(btc));
+            }
+            if (btc.GetBtc() <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(btc), "BitcoinValue must represent a value higher than 0");
+            }
+            QueryString queryString = new QueryString();
+            queryString.Add("currency", currency);
+            queryString.Add("value", btc.Satoshis.ToString());
+
+            return await httpClient.GetAsync<double>("frombtc", queryString);
+        }
 	}
 }

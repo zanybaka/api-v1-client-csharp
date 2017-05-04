@@ -4,7 +4,7 @@ using Info.Blockchain.API.Json;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Info.Blockchain.API.BlockExplorer
+namespace Info.Blockchain.API.Models
 {
 	/// <summary>
 	///  Simple representation of a block

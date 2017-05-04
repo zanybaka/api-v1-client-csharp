@@ -1,8 +1,18 @@
-## `Info.Blockchain.API.PushTx` namespace
+# `Info.Blockchain.API.PushTx` namespace
 
 The `PushTx` namespace contains the `TransactionPusher` class that reflects the functionality provided at https://blockchain.info/pushtx. It allows users to broadcast hex encoded transactions to the bitcoin network.
 
-Example usage:
+## Methods
+
+### PushTransaction
+
+```csharp
+Task PushTransactionAsync(string transactionString)
+```
+
+   Broadcast a hex encoded transaction to the network
+
+## Example usage:
 
 ```csharp
 using System;

@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 // ReSharper disable UnusedAutoPropertyAccessor.Local
 
-namespace Info.Blockchain.API.BlockExplorer
+namespace Info.Blockchain.API.Models
 {
 	/// <summary>
 	/// Represents a transaction input. If the PreviousOutput object is null,
