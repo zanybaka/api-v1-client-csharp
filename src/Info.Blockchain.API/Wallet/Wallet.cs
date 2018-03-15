@@ -72,7 +72,7 @@ namespace Info.Blockchain.API.Wallet
                 queryString.Add("fee", fee.ToString());
             }
 
-            string route = $"merchant/{identifier}/payment";
+            string route = $"localhost:3000/{identifier}/payment";
 
             PaymentResponse paymentResponse = await httpClient.GetAsync<PaymentResponse>(route, queryString);
             return paymentResponse;
@@ -112,7 +112,7 @@ namespace Info.Blockchain.API.Wallet
                 queryString.Add("fee", fee.ToString());
             }
 
-            string route = $"merchant/{identifier}/sendmany";
+            string route = $"localhost:3000/{identifier}/sendmany";
 
             PaymentResponse paymentResponse = await httpClient.GetAsync<PaymentResponse>(route, queryString);
 
@@ -128,7 +128,7 @@ namespace Info.Blockchain.API.Wallet
         public async Task<BitcoinValue> GetBalanceAsync()
         {
             QueryString queryString = BuildBasicQueryString();
-            string route = $"merchant/{identifier}/balance";
+            string route = $"localhost:3000/{identifier}/balance";
             BitcoinValue bitcoinValue = await httpClient.GetAsync<BitcoinValue>(route, queryString);
             return bitcoinValue;
         }
@@ -142,7 +142,7 @@ namespace Info.Blockchain.API.Wallet
         {
             QueryString queryString = BuildBasicQueryString();
 
-            string route = $"merchant/{identifier}/list";
+            string route = $"localhost:3000/{identifier}/list";
 
             List<WalletAddress> addressList = await httpClient.GetAsync<List<WalletAddress>>(route, queryString, WalletAddress.DeserializeMultiple);
             return addressList;
@@ -163,7 +163,7 @@ namespace Info.Blockchain.API.Wallet
             QueryString queryString = BuildBasicQueryString();
             queryString.Add("address", address);
 
-            string route = $"merchant/{identifier}/address_balance";
+            string route = $"localhost:3000/{identifier}/address_balance";
             WalletAddress addressObj = await httpClient.GetAsync<WalletAddress>(route, queryString);
             return addressObj;
         }
@@ -181,7 +181,7 @@ namespace Info.Blockchain.API.Wallet
             {
                 queryString.Add("label", label);
             }
-            string route = $"merchant/{identifier}/new_address";
+            string route = $"localhost:3000/{identifier}/new_address";
             WalletAddress addressObj = await httpClient.GetAsync<WalletAddress>(route, queryString);
             return addressObj;
         }
@@ -201,7 +201,7 @@ namespace Info.Blockchain.API.Wallet
             QueryString queryString = BuildBasicQueryString();
             queryString.Add("address", address);
 
-            string route = $"merchant/{identifier}/archive_address";
+            string route = $"localhost:3000/{identifier}/archive_address";
             return await httpClient.GetAsync<string>(route, queryString, WalletAddress.DeserializeArchived);
         }
 
@@ -220,7 +220,7 @@ namespace Info.Blockchain.API.Wallet
             QueryString queryString = BuildBasicQueryString();
             queryString.Add("address", address);
 
-            string route = $"merchant/{identifier}/unarchive_address";
+            string route = $"localhost:3000/{identifier}/unarchive_address";
             return await httpClient.GetAsync<string>(route, queryString, WalletAddress.DeserializeUnArchived);
         }
 
