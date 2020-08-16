@@ -15,7 +15,7 @@ namespace Info.Blockchain.API.Statistics
 		private readonly IHttpClient httpClient;
 		public StatisticsExplorer()
 		{
-			httpClient = new BlockchainHttpClient("https://api.blockchain.info");
+			httpClient = new BlockchainHttpClient(uri: "https://api.blockchain.info");
 		}
 		internal StatisticsExplorer(IHttpClient httpClient)
 		{
@@ -61,6 +61,10 @@ namespace Info.Blockchain.API.Statistics
             catch (Exception ex)
             {
                 if (ex.Message.Contains("No chart with this name"))
+                {
+                    throw new ArgumentOutOfRangeException(nameof(chartType), "This chart name does not exist");
+                }
+                if (ex.Message.Contains("Not Found"))
                 {
                     throw new ArgumentOutOfRangeException(nameof(chartType), "This chart name does not exist");
                 }

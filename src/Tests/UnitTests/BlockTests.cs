@@ -101,7 +101,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
             {
                 using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
                 {
-                    await apiHelper.blockExplorer.GetBase58AddressAsync("some-address", 60);
+                    await apiHelper.blockExplorer.GetBase58AddressAsync("some-address", BlockExplorer.BlockExplorer.MAX_TRANSACTIONS_PER_REQUEST + 1);
                 }
             });
 
@@ -133,7 +133,7 @@ namespace Info.Blockchain.API.Tests.UnitTests
             {
                 using (BlockchainApiHelper apiHelper = UnitTestUtil.GetFakeHelper())
                 {
-                    await apiHelper.blockExplorer.GetMultiAddressAsync(new List<string>() {"address"}, 60);
+                    await apiHelper.blockExplorer.GetMultiAddressAsync(new List<string>() {"address"}, BlockExplorer.BlockExplorer.MAX_TRANSACTIONS_PER_MULTI_REQUEST + 1 );
                 }
             });
         }

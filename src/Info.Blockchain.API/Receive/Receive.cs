@@ -13,7 +13,7 @@ namespace Info.Blockchain.API.Receive
         public Receive(IHttpClient httpClient = null)
         {
             this.httpClient = (httpClient == null)
-                ? new BlockchainHttpClient("https://api.blockchain.info/v2")
+                ? new BlockchainHttpClient(uri: "https://api.blockchain.info/v2")
                 : httpClient;
         }
 

@@ -51,7 +51,7 @@ namespace Info.Blockchain.API.Client
             this.blockExplorer = new BlockExplorer.BlockExplorer(baseHttpClient);
             this.transactionBroadcaster = new TransactionPusher(baseHttpClient);
             this.exchangeRateExplorer = new ExchangeRateExplorer(baseHttpClient);
-            this.statisticsExplorer = new StatisticsExplorer(new BlockchainHttpClient("https://api.blockchain.info"));
+            this.statisticsExplorer = new StatisticsExplorer(new BlockchainHttpClient(uri: "https://api.blockchain.info"));
 
             if (serviceHttpClient != null)
             {

@@ -1,11 +1,17 @@
-﻿using Info.Blockchain.API.Models;
+﻿using System.Globalization;
+using Info.Blockchain.API.Models;
 using Xunit;
 
 namespace Info.Blockchain.API.Tests.UnitTests
 {
     public class BitcoinValueTests
 	{
-		[Fact]
+        public BitcoinValueTests()
+        {
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+		}
+
+        [Fact]
 		public void BitcoinValue_ConvertSatoshis_ValidConversion()
 		{
 			const long satoshis = 123456789;

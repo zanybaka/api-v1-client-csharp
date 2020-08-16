@@ -65,7 +65,7 @@ namespace Info.Blockchain.API.ExchangeRates
         /// <param name="btc">BitcoinValue representing the value to convert from</param>
         /// <param name="currency">Currency code (default USD)</param>
         /// <returns>Converted value in currency of choice</returns>
-        public async Task<double> FromBtcAsync(BitcoinValue btc, string currency = "")
+        public async Task<double> FromBtcAsync(BitcoinValue btc, string currency = "USD")
         {
             if (btc == null)
             {
@@ -79,7 +79,7 @@ namespace Info.Blockchain.API.ExchangeRates
             queryString.Add("currency", currency);
             queryString.Add("value", btc.Satoshis.ToString());
 
-            return await httpClient.GetAsync<double>("frombtc", queryString);
+            return await httpClient.GetAsync<double>("frombtc", queryString, Convert.ToDouble);
         }
 	}
 }

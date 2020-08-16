@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using Info.Blockchain.API.Client;
 using Info.Blockchain.API.Models;
 using Xunit;
@@ -7,7 +8,12 @@ namespace Info.Blockchain.API.Tests.IntegrationTests
 {
 	public class CurrencyTests
 	{
-		[Fact]
+        public CurrencyTests()
+        {
+            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+		}
+
+        [Fact]
 		public async void GetTicker_Valid()
 		{
 			using (BlockchainApiHelper apiHelper = new BlockchainApiHelper())
